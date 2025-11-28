@@ -125,7 +125,7 @@ connection: &conDSMR
 *Deze optie is voor mensen die geen slimme meter hebben van het type DSMR5.*
 
 Wilt u zelf toch niet met de aansturing via Modbus aan de gang maar wel zelf alles aanleggen, dan is deze optie geschikt voor u.
-[Hier](installation/site-kl.png) ziet u de configuratie. Voor deze configuratie moet je dus een extra module in de groepenkast plaatsen.
+[Hier](installation/module-site-kl.png) ziet u de configuratie. Voor deze configuratie moet je dus een extra module in de groepenkast plaatsen.
 Verder moet u de CT-klemmen om voedingsaders van de hoofdaansluiting plaatsen.
 
 
@@ -135,7 +135,7 @@ Verder moet u de CT-klemmen om voedingsaders van de hoofdaansluiting plaatsen.
 Met de EVSE-SC-02 kunt u heel snel en eenvoudig load-balancing toevoegen. Voor de rest geldt ook hier dat de juiste Modbus-kabel gebruikt
 moet worden en de handleiding gevolgd moet worden. Omdat er geen stroomklemmen geplaatst hoeven worden en deze module buiten de meterkast
 wordt geplaatst is deze optie eenvoudiger voor de installatie. Ook scheelt het ruimte in de groepenkast.
-[Hier](installation/site-sm-kl.png) ziet u de configuratie.
+[Hier](installation/module-site-sm-kl.png) ziet u de configuratie.
 
 Voor deze twee opties (EVSE-SC-01 en EVSE-SC-02) zijn de volgende aandachtspunten belangrijk:
 - Let er op dat u de juiste Modbus-kabel gebruikt. Deze kabel is bijvoorbeeld heel geschikt: https://www.elektroproducten.nl/product/stuurstroom-flex-liyy-3x05mm%C2%B2-per-meter/
