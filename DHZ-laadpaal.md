@@ -96,3 +96,48 @@ meters:
   name: grid
 ###################
 ```
+```
+###################
+#blok voor ser2net.yaml
+%YAML 1.1
+---
+# This is a ser2net configuration file, tailored to be rather simple.
+
+define: &banner \r\nser2net port \p device \d [\B] (Debian GNU/Linux)\r\n\r\n
+
+connection: &conDSMR
+    accepter: tcp,2000
+    enable: on
+    options:
+      max-connections: 3
+      kickolduser: true
+      telnet-brk-on-sync: true
+    connector: serialdev,
+              /dev/ttyUSB0,
+              115200n81,local
+###################
+```
+
+- volg de stappen onder https://docs.evcc.io/en/docs/features/loadmanagement om load-balancing toe te voegen
+
+# C. Edgetech WiFi-module
+## 1. EVSE-SC-01 met CT-klemmen
+*Deze optie is voor mensen die geen slimme meter hebben van het type DSMR5.*
+
+Wilt u zelf toch niet met de aansturing via Modbus aan de gang maar wel zelf alles aanleggen, dan is deze optie geschikt voor u.
+[Hier](installation/site-kl.png) ziet u de configuratie. Voor deze configuratie moet je dus een extra module in de groepenkast plaatsen.
+Verder moet u de CT-klemmen om voedingsaders van de hoofdaansluiting plaatsen.
+
+
+## 2. EVSE-SC-02 met RJ12-kabel
+*Deze optie is voor mensen met een slimme meter van het type DSMR5.*
+
+Met de EVSE-SC-02 kunt u heel snel en eenvoudig load-balancing toevoegen. Voor de rest geldt ook hier dat de juiste Modbus-kabel gebruikt
+moet worden en de handleiding gevolgd moet worden. Omdat er geen stroomklemmen geplaatst hoeven worden en deze module buiten de meterkast
+wordt geplaatst is deze optie eenvoudiger voor de installatie. Ook scheelt het ruimte in de groepenkast.
+[Hier](installation/site-sm-kl.png) ziet u de configuratie.
+
+Voor deze twee opties (EVSE-SC-01 en EVSE-SC-02) zijn de volgende aandachtspunten belangrijk:
+- Let er op dat u de juiste Modbus-kabel gebruikt. Deze kabel is bijvoorbeeld heel geschikt: https://www.elektroproducten.nl/product/stuurstroom-flex-liyy-3x05mm%C2%B2-per-meter/
+- U kunt de handleiding voor de installatie vinden op:  https://github.com/edge-tech-eu/SmartEVSE/tree/main
+- Deze modules maken gebruik van een cloud-server. U kunt deze gratis de eerste 60 dagen gratis gebruiken. Zie voor alle details wat u met het abonnement kunt https://mycharger.edgetech.nl/. Verder kun je ook een API gebruiken om zelf het proces van starten en stoppen van laden aan te sturen, zie informatie hierover op https://mycharger.edgetech.eu/ waarin aansturing vanuit HomeAssistant wordt uitgelegd.  Zonder abonnement werkt load-balancing gewoon verder, maar kunt u niet meer aansturen. We zijn momenteel bezig om ook een lokale API toe te voegen. Meer details volgen op deze pagina's.
