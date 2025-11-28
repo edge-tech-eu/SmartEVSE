@@ -135,7 +135,7 @@ Verder moet u de CT-klemmen om voedingsaders van de hoofdaansluiting plaatsen.
 Met de EVSE-SC-02 kunt u heel snel en eenvoudig load-balancing toevoegen. Voor de rest geldt ook hier dat de juiste Modbus-kabel gebruikt
 moet worden en de handleiding gevolgd moet worden. Omdat er geen stroomklemmen geplaatst hoeven worden en deze module buiten de meterkast
 wordt geplaatst is deze optie eenvoudiger voor de installatie. Ook scheelt het ruimte in de groepenkast.
-[Hier](installation/module-site-sm-kl.png) ziet u de configuratie.
+[Hier](installation/module_site-sm-kl.png) ziet u de configuratie.
 
 Voor deze twee opties (EVSE-SC-01 en EVSE-SC-02) zijn de volgende aandachtspunten belangrijk:
 - Let er op dat u de juiste Modbus-kabel gebruikt. Deze kabel is bijvoorbeeld heel geschikt: https://www.elektroproducten.nl/product/stuurstroom-flex-liyy-3x05mm%C2%B2-per-meter/
