@@ -27,7 +27,7 @@ Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuz
 
 ## LED aansluiten
 Op de laad-module kun je een 5VDc of 12VDC LED aansluiten.
-[Kijk hier](installation/adding_LED_to_charger.pdf) voor het aansluitschema.
+[Kijk hier](installation/adding%20LED%20to%20charger.pdf) voor het aansluitschema.
 
 ## Stappen voor de assemblage
 - Hieronder vind je het overzicht van alle aansluitingen
