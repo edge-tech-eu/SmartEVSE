@@ -11,10 +11,10 @@ Volg de stappen in onderstaande overzicht:
     1. Heeft u een DSMR5 slimme meter? Dan kunt de EVSE-SC-02 module rechtstreeks aan de slimme meter koppelen
     2. Heeft u geen slimme meter of een ouder type? Dan moet de stroom met stroomklemmen (CT) gemeten worden en heeft u type EVSE-SC-01 nodig.
 
-# *Veiligheid*
-Dit document is geschreven voor ervaren hobbyïsten. Dus mensen die op een veilige manier apparaten op een 3-fase voedingskabel kunnen aansluiten.
-Die weten wat aardlekautomaten zijn en de basis-principes kennen voor het aansluiten van grote stroomgebruikers via de meterkast.
-Wij raden altijd aan om wijzigingen in de meterkast door een erkende elektricien uit te laten voeren.
+> [!IMPORTANT]
+> Dit document is geschreven voor ervaren hobbyïsten. Dus mensen die op een veilige manier apparaten op een 3-fase voedingskabel kunnen aansluiten.
+> Die weten wat aardlekautomaten zijn en de basis-principes kennen voor het aansluiten van grote stroomgebruikers via de meterkast.
+> Wij raden altijd aan om wijzigingen in de meterkast door een erkende elektricien uit te laten voeren.
 
 # 1. De Basis-configuratie
 Met de basis-configuratie maak je een laadpunt zonder stroomsturing. Dat betekent dat het laadpunt geen rekening houdt met andere stroomgebruikers in het huis. Dit kan mogelijk voor problemen zorgen bij te grote stroomvraag. Zorg dat je dus alleen laadt op die momenten dat er voldoende capaciteit beschikbaar is. Dat is typisch het geval vanaf ‘s avonds 22 uur tot 4 uur in de ochtend. Houdt dus rekening met moglijk aanwezigheid van warmtepompen, thuis-accu’s en elektrische boilers. De basis-configuratie bestaat uit deze onderdelen:
@@ -26,7 +26,8 @@ Met de basis-configuratie maak je een laadpunt zonder stroomsturing. Dat beteken
 Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuze om de montage-beugels te gebruiken als de standaard-montage van de laad-module niet geschikt is voor jouw situatie.
 
 ## Stappen voor de assemblage
-- [Hier](installation/installation.png) vind je het overzicht van alle aansluitingen
+- Hieronder vind je het overzicht van alle aansluitingen
+![Aansluitiingen](installation/installation.png)
 - Bepaal waar het laadpunt wordt geplaatst.
 - Kies de handige plaats voor montage van de wartels voor de ingaande voedingskabel en uitgaande laadkabel. Boor gaten voor de wartels met een stappenboor. Boor ook gaten in de achterwand voor stevige montage op een muur of paal. Let er op dat je de schroefgaten waterdicht maakt met b.v. een rubberring of druppel kit.
 - Kies de oriëntatie van de laad-module – schroef deze vast of lijm de montagebeugels goed aan de achterwand van de kast.
@@ -40,4 +41,58 @@ Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuz
   - Steek de aders van de voedingskabel in de juiste ingangen, let goed op de kleuren op de grijze connector met 5 ingangen.
   - Verbind de aarde-ader (PE) met de WAGO-connector
   - Controleer dat de aders in de grijze connector onderling GEEN contact maken. Dat kan het geval zijn indien er aders met gevlochten draad gebruikt worden. Dan kunnen losse koper draadjes net buiten de ingang blijven zitten en kortsluiting veroorzaken. Let dus goed op!
-- Ziet alles er goed uit? Dan kun je de aardlekautomaat in groepenkast activeren. Controleer dat het groene LEDje op de laad-module elke 3 seconden knippert. [Zie dit plaatje](installation/LEDs.png) voor de plaats van het groene LEDje.
+- Ziet alles er goed uit? Dan kun je de aardlekautomaat in groepenkast activeren. Controleer dat het groene LEDje op de laad-module elke 3 seconden knippert. Zie hier voor de plaats van het groene LEDje:
+![LEDs](installation/LEDs.png)
+
+# 2. Load-balancing
+Load-balancing is een goed idee om je elektriciteitsaansuiting te beschermen tegen overbelasting. Als je namelijk te lang meer energie gebruikt dan de hoofdzekering aan kan zal deze doorbranden of afslaan. Bij oude zekeringen zul je je netbeheerder moeten bellen om de hoofdzekering te laten vervangen. Dat kost geld en veel tijd. Daarnaast is het ook verstandig om te laden op die momenten dat energie goedkoop is, danwel om het elektriciteitsnetwerk te ontlasten. Kortom, je wilt de tijd en het laden kunnen sturen en dat wordt ook wel load-balancing genoemd. Je kunt kiezen uit één van onderstaande mogelijkheden om load-balancing mogelijk te maken. Natuurlijk kun je de aansturing zelf maken op een platform van jouw keuze.
+
+## A. Ervaren hobbyïst: Raspberry Pi Pico of ESPhome
+Deze optie is geschikt voor mensen met programmeerervaring op bijvoorbeld een Arduino of ESP-platform. Daarnaast moet je een programmeerbare module kiezen die kan worden uitgebreid met een RS485 (Modbus) interface. Wij hebben een Waveshare ESP32-S3 WiFi-module met RS485 getest (https://www.waveshare.com/esp32-s3-relay-1ch.htm). Volg de wiki van Waveshare (https://www.waveshare.com/wiki/ESP32-S3-Relay-1CH) voor de juiste aansluitingen en wijze van het laden van code. Een eenvoudig voorbeeld om de laad-module uit te lezen staat [hier](Controllers/WaveShare_Industrial_ESP32-S3_Control_Board/SocketRequestExample).
+Alle informatie over de laad-module zoals aansluitingen en Modbus-registers staan op [Github](/)
+
+## B. Linux-gebruiker: Raspberry Pi met EVCC
+Deze optie is geschikt voor mensen die wel eens op een Linux-systeem hebben gewerkt en enige ervaring hebben in het gebruik met de command line via een terminal.
+Het voordeel van deze keuze is dat je bijvoorbeeld een Raspberry Pi 3B kunt kiezen waarop ook een slimme meter kan worden aangesloten met een speciale USB-kabel. Voorbeeld configuratie:
+- Raspberry Pi 3B: b.v. bij https://www.kiwi-electronics.com/nl/home/
+- Slimme meter P1-kabel zie: https://www.sossolutions.nl/slimme-meter-kabel
+- Zonder solderen bijvoorbeeld een “Waveshare RS485 CAN HAT”. Waveshare documenteert netjes met een Wiki-pagina hoe je deze voor de Pi moet instellen: https://www.waveshare.com/wiki/RS485_CAN_HAT#RS485_Usage Deze module is te koop bij Tinytronics, https://www.tinytronics.nl/nl/communicatie-en-signalen/serieel/rs-485/waveshare-rs485-can-hat-voor-raspberry-pi
+
+In onderstaande overzicht gaan we uit van een Raspberry Pi model 3B.
+
+In onderstaande overzicht gaan we uit van een Raspberry Pi model 3B.
+
+Volg de onderstaande stappen
+- Gebruik de Raspbian Imager ( https://www.raspberrypi.com/software/ ) om het SD-kaartje voor de Rapsberry te schrijven. Let erop dat je een hostnaam kiest die je terug kunt vinden, bv loadbalancer. Heb je een Pi zonder Ethernet vul dan ook de WiFi-gegevens in zodat je altijd op afstand bij de Pi met ssh.
+- Volg de stappen om de Pi met je netwerk verbonden te krijgen.
+- Open een terminal of login met ssh op de Pi
+- Volg dan de stappen op https://docs.evcc.io/en/docs/installation
+- Kies in de configuratie voor de Edgetech Smart EVSE
+- Kies de juiste adapter voor de Modbus-adaper, Modbus-adres 2, baudrate 9600, 8N1. Dit is een voorbeeld-stuk uit de evcc.yaml file voor de Waveshare adapter:
+
+```configuration
+chargers:
+- type: template
+  template: smartevse
+  id: 2
+  device: /dev/ttyS0
+  baudrate: 9600
+  comset: 8N1
+  modbus: rs485serial
+  name: laadpunt1
+```
+
+- Heb je ook de slimme meter P1-kabel? Dan moet je op de Pi ook het software-pakket ser2net installeren. Volg de handleiding van ser2net om seriële poort via een netwerk-socket bereikbaar te maken.
+Hieronder een voorbeeld van de definitie van de grid-meter in de evcc.yaml file en daaronder een voorbeeld configurtie van ser2net.conf:
+```configuration
+####################
+#blok voor EVCC
+meters:
+- type: template
+  template: dsmr
+  usage: grid
+  host: 127.0.0.1  # host: ser2net
+  port: 2000
+  name: grid
+###################
+```
