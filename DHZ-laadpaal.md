@@ -47,7 +47,7 @@ Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuz
 # 2. Load-balancing
 Load-balancing is een goed idee om je elektriciteitsaansuiting te beschermen tegen overbelasting. Als je namelijk te lang meer energie gebruikt dan de hoofdzekering aan kan zal deze doorbranden of afslaan. Bij oude zekeringen zul je je netbeheerder moeten bellen om de hoofdzekering te laten vervangen. Dat kost geld en veel tijd. Daarnaast is het ook verstandig om te laden op die momenten dat energie goedkoop is, danwel om het elektriciteitsnetwerk te ontlasten. Kortom, je wilt de tijd en het laden kunnen sturen en dat wordt ook wel load-balancing genoemd. Je kunt kiezen uit één van onderstaande mogelijkheden om load-balancing mogelijk te maken. Natuurlijk kun je de aansturing zelf maken op een platform van jouw keuze.
 
-## A. Ervaren hobbyïst: Raspberry Pi Pico of ESPhome
+## A. Ervaren hobbyïst (bv Raspberry Pi Pico of ESPhome)
 Deze optie is geschikt voor mensen met programmeerervaring op bijvoorbeld een Arduino of ESP-platform. Daarnaast moet je een programmeerbare module kiezen die kan worden uitgebreid met een RS485 (Modbus) interface. Wij hebben een Waveshare ESP32-S3 WiFi-module met RS485 getest (https://www.waveshare.com/esp32-s3-relay-1ch.htm). Volg de wiki van Waveshare (https://www.waveshare.com/wiki/ESP32-S3-Relay-1CH) voor de juiste aansluitingen en wijze van het laden van code. Een eenvoudig voorbeeld om de laad-module uit te lezen staat [hier](Controllers/WaveShare_Industrial_ESP32-S3_Control_Board/SocketRequestExample).
 Alle informatie over de laad-module zoals aansluitingen en Modbus-registers staan op [Github](/)
 
