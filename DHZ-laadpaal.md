@@ -26,7 +26,8 @@ Met de basis-configuratie maak je een laadpunt zonder stroomsturing. Dat beteken
 Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuze om de montage-beugels te gebruiken als de standaard-montage van de laad-module niet geschikt is voor jouw situatie.
 
 ## LED aansluiten
-Op de laad-module kun je een 5VDc of 12VDC LED aansluiten. [Kijk hier](installation/adding LED to charger.pdf) voor het aansluitschema.
+Op de laad-module kun je een 5VDc of 12VDC LED aansluiten.
+[Kijk hier](installation/adding_LED_to_charger.pdf) voor het aansluitschema.
 
 ## Stappen voor de assemblage
 - Hieronder vind je het overzicht van alle aansluitingen
