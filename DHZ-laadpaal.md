@@ -5,11 +5,11 @@ We zullen je nu stap voor stap helpen om alles in elkaar te zetten.
 Volg de stappen in onderstaande overzicht:
 1. [De basis-configuratie](installation/module-kl.png) – de “domme laadpaal”, dus zonder stroomsturing (load-balancing)
 2. Met stroomsturing (load-balancing). Kies dan uit één van onderstaande opties:
-  - Gebruik een ESP-device of een Pi-pico gekoppeld aan de een DSMR 4 of 5  slimme meter en verbind deze via een RS485-kabel (Modbus) aan het laadstation
-  - Gebruik een Raspberry Pi mini-computer met USB-kabel aan een DSMR 4 of 5 slimme meter en een RS485-interface. Gebruik het pakket EVCC om het laadstation aan te sturen
-  - Gebruik de Edgetech WiFi-module:
-    1. Heeft u een DSMR5 slimme meter? Dan kunt de EVSE-SC-02 module rechtstreeks aan de slimme meter koppelen
-    2. Heeft u geen slimme meter of een ouder type? Dan moet de stroom met stroomklemmen (CT) gemeten worden en heeft u type EVSE-SC-01 nodig.
+    - Gebruik een ESP-device of een Pi-pico gekoppeld aan de een DSMR 4 of 5  slimme meter en verbind deze via een RS485-kabel (Modbus) aan het laadstation
+    - Gebruik een Raspberry Pi mini-computer met USB-kabel aan een DSMR 4 of 5 slimme meter en een RS485-interface. Gebruik het pakket EVCC om het laadstation aan te sturen
+    - Gebruik de Edgetech WiFi-module:
+      1. Heeft u een DSMR5 slimme meter? Dan kunt de EVSE-SC-02 module rechtstreeks aan de slimme meter koppelen
+      2. Heeft u geen slimme meter of een ouder type? Dan moet de stroom met stroomklemmen (CT) gemeten worden en heeft u type EVSE-SC-01 nodig.
 
 > [!IMPORTANT]
 > Dit document is geschreven voor ervaren hobbyïsten. Dus mensen die op een veilige manier apparaten op een 3-fase voedingskabel kunnen aansluiten.
