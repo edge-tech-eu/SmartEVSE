@@ -8,4 +8,4 @@ Installation.png is an quick overview on how to install the SmartEVSE
 
 SmartEVSE mounts can be found in the '3d' folder
 
-Are you looking for the guidelines on building your own charge point? Then continue [here](DHZ-laadpaal.md) (that document is in Dutch)
+Are you looking for the guidelines on building your own charge point? Then continue [here](DHZ-laadpaal.md) (that document is in Dutch).
