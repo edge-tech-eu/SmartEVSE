@@ -3,7 +3,7 @@ Kijk, wij hebben alle voorbereidingen voor je gedaan!
 We zullen je nu stap voor stap helpen om alles in elkaar te zetten.
 
 Volg de stappen in onderstaande overzicht:
-1. De basis-configuratie – de “domme laadpaal”, dus zonder stroomsturing (load-balancing)
+1. [De basis-configuratie](installation/module-kl.png) – de “domme laadpaal”, dus zonder stroomsturing (load-balancing)
 2. Met stroomsturing (load-balancing). Kies dan uit één van onderstaande opties:
   - Gebruik een ESP-device of een Pi-pico gekoppeld aan de een DSMR 4 of 5  slimme meter en verbind deze via een RS485-kabel (Modbus) aan het laadstation
   - Gebruik een Raspberry Pi mini-computer met USB-kabel aan een DSMR 4 of 5 slimme meter en een RS485-interface. Gebruik het pakket EVCC om het laadstation aan te sturen
@@ -26,8 +26,7 @@ Met de basis-configuratie maak je een laadpunt zonder stroomsturing. Dat beteken
 Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuze om de montage-beugels te gebruiken als de standaard-montage van de laad-module niet geschikt is voor jouw situatie.
 
 ## Stappen voor de assemblage
-- Hieronder het overzicht van alle aansluitingen:
-[Aansluitingen](installation/installation.png)
+- [Hier](installation/installation.png) vind je het overzicht van alle aansluitingen
 - Bepaal waar het laadpunt wordt geplaatst.
 - Kies de handige plaats voor montage van de wartels voor de ingaande voedingskabel en uitgaande laadkabel. Boor gaten voor de wartels met een stappenboor. Boor ook gaten in de achterwand voor stevige montage op een muur of paal. Let er op dat je de schroefgaten waterdicht maakt met b.v. een rubberring of druppel kit.
 - Kies de oriëntatie van de laad-module – schroef deze vast of lijm de montagebeugels goed aan de achterwand van de kast.
@@ -41,4 +40,4 @@ Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuz
   - Steek de aders van de voedingskabel in de juiste ingangen, let goed op de kleuren op de grijze connector met 5 ingangen.
   - Verbind de aarde-ader (PE) met de WAGO-connector
   - Controleer dat de aders in de grijze connector onderling GEEN contact maken. Dat kan het geval zijn indien er aders met gevlochten draad gebruikt worden. Dan kunnen losse koper draadjes net buiten de ingang blijven zitten en kortsluiting veroorzaken. Let dus goed op!
-- Ziet alles er goed uit? Dan kun je de aardlekautomaat in groepenkast activeren. Controleer dat het groene LEDje op de laad-module elke 3 seconden knippert. Zie onderstaand plaatje voor de plaats van het groene LEDje.
+- Ziet alles er goed uit? Dan kun je de aardlekautomaat in groepenkast activeren. Controleer dat het groene LEDje op de laad-module elke 3 seconden knippert. [Zie dit plaatje](installation/LEDs.png) voor de plaats van het groene LEDje.
