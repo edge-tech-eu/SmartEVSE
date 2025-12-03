@@ -1,1 +1,1 @@
-# Get day-ahead electricity pricing from ENTSO-E
+# Get day-ahead electricity pricing from ENTSO-e
