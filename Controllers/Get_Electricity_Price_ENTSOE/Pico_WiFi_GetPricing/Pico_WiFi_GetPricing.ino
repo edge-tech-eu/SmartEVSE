@@ -1,3 +1,22 @@
+/* 
+    This is example code to show how to get the day-ahead electricity prices from ENTSO-e
+    Use this code to make your own evse controller and charge your car at lowest cost
+
+    You need a security key from ENTO-e, see ENTSOe.cpp
+
+    Board used:
+    - Raspberrry Pi Pico 2W - from Raspberry Pi Pico/RP2040/RP2350
+
+    Libraries used:
+    - WiFi v1.0.0 (from package RP2040)
+    - HTTPClient v1.2 (from package RP2040)
+    - NTPClient v3.2.1 - to get the time
+    - RTClib v2.1.4    - to convert epoch in date
+
+    Contact us if you help controlling our evse: https://edgetech.eu/
+
+    Edge Technologies
+*/
 #include <Arduino.h>
 #include <NTPClient.h>
 #include <WiFi.h>
