@@ -1,3 +1,18 @@
+/*
+
+  Board uses:
+  - Raspberry Pi Pico 2W
+  - WaveShare 2-Channel RS485 Module for Pico: https://www.waveshare.com/pico-2ch-rs485.htm
+
+  Documentation:
+  - https://github.com/edge-tech-eu/SmartEVSE/blob/main/ModBusRegisters.pdf
+  - https://arduino-pico.readthedocs.io/en/latest/
+
+  Contact us if you help controlling our evse: https://edgetech.eu/
+
+    your friends @ Edge Technologies  
+
+*/
 #include <Arduino.h>
 #include "ModBus.h"
 #include "SmartEVSE.h"
