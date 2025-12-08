@@ -83,8 +83,26 @@ void smart_evse_get_state(int address) {
       int state = states & 0xff;
       int error = (states >> 8) & 0xff;
 
-      Serial.printf("state %d\r\n", state);
-      Serial.printf("error %d\r\n", error);
+      switch(state) {
+        case 0: Serial.printf("state undefined\r\n"); break;
+        case 1: Serial.printf("state A\r\n"); break;
+        case 2: Serial.printf("state B\r\n"); break;
+        case 3: Serial.printf("state C\r\n"); break;
+        case 4: Serial.printf("state D\r\n"); break;
+        case 5: Serial.printf("state ERROR\r\n"); break;
+        case 6: Serial.printf("hardware error\r\n"); break;
+        default: Serial.printf("weird state (%d)\r\n", state); break;
+      }
+
+      // if(error == 0x00) {Serial.printf("no errors\r\n");}
+      if(error&0x01) {Serial.printf("temperature too high\r\n");}
+      if(error&0x02) {Serial.printf("stuck relay\r\n");}
+      if(error&0x04) {Serial.printf("ground fault\r\n");}
+      if(error&0x08) {Serial.printf("cp max too low\r\n");}
+      if(error&0x10) {Serial.printf("cp min too high\r\n");}
+      if(error&0x20) {Serial.printf("dc leak detected\r\n");}
+      if(error&0x40) {Serial.printf("i2c initialize error\r\n");}
+      if(error&0x80) {Serial.printf("i2c communication error\r\n");}
 
     } else {
 
