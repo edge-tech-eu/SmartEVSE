@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include "ModBus.h"
+#include "SmartEVSE.h"
+
+#define ADDRESS 1
 
 Modbus mb = Modbus();
 
@@ -12,7 +15,6 @@ void setup() {
 
   Serial.printf("\r\n\r\nTesting Controlling Charger\r\nusing WaveShare 2 CH Rs495...\r\n\r\n");
 
-  // modbus serial, mode and pins hard-coded
   mb.begin(9600);
 
   next_time = millis() + 1000;
@@ -26,21 +28,10 @@ unsigned long now = millis();
     
     next_time += 5000;
 
-    Serial.printf("Request serial and fw version\r\n");
+    Serial.printf("Request serial and fw version:\r\n");
 
-    if (mb.readInputRegisters(1, 0, 6) == mb.ku8MBSuccess) {
-      
-      Serial.printf("serial: %4x%4x%4x%4x%4x, fw version: %4x\r\n",
-        mb.getResponseBuffer(0),
-        mb.getResponseBuffer(1),
-        mb.getResponseBuffer(2),
-        mb.getResponseBuffer(3),
-        mb.getResponseBuffer(4),
-        mb.getResponseBuffer(5));
-
-    } else {
-
-      Serial.printf("failed to read over mb\r\n");
-    }
+    smart_evse_get_serial(ADDRESS);
+  
+    smart_evse_get_fw_version(ADDRESS);
   }
 }
