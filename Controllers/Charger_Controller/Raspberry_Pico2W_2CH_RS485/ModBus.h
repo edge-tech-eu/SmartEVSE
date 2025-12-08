@@ -33,8 +33,8 @@ Arduino library for communicating with Modbus slaves over RS232/485 (via RTU pro
 */
 
   
-#ifndef ModBus_h
-#define ModBus_h
+#ifndef MODBUS_h
+#define MODBUS_h
 
 // adapted and hardcoded for WaveShare ESP32_S3_Relay_1CH
 
@@ -69,14 +69,14 @@ Macro to generate 32-bit integer from (2) 16-bit words.
 //#include <util/crc16.h>
 
 
-
+/*
 #define lowByte(w)					 ((w) & 0xFF)
 #define highByte(w)					(((w) >> 8) & 0xFF)
 #define bitRead(value, bit)			(((value) >> (bit)) & 0x01)
 #define bitSet(value, bit)			 ((value) |= (1UL << (bit)))
 #define bitClear(value, bit)		   ((value) &= ~(1UL << (bit)))
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
-
+*/
 
 /* _____CLASS DEFINITIONS____________________________________________________ */
 /**
