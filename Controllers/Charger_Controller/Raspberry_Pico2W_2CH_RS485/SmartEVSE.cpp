@@ -1,8 +1,7 @@
+
 #include <Arduino.h>
 #include "ModBus.h"
 #include "SmartEVSE.h"
-
-// see: https://github.com/edge-tech-eu/SmartEVSE/blob/main/ModBusRegisters.pdf
 
 extern Modbus mb;
 
