@@ -42,18 +42,18 @@ void setup() {
   
   smart_evse_get_fw_version(ADDRESS);
 
+  smart_evse_get_max_currents(ADDRESS);
+
   next_time = millis() + 1000;
 }
 
 void loop() {
   
-unsigned long now = millis();
+  unsigned long now = millis();
 
   if(now > next_time) {
     
     next_time += 5000;
-
-    Serial.printf("Request serial and fw version:\r\n");
 
     smart_evse_get_state(ADDRESS);
 
