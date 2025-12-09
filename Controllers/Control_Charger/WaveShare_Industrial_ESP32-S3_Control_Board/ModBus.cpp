@@ -40,6 +40,10 @@ Arduino library for communicating with Modbus slaves over RS232/485 (via RTU pro
 // using automatic rs485 (UART_MODE_RS485_HALF_DUPLEX, MBUseEnablePin = 0)
 // logging: printf
 
+#ifndef ARDUINO_ESP32S3_DEV
+#error ModBus.cpp adapted to ESP32S3, check out other examples for other architectures
+#endif
+
 #define TXD1              17
 #define RXD1              18
 #define TXD1EN            21

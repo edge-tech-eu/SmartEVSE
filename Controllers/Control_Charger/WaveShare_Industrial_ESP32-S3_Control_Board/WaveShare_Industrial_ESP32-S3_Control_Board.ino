@@ -1,6 +1,6 @@
 /*
 
-  Board: ESP32 S3 Relay 1CH
+  Board: esp32: ESP32 S3 Relay 1CH
   - ESP32S3 Dev Module
   - Flash Size: 8MB (64Mb)
   - Partition Scheme: 8M with spiffs (3M APP/1.5MB SPIFFS)
@@ -16,8 +16,14 @@
 
 */
 #include <HardwareSerial.h>
-#include "Arduino.h"
+#include <Arduino.h>
 #include "ModBus.h"
+#include "SmartEVSE.h"
+
+// the default address of the EdgeTech EVSE has modbus address 1
+// be aware that when the address is still 1, the board needs a state change t respond to modbus
+
+#define ADDRESS 1
 
 Modbus mb = Modbus();
 
@@ -43,7 +49,7 @@ void loop() {
 
     printf("Request serial and fw version\r\n");
 
-    if (mb.readInputRegisters(1, 0, 6) == mb.ku8MBSuccess) {
+    if (mb.readInputRegisters(ADDRESS, 0, 6) == mb.ku8MBSuccess) {
       
       printf("serial: %4x%4x%4x%4x%4x, fw version: %4x\r\n",
         mb.getResponseBuffer(0),
