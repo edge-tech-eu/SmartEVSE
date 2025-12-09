@@ -20,6 +20,10 @@ void smart_evse_get_serial(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -32,6 +36,10 @@ void smart_evse_get_fw_version(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -51,6 +59,10 @@ void smart_evse_persist_settings(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -70,6 +82,10 @@ void smart_evse_get_max_currents(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -107,6 +123,10 @@ void smart_evse_get_state(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -122,6 +142,10 @@ void smart_evse_get_temperature(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -137,6 +161,10 @@ void smart_evse_get_current_draw(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -150,6 +178,10 @@ void smart_evse_get_session_energy(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -164,6 +196,10 @@ void smart_evse_get_output_voltage(int address) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -176,6 +212,10 @@ void smart_evse_set_max_current(int address, int max_current, int max_current_ne
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
@@ -188,6 +228,10 @@ void smart_evse_set_magic(int address, int magic) {
     } else {
 
       Serial.printf("failed to read over mb\r\n");
+
+      if(address == 1) {
+        Serial.printf("try state change with button on the board\r\n");
+      }
     }
 }
 
