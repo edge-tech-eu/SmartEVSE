@@ -78,7 +78,6 @@ You can connect a 5VDC or 12VDC LED to the charging module.
 ![LEDs](installation/LEDs.png)
 
 > [!IMPORTANT]
-
 > If the red LED flashes, check that the earth is properly connected, both to the charging module and to the earth of the house.
 
 
