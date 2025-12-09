@@ -1,14 +1,58 @@
 #include <Arduino.h>
 #include "ModBus.h"
 
-// ModBus.cpp adapted to Raspberry Pico
+#ifdef ARDUINO_ARCH_RP2040
 
-#ifndef ARDUINO_ARCH_RP2040
-#error ModBus.cpp adapted to Raspberry Pico, check out other examples for other architectures
+	#define TXD1 4
+	#define RXD1 5
+
+	// use UART1 / Serial2
+	#define SERIAL_RS485	Serial2
+	#define DEBUG_PRINTF	Serial.printf
+
+	void Modbus::begin(uint16_t u16BaudRate) {
+
+		_u8TransmitBufferIndex = 0;
+		u16TransmitBufferLength = 0;
+
+		SERIAL_RS485.setTX(TXD1);
+		SERIAL_RS485.setRX(RXD1);
+		SERIAL_RS485.begin(u16BaudRate);
+	}
+
+#elif ARDUINO_ESP32S3_DEV
+
+	#define TXD1              17
+	#define RXD1              18
+	#define TXD1EN            21
+
+	HardwareSerial MBSerial(1);
+
+	#define SERIAL_RS485	MBSerial
+	#define DEBUG_PRINTF	printf
+	
+
+	void Modbus::begin(uint16_t u16BaudRate) {
+
+		_u8TransmitBufferIndex = 0;
+		u16TransmitBufferLength = 0;
+		
+		MBSerial.begin(u16BaudRate, SERIAL_8N1, RXD1, TXD1);
+
+		if (!MBSerial.setPins(-1, -1, -1, TXD1EN)) {
+			DEBUG_PRINTF("Failed to set TXDEN pins\r\n");
+		}
+
+		if (!MBSerial.setMode(UART_MODE_RS485_HALF_DUPLEX)) {
+			DEBUG_PRINTF("Failed to set RS485 mode\r\n");
+		}
+	}
+
+#else
+
+	#error ModBus.cpp needs to be adapted to architecture and rs485 interface, please check/add your combination
+
 #endif
-
-#define TXD1 4
-#define RXD1 5
 
 
 uint8_t u8ModbusADU[256];
@@ -42,16 +86,6 @@ Modbus::Modbus(void) {
 
 void Modbus::begin(void) {
 	begin(9600);
-}
-
-void Modbus::begin(uint16_t u16BaudRate) {
-	_u8TransmitBufferIndex = 0;
-	u16TransmitBufferLength = 0;
-
-	// use UART1 / Serial2
-	Serial2.setTX(TXD1);
-	Serial2.setRX(RXD1);
-	Serial2.begin(u16BaudRate);
 }
 
 
@@ -345,49 +379,49 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 	int extranuousBytesRead;
 
 	// clear reading bufffer
-	Serial2.setTimeout(4);
+	SERIAL_RS485.setTimeout(4);
 	do {
-		extranuousBytesRead = Serial2.readBytes(dumpBuffer, 10);
+		extranuousBytesRead = SERIAL_RS485.readBytes(dumpBuffer, 10);
 	} while (extranuousBytesRead == 10);
 
 	// Transmit request
-	Serial2.write(u8ModbusADU, u8ModbusADUSize);
+	SERIAL_RS485.write(u8ModbusADU, u8ModbusADUSize);
 
 	u8ModbusADUSize = 0;
 
 	// Wait for transmission to get completed
-	Serial2.flush();
+	SERIAL_RS485.flush();
 
 	// read 1 byte, needs to slave address otherwise assume noise
-	Serial2.setTimeout(40);
+	SERIAL_RS485.setTimeout(40);
 	int maxReads = 5;
 	u8ModbusADU[0] = 0;
 	do {
-		u8ModbusADUSize = Serial2.readBytes((char *)u8ModbusADU, 1);
+		u8ModbusADUSize = SERIAL_RS485.readBytes((char *)u8ModbusADU, 1);
 		maxReads--;
 	} while ((u8ModbusADU[0] != u8MBSlave) && (maxReads > 0));
 
 	// Read 5 bytes function code, 1+1.5 ms each = 12.5ms
-	Serial2.setTimeout(20);
-	u8ModbusADUSize += Serial2.readBytes((char *)(&u8ModbusADU[1]), 4);
+	SERIAL_RS485.setTimeout(20);
+	u8ModbusADUSize += SERIAL_RS485.readBytes((char *)(&u8ModbusADU[1]), 4);
 
 	if (u8ModbusADUSize != 5) {
 		u8MBStatus = ku8MBResponseTimedOut;
-		printf("mb: read adu failed, size %d != 5\r\n", u8ModbusADUSize);
+		DEBUG_PRINTF("mb: read adu failed, size %d != 5\r\n", u8ModbusADUSize);
 	} else {
 		if (u8ModbusADU[0] != u8MBSlave) {
 			u8MBStatus = ku8MBInvalidSlaveID;
-			printf("mb: invalid slave id\r\n");
+			DEBUG_PRINTF("mb: invalid slave id\r\n");
 		}
 
 		if ((u8ModbusADU[1] & 0x7F) != u8MBFunction) {
 			u8MBStatus = ku8MBInvalidFunction;
-			printf("mb: invalid function\r\n");
+			DEBUG_PRINTF("mb: invalid function\r\n");
 		}
 
 		if (bitRead(u8ModbusADU[1], 7)) {
 			u8MBStatus = u8ModbusADU[2];
-			printf("mb: exception %d\r\n", (int)u8MBStatus);
+			DEBUG_PRINTF("mb: exception %d\r\n", (int)u8MBStatus);
 		}
 	}
 
@@ -419,15 +453,15 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 		}
 
 		// Set timeout and read remaining data
-		Serial2.setTimeout(u8BytesLeft * 2);
-		int bytesRead = Serial2.readBytes((char *)(u8ModbusADU + 5), u8BytesLeft);
+		SERIAL_RS485.setTimeout(u8BytesLeft * 2);
+		int bytesRead = SERIAL_RS485.readBytes((char *)(u8ModbusADU + 5), u8BytesLeft);
 
 		u8ModbusADUSize += bytesRead;
 
 		if (bytesRead != u8BytesLeft) {
 
 			u8MBStatus = ku8MBResponseTimedOut;
-			printf("mb: data read %d != %d\r\n", bytesRead, u8BytesLeft);
+			DEBUG_PRINTF("mb: data read %d != %d\r\n", bytesRead, u8BytesLeft);
 
 		} else {
 
@@ -440,7 +474,7 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 			// verify CRC
 			if (lowByte(u16CRC) != u8ModbusADU[u8ModbusADUSize - 2] || highByte(u16CRC) != u8ModbusADU[u8ModbusADUSize - 1]) {
 				u8MBStatus = ku8MBInvalidCRC;
-				printf("mb: invalid crc\r\n");
+				DEBUG_PRINTF("mb: invalid crc\r\n");
 			}
 		}
 	}
