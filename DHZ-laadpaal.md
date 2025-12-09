@@ -23,6 +23,7 @@ Met de basis-configuratie maak je een laadpunt zonder stroomsturing. Dat beteken
 - laadkabel
 - behuizing en wartels
 - montage-beugels
+
 Je kunt deze behuizing zelf eenvoudig in elkaar zetten. Je hebt zelf nog de keuze om de montage-beugels te gebruiken als de standaard-montage van de laad-module niet geschikt is voor jouw situatie.
 
 ## LED aansluiten
