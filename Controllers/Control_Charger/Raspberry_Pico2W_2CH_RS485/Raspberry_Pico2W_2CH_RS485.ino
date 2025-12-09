@@ -1,7 +1,7 @@
 /*
 
   Board: Raspberry Pi Pico/RP2040/RP2350: Raspberry Pi Pico 2W
-  - with WaveShare 2-Channel RS485 Module for Pico 
+  - with: WaveShare 2-Channel RS485 Module for Pico 
 
   Documentation:
   - https://www.waveshare.com/pico-2ch-rs485.htm
