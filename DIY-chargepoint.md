@@ -20,15 +20,10 @@ Follow the steps in the overview below:
 With the basic configuration, you create a charging point without power control. This means that the charging point does not take other power users in the house into account. This can potentially cause problems if the power demand is too high. Therefore, ensure that you only charge when there is sufficient capacity available. This is typically the case from 10 p.m. to 4 a.m. Take into account the possible presence of heat pumps, home batteries and electric boilers. The basic configuration consists of the following components:
 
 - charging module
-
 - DC earth leakage module with connection cable
-
 - charging cable
-
 - housing and cable glands
-
 - mounting brackets
-
 
 You can easily assemble this housing yourself. You also have the option of using the mounting brackets if the standard mounting of the charging module is not suitable for your situation.
 
@@ -44,7 +39,7 @@ You can connect a 5VDC or 12VDC LED to the charging module.
 
 - Below is an overview of all connections
 
-![Connections](installation/connecting-charger-module.png)
+![Connections](installation/aansluiten-laadmodule.png)
 
 - Decide where to place the charging point. We recommend always installing a Modbus cable alongside the power cable. Make sure you use the **correct Modbus cable**. This cable, for example, is very suitable: https://www.elektroproducten.nl/product/stuurstroom-flex-liyy-3x05mm%C2%B2-per-meter/
 
