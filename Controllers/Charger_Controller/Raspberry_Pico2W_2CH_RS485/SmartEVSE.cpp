@@ -85,10 +85,10 @@ void smart_evse_get_state(int address) {
 
       switch(state) {
         case 0: Serial.printf("state undefined\r\n"); break;
-        case 1: Serial.printf("state A\r\n"); break;
-        case 2: Serial.printf("state B\r\n"); break;
-        case 3: Serial.printf("state C\r\n"); break;
-        case 4: Serial.printf("state D\r\n"); break;
+        case 1: Serial.printf("state A, no car connected\r\n"); break;
+        case 2: Serial.printf("state B, car connected, not charging\r\n"); break;
+        case 3: Serial.printf("state C, car connected, charging\r\n"); break;
+        case 4: Serial.printf("state D, car connected, charging, ventilation requited\r\n"); break;
         case 5: Serial.printf("state ERROR\r\n"); break;
         case 6: Serial.printf("hardware error\r\n"); break;
         default: Serial.printf("weird state (%d)\r\n", state); break;
@@ -117,7 +117,7 @@ void smart_evse_get_temperature(int address) {
       
       int temperature = mb.getResponseBuffer(0);
 
-      Serial.printf("temperature %d\r\n", temperature);
+      Serial.printf("board temperature %d\r\n", temperature);
 
     } else {
 
