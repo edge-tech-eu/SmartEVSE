@@ -54,17 +54,21 @@ Op de laad-module kun je een 5VDc of 12VDC LED aansluiten.
 ## Test met het opladen van een auto
 Als u bovenstaande stappen heeft gevolgd en het LEDje op de laad-module groen knippert dan kunt u gaan controleren of uw auto opgeladen kan worden. Sluit de laadkabel op de auto aan. Gaat de auto laden? Gefeliciteerd! Is dat niet het geval kijk dan op de laad-module en controleer of de rode LED af & toe knippert. Afhankelijk van de volgorde van knipperen kunt u bepalen wat de fout is:
 
-| Conditie                                      | Weergave rode LED                         |
-|-----------------------------------------------|-------------------------------------------|
-| Fout bij opstarten (00000001)                 | Heel lang uit, erg kort aan               |
-| Temperatuur hoog (10010000)                   | Kort aan, kort uit, kort aan, lang uit    |
-| Temperatuur te hoog, laden gestopt (10011000) | Kort aan, kort uit, 2x kort aan, lang uit |
+| Conditie                                      | Weergave rode LED                                             |
+|-----------------------------------------------|---------------------------------------------------------------|
+| Fout bij opstarten (00000001)                 | Heel lang uit, erg kort aan                                   |
+| Temperatuur hoog (10010000)                   | Kort aan, kort uit, kort aan, lang uit                        |
+| Temperatuur te hoog, laden gestopt (10011000) | Kort aan, kort uit, 2x kort aan, lang uit                     |
+| Geen aarde aangesloten (10011100)             | Kort aan, kort uit, 3x kort aan, even uit                     |
+| Relais blijft ingeschakeld (10011110)         | Kort aan, kort uit, 4x kort aan, kort uit                     |
+| DC-aardlek (10010110)                         | Kort aan, kort uit, kort aan, kort uit, 2x kort aan, kort uit |
+| Ok                                            | Continue uit                                                  |
 
 # 2. Load-balancing
 Load-balancing is een goed idee om je elektriciteitsaansuiting te beschermen tegen overbelasting. Als je namelijk te lang meer energie gebruikt dan de hoofdzekering aan kan zal deze doorbranden of afslaan. Bij oude zekeringen zul je je netbeheerder moeten bellen om de hoofdzekering te laten vervangen. Dat kost geld en veel tijd. Daarnaast is het ook verstandig om te laden op die momenten dat energie goedkoop is, danwel om het elektriciteitsnetwerk te ontlasten. Kortom, je wilt de tijd en het laden kunnen sturen en dat wordt ook wel load-balancing genoemd. Je kunt kiezen uit één van onderstaande mogelijkheden om load-balancing mogelijk te maken. Natuurlijk kun je de aansturing zelf maken op een platform van jouw keuze.
 
 ## A. Ervaren hobbyïst (bv Raspberry Pi Pico of ESPhome)
-Deze optie is geschikt voor mensen met programmeerervaring op bijvoorbeld een Arduino of ESP-platform. Daarnaast moet je een programmeerbare module kiezen die kan worden uitgebreid met een RS485 (Modbus) interface. Wij hebben een Waveshare ESP32-S3 WiFi-module met RS485 getest (https://www.waveshare.com/esp32-s3-relay-1ch.htm). Volg de wiki van Waveshare (https://www.waveshare.com/wiki/ESP32-S3-Relay-1CH) voor de juiste aansluitingen en wijze van het laden van code. Een eenvoudig voorbeeld om de laad-module uit te lezen staat [hier](Controllers/WaveShare_Industrial_ESP32-S3_Control_Board/SocketRequestExample).
+Deze optie is geschikt voor mensen met programmeerervaring op bijvoorbeld een Arduino of ESP-platform. Daarnaast moet je een programmeerbare module kiezen die kan worden uitgebreid met een RS485 (Modbus) interface. Wij hebben een Waveshare ESP32-S3 WiFi-module met RS485 getest (https://www.waveshare.com/esp32-s3-relay-1ch.htm). Volg de wiki van Waveshare (https://www.waveshare.com/wiki/ESP32-S3-Relay-1CH) voor de juiste aansluitingen en wijze van het laden van code. Een eenvoudig voorbeeld om de laad-module uit te lezen staat [hier](Controllers).
 Alle informatie over de laad-module zoals aansluitingen en Modbus-registers staan op [Github](/)
 
 ## B. Linux-gebruiker: Raspberry Pi met EVCC
