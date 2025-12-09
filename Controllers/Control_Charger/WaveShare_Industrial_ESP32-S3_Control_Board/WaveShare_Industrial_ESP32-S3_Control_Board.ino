@@ -17,8 +17,10 @@
 */
 #include <HardwareSerial.h>
 #include <Arduino.h>
+#include "DebugPrintf.h"
 #include "ModBus.h"
 #include "SmartEVSE.h"
+
 
 // the default address of the EdgeTech EVSE has modbus address 1
 // be aware that when the address is still 1, the board needs a state change t respond to modbus
@@ -31,13 +33,24 @@ unsigned long next_time;
 
 void setup() {
 
-  printf("\r\n\r\nBoard: ESP32 S3 Relay 1CH\r\nTesting ModBus\r\n");
+  DEBUG_PRINTF("\r\n\r\nBoard: ESP32 S3 Relay 1CH\r\nTesting ModBus\r\n");
 
   // modbus serial, mode and pins hard-coded
   mb.begin(9600);
 
+  delay(2500);
+
+  DEBUG_PRINTF("Request serial and fw version:\r\n");
+
+  smart_evse_get_serial(ADDRESS);
+  
+  smart_evse_get_fw_version(ADDRESS);
+
+  smart_evse_get_max_currents(ADDRESS);
+
   next_time = millis() + 1000;
 }
+
 
 void loop() {
   
@@ -47,22 +60,8 @@ void loop() {
     
     next_time += 5000;
 
-    printf("Request serial and fw version\r\n");
+    smart_evse_get_state(ADDRESS);
 
-    if (mb.readInputRegisters(ADDRESS, 0, 6) == mb.ku8MBSuccess) {
-      
-      printf("serial: %4x%4x%4x%4x%4x, fw version: %4x\r\n",
-        mb.getResponseBuffer(0),
-        mb.getResponseBuffer(1),
-        mb.getResponseBuffer(2),
-        mb.getResponseBuffer(3),
-        mb.getResponseBuffer(4),
-        mb.getResponseBuffer(5));
-
-    } else {
-
-      printf("failed to read over mb");
-    }
+    smart_evse_get_temperature(ADDRESS);
   }
-
 }
