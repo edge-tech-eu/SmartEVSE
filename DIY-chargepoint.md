@@ -89,7 +89,7 @@ Is the car charging? Congratulations! If not, check the charging module and see 
 is flashing occasionally. Depending on the flashing pattern, you can determine what the fault is:
 
 | Condition                                         | Red LED display                                                  |
-| ------------------------------------------------- | --------------------------------- ------------------------------ |
+| ------------------------------------------------- | ---------------------------------------------------------------- |
 | Start-up error (00000001)                         | Very long off, very short on                                     |
 | High temperature (10010000)                       | Short on, short off, short on, long off                          |
 | Temperature too high, charging stopped (10011000) | Short on, short off, 2x short on, long off                       |
