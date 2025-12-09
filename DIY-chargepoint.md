@@ -83,12 +83,13 @@ You can connect a 5VDC or 12VDC LED to the charging module.
 
 ## Test by charging a car
 
-If you have followed the above steps and the LED on the charging module is flashing green, you can check whether your car can be charged. Connect the charging cable to the car. Is the car charging? Congratulations! If not, check the charging module and see if the red LED is flashing occasionally. Depending on the flashing pattern, you can determine what the fault is:
-
-
+If you have followed the above steps and the LED on the charging module is flashing green,
+you can check whether your car can be charged. Connect the charging cable to the car.
+Is the car charging? Congratulations! If not, check the charging module and see if the red LED
+is flashing occasionally. Depending on the flashing pattern, you can determine what the fault is:
 
 | Condition                                         | Red LED display                                                  |
-|---------------------------------------------------|---------------------------------- -------------------------------|
+| ------------------------------------------------- | --------------------------------- ------------------------------ |
 | Start-up error (00000001)                         | Very long off, very short on                                     |
 | High temperature (10010000)                       | Short on, short off, short on, long off                          |
 | Temperature too high, charging stopped (10011000) | Short on, short off, 2x short on, long off                       |
@@ -96,3 +97,4 @@ If you have followed the above steps and the LED on the charging module is flash
 | Relay remains switched on (10011110)              | Short on, short off, 4x short on, short off                      |
 | DC earth fault (10010110)                         | Short on, short off, short on, short off, 2x short on, short off |
 | OK                                                | Continuous off                                                   |
+
