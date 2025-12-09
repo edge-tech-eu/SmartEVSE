@@ -1,5 +1,7 @@
 #include <Arduino.h>
+#include "DebugPrintf.h"
 #include "ModBus.h"
+
 
 #ifdef ARDUINO_ARCH_RP2040
 
@@ -8,8 +10,7 @@
 
 	// use UART1 / Serial2
 	#define SERIAL_RS485	Serial2
-	#define DEBUG_PRINTF	Serial.printf
-
+	
 	void Modbus::begin(uint16_t u16BaudRate) {
 
 		_u8TransmitBufferIndex = 0;
@@ -28,9 +29,7 @@
 
 	HardwareSerial MBSerial(1);
 
-	#define SERIAL_RS485	MBSerial
-	#define DEBUG_PRINTF	printf
-	
+	#define SERIAL_RS485	MBSerial	
 
 	void Modbus::begin(uint16_t u16BaudRate) {
 
