@@ -1,19 +1,23 @@
+/*
+
+  Board: ESP32 S3 Relay 1CH
+  - ESP32S3 Dev Module
+  - Flash Size: 8MB (64Mb)
+  - Partition Scheme: 8M with spiffs (3M APP/1.5MB SPIFFS)
+  
+  Documentation:
+  - https://www.waveshare.com/esp32-s3-rs485-can.htm
+  - https://files.waveshare.com/wiki/ESP32-S3-Relay-1CH/ESP32-S3-Relay-1CH-schematic.pdf
+  - https://www.waveshare.com/wiki/ESP32-S3-Relay-1CH-RS485
+
+  Contact us if you help controlling our evse: https://edgetech.eu/
+
+    your friends @ EdgeTech
+
+*/
 #include <HardwareSerial.h>
 #include "Arduino.h"
 #include "ModBus.h"
-
-
-// ESP32 S3 Relay 1CH
-// product:    https://www.waveshare.com/esp32-s3-rs485-can.htm
-// schematics: https://files.waveshare.com/wiki/ESP32-S3-Relay-1CH/ESP32-S3-Relay-1CH-schematic.pdf
-// wiki:       https://www.waveshare.com/wiki/ESP32-S3-Relay-1CH-RS485
-
-
-// Board:
-// ESP32S3 Dev Module
-// Flash Size: 8MB (64Mb)
-// Partition Scheme: 8M with spiffs (3M APP/1.5MB SPIFFS)
-
 
 Modbus mb = Modbus();
 
