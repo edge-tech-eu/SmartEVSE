@@ -19,7 +19,7 @@ Volg de stappen in onderstaande overzicht:
 # 1. De Basis-configuratie
 Met de basis-configuratie maak je een laadpunt zonder stroomsturing. Dat betekent dat het laadpunt geen rekening houdt met andere stroomgebruikers in het huis. Dit kan mogelijk voor problemen zorgen bij te grote stroomvraag. Zorg dat je dus alleen laadt op die momenten dat er voldoende capaciteit beschikbaar is. Dat is typisch het geval vanaf ‘s avonds 22 uur tot 4 uur in de ochtend. Houdt dus rekening met moglijk aanwezigheid van warmtepompen, thuis-accu’s en elektrische boilers. De basis-configuratie bestaat uit deze onderdelen:
 - laad-module
-- DC-aardlek-module
+- DC-aardlek-module met aansluitkabel
 - laadkabel
 - behuizing en wartels
 - montage-beugels
@@ -33,7 +33,7 @@ Op de laad-module kun je een 5VDc of 12VDC LED aansluiten.
 ## Stappen voor de assemblage
 - Hieronder vind je het overzicht van alle aansluitingen
 ![Aansluitiingen](installation/aansluiten-laadmodule.png)
-- Bepaal waar het laadpunt wordt geplaatst.
+- Bepaal waar het laadpunt wordt geplaatst. We raden aan om altijd ook een Modbus-kabel naast de voedingskabel aan te leggen. Let er op dat u de **juiste Modbus-kabel gebruik**t. Deze kabel is bijvoorbeeld heel geschikt: https://www.elektroproducten.nl/product/stuurstroom-flex-liyy-3x05mm%C2%B2-per-meter/
 - Kies de handige plaats voor montage van de wartels voor de ingaande voedingskabel en uitgaande laadkabel. Boor gaten voor de wartels met een stappenboor. Boor ook gaten in de achterwand voor stevige montage op een muur of paal. Let er op dat je de schroefgaten waterdicht maakt met b.v. een rubberring of druppel kit.
 - Kies de oriëntatie van de laad-module – schroef deze vast of lijm de montagebeugels goed aan de achterwand van de kast.
 - Monteer de laad-module in de kast.
