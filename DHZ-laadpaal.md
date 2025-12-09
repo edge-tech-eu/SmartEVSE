@@ -32,7 +32,7 @@ Op de laad-module kun je een 5VDc of 12VDC LED aansluiten.
 
 ## Stappen voor de assemblage
 - Hieronder vind je het overzicht van alle aansluitingen
-![Aansluitiingen](installation/installation.png)
+![Aansluitiingen](installation/aansluiten-laadmodule.png)
 - Bepaal waar het laadpunt wordt geplaatst.
 - Kies de handige plaats voor montage van de wartels voor de ingaande voedingskabel en uitgaande laadkabel. Boor gaten voor de wartels met een stappenboor. Boor ook gaten in de achterwand voor stevige montage op een muur of paal. Let er op dat je de schroefgaten waterdicht maakt met b.v. een rubberring of druppel kit.
 - Kies de oriëntatie van de laad-module – schroef deze vast of lijm de montagebeugels goed aan de achterwand van de kast.
