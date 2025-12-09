@@ -100,7 +100,7 @@ chargers:
   name: laadpunt1
 ```
 
-- Heb je ook de slimme meter P1-kabel? Dan moet je op de Pi ook het software-pakket ser2net installeren. Volg de handleiding van ser2net om seriële poort via een netwerk-socket bereikbaar te maken.
+- Heb je ook de slimme meter P1-kabel? Dan moet je op de Pi ook het software-pakket ser2net installeren. Volg de handleiding van ser2net om de seriële poort via een netwerk-socket bereikbaar te maken.
 Hieronder een voorbeeld van de definitie van de grid-meter in de evcc.yaml file en daaronder een voorbeeld configurtie van ser2net.conf:
 ```configuration
 ####################
