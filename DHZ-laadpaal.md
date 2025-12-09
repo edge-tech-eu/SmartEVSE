@@ -80,8 +80,6 @@ Het voordeel van deze keuze is dat je bijvoorbeeld een Raspberry Pi 3B kunt kiez
 
 In onderstaande overzicht gaan we uit van een Raspberry Pi model 3B.
 
-In onderstaande overzicht gaan we uit van een Raspberry Pi model 3B.
-
 Volg de onderstaande stappen
 - Gebruik de Raspbian Imager ( https://www.raspberrypi.com/software/ ) om het SD-kaartje voor de Rapsberry te schrijven. Let erop dat je een hostnaam kiest die je terug kunt vinden, bv loadbalancer. Heb je een Pi zonder Ethernet vul dan ook de WiFi-gegevens in zodat je altijd op afstand bij de Pi met ssh.
 - Volg de stappen om de Pi met je netwerk verbonden te krijgen.
