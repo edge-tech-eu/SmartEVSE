@@ -48,6 +48,8 @@ Op de laad-module kun je een 5VDc of 12VDC LED aansluiten.
   - Controleer dat de aders in de grijze connector onderling GEEN contact maken. Dat kan het geval zijn indien er aders met gevlochten draad gebruikt worden. Dan kunnen losse koper draadjes net buiten de ingang blijven zitten en kortsluiting veroorzaken. Let dus goed op!
 - Ziet alles er goed uit? Dan kun je de aardlekautomaat in groepenkast activeren. Controleer dat het groene LEDje op de laad-module elke 3 seconden knippert. Zie hier voor de plaats van het groene LEDje:
 ![LEDs](installation/LEDs.png)
+> [!IMPORTANT]
+> indien het rode LEDje knippert controleer dan of de aarde goed is aangesloten, zowel op de laad-module als ook verbonden met de aarde van het huis. 
 
 # 2. Load-balancing
 Load-balancing is een goed idee om je elektriciteitsaansuiting te beschermen tegen overbelasting. Als je namelijk te lang meer energie gebruikt dan de hoofdzekering aan kan zal deze doorbranden of afslaan. Bij oude zekeringen zul je je netbeheerder moeten bellen om de hoofdzekering te laten vervangen. Dat kost geld en veel tijd. Daarnaast is het ook verstandig om te laden op die momenten dat energie goedkoop is, danwel om het elektriciteitsnetwerk te ontlasten. Kortom, je wilt de tijd en het laden kunnen sturen en dat wordt ook wel load-balancing genoemd. Je kunt kiezen uit één van onderstaande mogelijkheden om load-balancing mogelijk te maken. Natuurlijk kun je de aansturing zelf maken op een platform van jouw keuze.
