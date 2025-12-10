@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "DebugPrintf.h"
+#include "Board.h"
 #include "ModBus.h"
 
 
@@ -23,29 +23,64 @@
 
 #elif ARDUINO_ESP32S3_DEV
 
-	#define TXD1              17
-	#define RXD1              18
-	#define TXD1EN            21
+	#ifdef T_Panel_V1_2_RS485
 
-	HardwareSerial MBSerial(1);
-
-	#define SERIAL_RS485	MBSerial	
-
-	void Modbus::begin(uint16_t u16BaudRate) {
-
-		_u8TransmitBufferIndex = 0;
-		u16TransmitBufferLength = 0;
+		// LillyGo T-Panel RS485
+		#include <HardwareSerial.h>
+		#include "pin_config.h"
+		#include "XL95x5_Driver.h"
 		
-		MBSerial.begin(u16BaudRate, SERIAL_8N1, RXD1, TXD1);
+		// modbus write enable is mapped on an i2c extender
+		XL95x5 Class_XL95x5(XL95x5_IIC_ADDRESS, XL95x5_SDA, XL95x5_SCL);
 
-		if (!MBSerial.setPins(-1, -1, -1, TXD1EN)) {
-			DEBUG_PRINTF("Failed to set TXDEN pins\r\n");
-		}
+		HardwareSerial SerialPort(2);
 
-		if (!MBSerial.setMode(UART_MODE_RS485_HALF_DUPLEX)) {
-			DEBUG_PRINTF("Failed to set RS485 mode\r\n");
+		#define SERIAL_RS485	SerialPort
+
+		void Modbus::begin(uint16_t u16BaudRate) {
+
+				_u8TransmitBufferIndex = 0;
+				u16TransmitBufferLength = 0;
+
+				SerialPort.begin(u16BaudRate, SERIAL_8N1, RS485_RX, RS485_TX);
+				
+				Class_XL95x5.begin();
+				Class_XL95x5.read_all_reg(); // Read all registers
+
+				Class_XL95x5.portMode(XL95x5_PORT_0, OUTPUT); // Configure the XL95x5 full port mode
+				Class_XL95x5.portMode(XL95x5_PORT_1, OUTPUT);
+
+				Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
+			
+			}
+
+	#else
+
+		// This works for the Waveshare Industrial ESP32S3 Control board
+		#define TXD1              17
+		#define RXD1              18
+		#define TXD1EN            21
+
+		HardwareSerial MBSerial(1);
+
+		#define SERIAL_RS485	MBSerial	
+
+		void Modbus::begin(uint16_t u16BaudRate) {
+
+			_u8TransmitBufferIndex = 0;
+			u16TransmitBufferLength = 0;
+			
+			MBSerial.begin(u16BaudRate, SERIAL_8N1, RXD1, TXD1);
+
+			if (!MBSerial.setPins(-1, -1, -1, TXD1EN)) {
+				DEBUG_PRINTF("Failed to set TXDEN pins\r\n");
+			}
+
+			if (!MBSerial.setMode(UART_MODE_RS485_HALF_DUPLEX)) {
+				DEBUG_PRINTF("Failed to set RS485 mode\r\n");
+			}
 		}
-	}
+	#endif
 
 #else
 
