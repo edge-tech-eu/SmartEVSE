@@ -1,7 +1,14 @@
 /*
 
+  Raspberry Pi Pico 2W + WaveShare 2-Channel RS485 Module for Pico
+
   Board: Raspberry Pi Pico/RP2040/RP2350: Raspberry Pi Pico 2W
-  - with: WaveShare 2-Channel RS485 Module for Pico 
+  
+    Connections:
+    Charger:              WaveShare:   
+    ModBud_Ground/white   Channel 1: G
+    ModBud_A/yellow       Channel 1: A
+    ModBud_B/green        Channel 1: B
 
   Documentation:
   - https://www.waveshare.com/pico-2ch-rs485.htm
@@ -14,6 +21,7 @@
 
 */
 #include <Arduino.h>
+#include "Board.h"
 #include "ModBus.h"
 #include "SmartEVSE.h"
 
