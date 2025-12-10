@@ -34,7 +34,7 @@ void setup() {
 
   delay(10000);
 
-  Serial.printf("\r\n\r\nTesting Controlling Charger\r\nusing WaveShare 2 CH Rs495...\r\n\r\n");
+  Serial.printf("\r\n\r\nTesting Controlling Charger\r\nusing WaveShare 2 CH RS485...\r\n\r\n");
 
   Serial.printf("Request serial and fw version:\r\n");
 
