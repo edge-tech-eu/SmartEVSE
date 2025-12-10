@@ -1,7 +1,8 @@
 /*
 
-  Board: esp32: ESP32 S3 Relay 1CH
-  - ESP32S3 Dev Module
+  WaveShare Industrial ESP32S3 Controller Board
+
+  Board: esp32: ESP32S3 Dev Module
   - Flash Size: 8MB (64Mb)
   - Partition Scheme: 8M with spiffs (3M APP/1.5MB SPIFFS)
   
@@ -17,7 +18,7 @@
 */
 #include <HardwareSerial.h>
 #include <Arduino.h>
-#include "DebugPrintf.h"
+#include "Board.h"
 #include "ModBus.h"
 #include "SmartEVSE.h"
 
