@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "DebugPrintf.h"
+#include "Board.h"
 #include "ModBus.h"
 
 
@@ -80,7 +80,7 @@
 				DEBUG_PRINTF("Failed to set RS485 mode\r\n");
 			}
 		}
-	#endf
+	#endif
 
 #else
 

@@ -1,36 +1,93 @@
 #include <Arduino.h>
-#include <HardwareSerial.h>
-//#include <Wire.h>
-#include "DebugPrintf.h"
-#include "pin_config.h"
-#include "XL95x5_Driver.h"
+#include "Board.h"
 #include "ModBus.h"
 
-#ifdef T_Panel_V1_2_RS485
-// modbus write enable is mapped on an i2c extender
-XL95x5 Class_XL95x5(XL95x5_IIC_ADDRESS, XL95x5_SDA, XL95x5_SCL);
-HardwareSerial SerialPort(2);
-#define SERIAL_RS485	SerialPort
-#endif
 
+#ifdef ARDUINO_ARCH_RP2040
+
+	#define TXD1 4
+	#define RXD1 5
+
+	// use UART1 / Serial2
+	#define SERIAL_RS485	Serial2
 	
-
 	void Modbus::begin(uint16_t u16BaudRate) {
 
 		_u8TransmitBufferIndex = 0;
 		u16TransmitBufferLength = 0;
 
-		SerialPort.begin(u16BaudRate, SERIAL_8N1, RS485_RX, RS485_TX);
-    
-    Class_XL95x5.begin();
-    Class_XL95x5.read_all_reg(); // Read all registers
-
-    Class_XL95x5.portMode(XL95x5_PORT_0, OUTPUT); // Configure the XL95x5 full port mode
-    Class_XL95x5.portMode(XL95x5_PORT_1, OUTPUT);
-
-    Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
-	
+		SERIAL_RS485.setTX(TXD1);
+		SERIAL_RS485.setRX(RXD1);
+		SERIAL_RS485.begin(u16BaudRate);
 	}
+
+#elif ARDUINO_ESP32S3_DEV
+
+	#ifdef T_Panel_V1_2_RS485
+
+		// LillyGo T-Panel RS485
+		#include <HardwareSerial.h>
+		#include "pin_config.h"
+		#include "XL95x5_Driver.h"
+		
+		// modbus write enable is mapped on an i2c extender
+		XL95x5 Class_XL95x5(XL95x5_IIC_ADDRESS, XL95x5_SDA, XL95x5_SCL);
+
+		HardwareSerial SerialPort(2);
+
+		#define SERIAL_RS485	SerialPort
+
+		void Modbus::begin(uint16_t u16BaudRate) {
+
+				_u8TransmitBufferIndex = 0;
+				u16TransmitBufferLength = 0;
+
+				SerialPort.begin(u16BaudRate, SERIAL_8N1, RS485_RX, RS485_TX);
+				
+				Class_XL95x5.begin();
+				Class_XL95x5.read_all_reg(); // Read all registers
+
+				Class_XL95x5.portMode(XL95x5_PORT_0, OUTPUT); // Configure the XL95x5 full port mode
+				Class_XL95x5.portMode(XL95x5_PORT_1, OUTPUT);
+
+				Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
+			
+			}
+
+	#else
+
+		// This works for the Waveshare Industrial ESP32S3 Control board
+		#define TXD1              17
+		#define RXD1              18
+		#define TXD1EN            21
+
+		HardwareSerial MBSerial(1);
+
+		#define SERIAL_RS485	MBSerial	
+
+		void Modbus::begin(uint16_t u16BaudRate) {
+
+			_u8TransmitBufferIndex = 0;
+			u16TransmitBufferLength = 0;
+			
+			MBSerial.begin(u16BaudRate, SERIAL_8N1, RXD1, TXD1);
+
+			if (!MBSerial.setPins(-1, -1, -1, TXD1EN)) {
+				DEBUG_PRINTF("Failed to set TXDEN pins\r\n");
+			}
+
+			if (!MBSerial.setMode(UART_MODE_RS485_HALF_DUPLEX)) {
+				DEBUG_PRINTF("Failed to set RS485 mode\r\n");
+			}
+		}
+	#endif
+
+#else
+
+	#error ModBus.cpp needs to be adapted to architecture and rs485 interface, please check/add your combination
+
+#endif
+
 
 uint8_t u8ModbusADU[256];
 char dumpBuffer[10];
@@ -361,9 +418,6 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 		extranuousBytesRead = SERIAL_RS485.readBytes(dumpBuffer, 10);
 	} while (extranuousBytesRead == 10);
 
-	// WRITE ENABLE
-	Class_XL95x5.digitalWrite(XL95X5_RS485_CON, HIGH);
-
 	// Transmit request
 	SERIAL_RS485.write(u8ModbusADU, u8ModbusADUSize);
 
@@ -371,9 +425,6 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 
 	// Wait for transmission to get completed
 	SERIAL_RS485.flush();
-
-	// WRITE DISABLE
-	Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
 
 	// read 1 byte, needs to slave address otherwise assume noise
 	SERIAL_RS485.setTimeout(40);
