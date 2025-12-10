@@ -1,43 +1,36 @@
- // USB CDC On Boot	- Enabled
-// Flash Size	- 16MB (128Mb)
-// Partition Scheme	- 16M Flash (3MB APP/9.9MB FATFS)
-// PSRAM	QSPI PSRAM
-
 #include <Arduino.h>
 #include <HardwareSerial.h>
-#include <Wire.h>
+//#include <Wire.h>
 #include "DebugPrintf.h"
 #include "pin_config.h"
 #include "XL95x5_Driver.h"
 #include "ModBus.h"
 
-extern XL95x5 Class_XL95x5;
-extern HardwareSerial SerialPort;
+#ifdef T_Panel_V1_2_RS485
+// modbus write enable is mapped on an i2c extender
+XL95x5 Class_XL95x5(XL95x5_IIC_ADDRESS, XL95x5_SDA, XL95x5_SCL);
+HardwareSerial SerialPort(2);
+#define SERIAL_RS485	SerialPort
+#endif
 
-
-// HardwareSerial SerialPort(2);
-
-	#define SERIAL_RS485	SerialPort
+	
 
 	void Modbus::begin(uint16_t u16BaudRate) {
 
 		_u8TransmitBufferIndex = 0;
 		u16TransmitBufferLength = 0;
-		
-		//SerialPort.begin(9600, SERIAL_8N1, RS485_RX, RS485_TX);
-/*
-Class_XL95x5.begin();
+
+		SerialPort.begin(u16BaudRate, SERIAL_8N1, RS485_RX, RS485_TX);
+    
+    Class_XL95x5.begin();
     Class_XL95x5.read_all_reg(); // Read all registers
 
     Class_XL95x5.portMode(XL95x5_PORT_0, OUTPUT); // Configure the XL95x5 full port mode
     Class_XL95x5.portMode(XL95x5_PORT_1, OUTPUT);
 
-    Class_XL95x5.digitalWrite(XL95X5_RS485_CON, HIGH);
-		*/
+    Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
+	
 	}
-
-
-
 
 uint8_t u8ModbusADU[256];
 char dumpBuffer[10];
