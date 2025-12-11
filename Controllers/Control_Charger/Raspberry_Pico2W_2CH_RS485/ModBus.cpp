@@ -5,9 +5,6 @@
 
 #ifdef ARDUINO_ARCH_RP2040
 
-	#define TXD1 4
-	#define RXD1 5
-
 	// use UART1 / Serial2
 	#define SERIAL_RS485	Serial2
 	
