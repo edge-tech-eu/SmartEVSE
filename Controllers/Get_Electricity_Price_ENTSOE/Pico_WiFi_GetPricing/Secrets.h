@@ -1,3 +1,3 @@
-#define WIFI_SSID             *** set to your network ***
-#define WIFI_PASSWORD         *** set to your password ***
-#define ETSOE_SECURITY_TOKEN  *** set to your key ***
+#define WIFI_SSID             ***REMOVED***
+#define WIFI_PASSWORD         ***REMOVED***
+#define ETSOE_SECURITY_TOKEN  ***REMOVED***
