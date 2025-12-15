@@ -1,5 +1,5 @@
 # DIY charging station
-Voor Nederlands zie [hier](DHZ-laadpaal.md]
+Voor Nederlands zie [hier](DHZ-laadpaal.md)
 
 Look, we've done all the prep work for you!
 We'll now help you put everything together step by step.
