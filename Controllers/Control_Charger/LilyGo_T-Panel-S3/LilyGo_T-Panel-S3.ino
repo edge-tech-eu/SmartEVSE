@@ -42,10 +42,11 @@ unsigned long next_time;
 
 // no not forget to press the boot button
 
+ChargerState charger_state;
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   mb.begin(9600);
 
   delay(10000);
@@ -69,33 +70,14 @@ void loop() {
 
   if (now > next_time) {
 
-    next_time += 5000;
-    /*
-    Class_XL95x5.digitalWrite(XL95X5_RS485_CON, HIGH);
-    
-    SerialPort.printf("hallo");
-    SerialPort.flush();
-    Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
-    */
+    next_time += 10000;
 
-    smart_evse_get_state(ADDRESS);
+    smart_evse_get_charger_state(ADDRESS, &charger_state);
 
-    smart_evse_get_temperature(ADDRESS);
+    Serial.printf("state: %d, error: %d, temperature: %d, cable: %d a\r\n", 
+      charger_state.state, charger_state.error, charger_state.temperature, charger_state.cable_current);
+    Serial.printf("current: %f, %f, %f a\r\n",charger_state.c[0],charger_state.c[1],charger_state.c[2]);
+    Serial.printf("voltage: %f, %f, %f v\r\n",charger_state.v[0],charger_state.v[1],charger_state.v[2]);
+    Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n");
   }
-
-  /*
-    Class_XL95x5.digitalWrite(XL95X5_RS485_CON, HIGH);
-    temp++;
-    SerialPort.printf("%d", temp);
-
-    delay(1000);
-
-    while (SerialPort.available() > 0)
-    {
-        Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
-        DATA1 = SerialPort.read();
-        Serial.print(DATA1);
-    }
-    delay(1000);
-    */
 }

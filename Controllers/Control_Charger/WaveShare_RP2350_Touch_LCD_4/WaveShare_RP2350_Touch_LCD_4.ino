@@ -29,6 +29,8 @@
 
 Modbus mb = Modbus();
 
+ChargerState charger_state;
+
 unsigned long next_time;
 
 void setup() {
@@ -44,6 +46,8 @@ void setup() {
   Serial.printf("Request serial and fw version:\r\n");
 
   smart_evse_get_serial(ADDRESS);
+
+  // smart_evse_change_address(ADDRESS, NEW_ADDRESS, 0x1234);
   
   smart_evse_get_fw_version(ADDRESS);
 
@@ -54,14 +58,18 @@ void setup() {
 
 void loop() {
 
-  unsigned long now = millis();
+unsigned long now = millis();
 
   if (now > next_time) {
 
-    next_time += 5000;
+    next_time += 10000;
 
-    smart_evse_get_state(ADDRESS);
+    smart_evse_get_charger_state(ADDRESS, &charger_state);
 
-    smart_evse_get_temperature(ADDRESS);
+    Serial.printf("state: %d, error: %d, temperature: %d, cable: %d a\r\n", 
+      charger_state.state, charger_state.error, charger_state.temperature, charger_state.cable_current);
+    Serial.printf("current: %f, %f, %f a\r\n",charger_state.c[0],charger_state.c[1],charger_state.c[2]);
+    Serial.printf("voltage: %f, %f, %f v\r\n",charger_state.v[0],charger_state.v[1],charger_state.v[2]);
+    Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n");
   }
 }
