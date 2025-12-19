@@ -1,6 +1,20 @@
 #ifndef SMARTEVSE_h
 #define SMARTEVSE_h
 
+typedef struct {
+  unsigned char cable_current;
+  double c[3];
+  double v[3];
+  double kwh_session;
+  double kwh_total;
+  unsigned char state;
+  unsigned char error;
+  unsigned char temperature;
+} ChargerState;
+
+void smart_evse_set_phases(int address, bool isPhases3);
+bool smart_evse_is_32_amp(int address);
+void smart_evse_get_charger_state(int address, ChargerState *charger_state);
 void smart_evse_get_serial(int address);
 void smart_evse_get_fw_version(int address);
 void smart_evse_persist_settings(int address);

@@ -235,3 +235,93 @@ void smart_evse_set_magic(int address, int magic) {
     }
   }
 }
+
+void smart_evse_set_phases(int address, bool isPhases3) {
+
+  unsigned int value = (isPhases3?1:0);
+
+  if (mb.writeSingleRegister(address, 0x204, value) == mb.ku8MBSuccess) {
+
+    DEBUG_PRINTF("wrote settings\r\n");
+
+  } else {
+
+    DEBUG_PRINTF("failed to read over mb\r\n");
+
+    if (address == 1) {
+      DEBUG_PRINTF("try state change with button on the board\r\n");
+    }
+  }
+}
+
+bool smart_evse_is_32_amp(int address) {
+
+  bool is32Amp = false;
+
+  if (mb.readInputRegisters(address, 0x10c, 1) == mb.ku8MBSuccess) {
+
+    // 0x10c options, bit 1 is 32/16a
+    unsigned int value = mb.getResponseBuffer(0);
+
+    is32Amp = (value & 0x02) > 0;
+
+  } else {
+
+    DEBUG_PRINTF("failed to read over mb\r\n");
+
+    if (address == 1) {
+      DEBUG_PRINTF("try state change with button on the board\r\n");
+    }
+  }
+
+  return(is32Amp);
+}
+
+void smart_evse_get_charger_state(int address, ChargerState *charger_state) {
+
+  if (mb.readInputRegisters(address, 0x103, 10) == mb.ku8MBSuccess) {
+    
+    // 0x103 state, error
+    unsigned int value = mb.getResponseBuffer(0);
+    charger_state->error = value >> 8;
+    charger_state->state = value & 0xff;
+
+    // 0x104 temperature
+    charger_state->temperature = mb.getResponseBuffer(1);
+
+    // 0x105 current l1 (1/256 a)
+    charger_state->c[0] = (double)mb.getResponseBuffer(2)/256.;
+
+    // 0x106 current l2 (1/256 a)
+    charger_state->c[1] = (double)mb.getResponseBuffer(3)/256.;
+
+    // 0x107 current l3 (1/256 a)
+    charger_state->c[2] = (double)mb.getResponseBuffer(4)/256.;
+
+    // 0x108 energy session (1/256 kwh)
+    charger_state->kwh_session = (double)mb.getResponseBuffer(5)/256.;
+
+    // 0x109 voltage l1 (1/256 v)
+    charger_state->v[0] = (double)mb.getResponseBuffer(6)/256.;
+
+    // 0x10a voltage l2 (1/256 v)
+    charger_state->v[1] = (double)mb.getResponseBuffer(7)/256.;
+
+    // 0x10b voltage l3 (1/256 v)
+    charger_state->v[2] = (double)mb.getResponseBuffer(8)/256.;
+
+    // 0x10c options, bit 1 is 32/16a
+
+    // 0x10d energy total (low part, 1/256 kwh)
+    // 0x10e energy total (high part, 1/256 kwh)
+    charger_state->kwh_total = (double)mb.getResponseBuffer(10)/256. + (double)mb.getResponseBuffer(11)*256.;
+
+  } else {
+
+    DEBUG_PRINTF("failed to read over mb\r\n");
+
+    if (address == 1) {
+      DEBUG_PRINTF("try state change with button on the board\r\n");
+    }
+  }
+}
