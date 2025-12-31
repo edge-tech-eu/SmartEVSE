@@ -19,6 +19,9 @@
   - https://github.com/Xinyuan-LilyGO/T-Panel
   - https://github.com/Xinyuan-LilyGO/T-Panel/blob/arduino-esp32-libs_V2.0.14/project/T-Panel_V1.2.pdf
 
+  Note:
+  - for lvgl to work it needs esp32 bsp 2.x (3.x does not compile)
+  - also install the libraries in the "libraries" folder of this sketch
 
   Contact us if you help controlling our evse: https://edgetech.eu/
 
@@ -28,7 +31,6 @@
 
 #define TOUCH_MODULES_CST_MUTUAL
 
-// this needs esp32 bsp 2.x (3.x does not compile)
 
 #include "lvgl.h"
 #include "misc/lv_color.h"
