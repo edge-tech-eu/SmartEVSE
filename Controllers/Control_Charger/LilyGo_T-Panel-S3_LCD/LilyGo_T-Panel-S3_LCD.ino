@@ -1,3 +1,31 @@
+/*
+
+  LillyGo T-Panel S3 RS485
+
+  Board: esp32: ESP32S3 Dev Module
+  - USB CDC On Boot	  Enabled
+  - Flash Size	      16MB (128Mb)
+  - Partition Scheme	16M Flash (3MB APP/9.9MB FATFS)
+  - PSRAM	            QSPI PSRAM
+
+  Connections:
+    Charger:              T-Panel:   
+    ModBud_Ground/white   SGND
+    ModBud_A/yellow       L
+    ModBud_B/green        H
+
+  Documentation:
+  - https://lilygo.cc/products/t-panel-s3?srsltid=AfmBOoqK3WmcNyMwsreH9n6bwDtGik-VFqjp-NglJnTqaYiQIHH78q6t
+  - https://github.com/Xinyuan-LilyGO/T-Panel
+  - https://github.com/Xinyuan-LilyGO/T-Panel/blob/arduino-esp32-libs_V2.0.14/project/T-Panel_V1.2.pdf
+
+
+  Contact us if you help controlling our evse: https://edgetech.eu/
+
+    your friends @ EdgeTech
+
+*/
+
 #define TOUCH_MODULES_CST_MUTUAL
 
 // this needs esp32 bsp 2.x (3.x does not compile)
