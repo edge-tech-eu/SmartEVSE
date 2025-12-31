@@ -40,13 +40,15 @@
 #include "SmartEVSE.h"
 #include "UI.h"
 
+// the default address of the EdgeTech EVSE has modbus address 1
+// be aware that when the address is still 1, the board needs a state change t respond to modbus
+
+#define ADDRESS 1
+
 
 unsigned long next_time;
 
 ChargerState charger_state;
-
-#define ADDRESS 1
-
 
 
 volatile bool Touch_Int_Flag = false;

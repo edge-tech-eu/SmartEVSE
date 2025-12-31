@@ -53,6 +53,10 @@ void setup() {
 
   Serial.printf("\r\n\r\nTesting Controlling Charger\r\nusing LilyGo T-Panel RS485...\r\n\r\n");
 
+  smart_evse_init();
+  charger_state.count = 0;
+  charger_state.error_count = 0;
+
   Serial.printf("Request serial and fw version:\r\n");
 
   smart_evse_get_serial(ADDRESS);

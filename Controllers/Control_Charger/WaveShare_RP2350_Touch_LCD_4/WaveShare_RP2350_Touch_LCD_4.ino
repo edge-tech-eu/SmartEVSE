@@ -22,12 +22,12 @@
 */
 #include <Arduino.h>
 #include "Board.h"
-#include "ModBus.h"
 #include "SmartEVSE.h"
 
-#define ADDRESS 1
+// the default address of the EdgeTech EVSE has modbus address 1
+// be aware that when the address is still 1, the board needs a state change t respond to modbus
 
-Modbus mb = Modbus();
+#define ADDRESS 1
 
 ChargerState charger_state;
 
@@ -36,14 +36,14 @@ unsigned long next_time;
 void setup() {
 
   Serial.begin(115200);
-
-  mb.begin(9600);
-
+  
   delay(10000);
 
   Serial.printf("\r\n\r\nTesting Controlling Charger\r\nusing WaveShare RP2350 Touch LCD 4...\r\n\r\n");
 
   Serial.printf("Request serial and fw version:\r\n");
+
+  smart_evse_init();
 
   smart_evse_get_serial(ADDRESS);
 

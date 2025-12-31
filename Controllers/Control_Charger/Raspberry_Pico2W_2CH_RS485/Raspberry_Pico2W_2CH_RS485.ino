@@ -22,7 +22,6 @@
 */
 #include <Arduino.h>
 #include "Board.h"
-#include "ModBus.h"
 #include "SmartEVSE.h"
 
 // the default address of the EdgeTech EVSE has modbus address 1
@@ -30,21 +29,22 @@
 
 #define ADDRESS 1
 
-Modbus mb = Modbus();
+ChargerState charger_state;
 
 unsigned long next_time;
+
 
 void setup() {
 
   Serial.begin(115200);
   
-  mb.begin(9600);
-
   delay(10000);
 
   Serial.printf("\r\n\r\nTesting Controlling Charger\r\nusing WaveShare 2 CH RS485...\r\n\r\n");
 
   Serial.printf("Request serial and fw version:\r\n");
+
+  smart_evse_init();
 
   smart_evse_get_serial(ADDRESS);
   
@@ -63,8 +63,17 @@ void loop() {
     
     next_time += 5000;
 
-    smart_evse_get_state(ADDRESS);
+    smart_evse_get_charger_state(ADDRESS, &charger_state);
 
-    smart_evse_get_temperature(ADDRESS);
+    if (charger_state.isNew) {
+
+      charger_state.isNew = false;
+
+      Serial.printf("state: %d, error: %d, temperature: %d, cable: %d a\r\n",
+                    charger_state.state, charger_state.error, charger_state.temperature, charger_state.cable_current);
+      Serial.printf("current: %f, %f, %f a\r\n", charger_state.c[0], charger_state.c[1], charger_state.c[2]);
+      Serial.printf("voltage: %f, %f, %f v\r\n", charger_state.v[0], charger_state.v[1], charger_state.v[2]);
+      Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n",charger_state.kwh_session, charger_state.kwh_total);
+    }
   }
 }

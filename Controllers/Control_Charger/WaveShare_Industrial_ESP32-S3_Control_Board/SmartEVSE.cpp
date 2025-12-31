@@ -3,7 +3,12 @@
 #include "ModBus.h"
 #include "SmartEVSE.h"
 
-extern Modbus mb;
+Modbus mb = Modbus();
+
+void smart_evse_init() {
+
+  mb.begin(9600);
+}
 
 void smart_evse_get_serial(int address) {
 
@@ -279,6 +284,8 @@ bool smart_evse_is_32_amp(int address) {
 
 void smart_evse_get_charger_state(int address, ChargerState *charger_state) {
 
+  charger_state->count++;
+
   if (mb.readInputRegisters(address, 0x103, 10) == mb.ku8MBSuccess) {
     
     // 0x103 state, error
@@ -316,7 +323,13 @@ void smart_evse_get_charger_state(int address, ChargerState *charger_state) {
     // 0x10e energy total (high part, 1/256 kwh)
     charger_state->kwh_total = (double)mb.getResponseBuffer(10)/256. + (double)mb.getResponseBuffer(11)*256.;
 
+    // time stamp;
+    charger_state->ts = millis();
+    charger_state->isNew = true;
+
   } else {
+
+    charger_state->error_count++;
 
     DEBUG_PRINTF("failed to read over mb\r\n");
 
