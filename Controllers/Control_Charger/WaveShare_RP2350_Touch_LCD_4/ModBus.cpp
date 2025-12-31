@@ -5,6 +5,9 @@
 
 #ifdef ARDUINO_ARCH_RP2040
 
+	#define TXD1 4
+	#define RXD1 5
+
 	// use UART1 / Serial2
 	#define SERIAL_RS485	Serial2
 	
@@ -18,21 +21,33 @@
 		SERIAL_RS485.begin(u16BaudRate);
 	}
 
+#elif ARDUINO_M5STACK_CORES3
+
+	#define SERIAL_RS485	Serial2
+
+	void Modbus::begin(uint16_t u16BaudRate) {
+
+		SERIAL_RS485.begin(u16BaudRate, SERIAL_8N1, 18, 17);
+	}
+
 #elif ARDUINO_ESP32S3_DEV
 
 	#ifdef T_Panel_V1_2_RS485
 
 		// LillyGo T-Panel RS485
+		#include "Arduino_GFX_Library.h"
 		#include <HardwareSerial.h>
 		#include "pin_config.h"
 		#include "XL95x5_Driver.h"
 		
 		// modbus write enable is mapped on an i2c extender
-		XL95x5 Class_XL95x5(XL95x5_IIC_ADDRESS, XL95x5_SDA, XL95x5_SCL);
+		// XL95x5 Class_XL95x5(XL95x5_IIC_ADDRESS, XL95x5_SDA, XL95x5_SCL);
 
 		HardwareSerial SerialPort(2);
 
 		#define SERIAL_RS485	SerialPort
+
+extern Arduino_DataBus *bus;
 
 		void Modbus::begin(uint16_t u16BaudRate) {
 
@@ -41,13 +56,15 @@
 
 				SerialPort.begin(u16BaudRate, SERIAL_8N1, RS485_RX, RS485_TX);
 				
-				Class_XL95x5.begin();
-				Class_XL95x5.read_all_reg(); // Read all registers
+				// Class_XL95x5.begin();
+				// Class_XL95x5.read_all_reg(); // Read all registers
 
-				Class_XL95x5.portMode(XL95x5_PORT_0, OUTPUT); // Configure the XL95x5 full port mode
-				Class_XL95x5.portMode(XL95x5_PORT_1, OUTPUT);
+				// Class_XL95x5.portMode(XL95x5_PORT_0, OUTPUT); // Configure the XL95x5 full port mode
+				// Class_XL95x5.portMode(XL95x5_PORT_1, OUTPUT);
 
-				Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
+				// Class_XL95x5.digitalWrite(XL95X5_RS485_CON, LOW);
+				bus->pinMode(XL95X5_RS485_CON, OUTPUT);
+				bus->digitalWrite(XL95X5_RS485_CON, LOW);
 			
 			}
 
@@ -90,7 +107,7 @@ uint8_t u8ModbusADU[256];
 char dumpBuffer[10];
 
 
-uint16_t word(uint8_t high, uint8_t low) {
+uint16_t word_from_bytes(uint8_t high, uint8_t low) {
 	uint16_t ret_val = low;
 	ret_val += (high << 8);
 	return ret_val;
@@ -155,7 +172,7 @@ void Modbus::send(uint32_t data) {
 
 
 void Modbus::send(uint8_t data) {
-	send(word(0x00, data));  //MSB = 0, LSB = data
+	send(word_from_bytes(0x00, data));  //MSB = 0, LSB = data
 }
 
 
@@ -519,7 +536,7 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 				// load bytes into word; response bytes are ordered L, H, L, H, ...
 				for (i = 0; i < (u8ModbusADU[2] >> 1); i++) {
 					if (i < ku8MaxBufferSize) {
-						_u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 4], u8ModbusADU[2 * i + 3]);
+						_u16ResponseBuffer[i] = word_from_bytes(u8ModbusADU[2 * i + 4], u8ModbusADU[2 * i + 3]);
 					}
 					_u8ResponseBufferLength = i;
 				}
@@ -527,7 +544,7 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 				// in the event of an odd number of bytes, load last byte into zero-padded word
 				if (u8ModbusADU[2] % 2) {
 					if (i < ku8MaxBufferSize) {
-						_u16ResponseBuffer[i] = word(0, u8ModbusADU[2 * i + 3]);
+						_u16ResponseBuffer[i] = word_from_bytes(0, u8ModbusADU[2 * i + 3]);
 					}
 					_u8ResponseBufferLength = i + 1;
 				}
@@ -539,7 +556,7 @@ uint8_t Modbus::ModbusMasterTransaction(uint8_t u8MBSlave, uint8_t u8MBFunction)
 				// load bytes into word; response bytes are ordered H, L, H, L, ...
 				for (i = 0; i < (u8ModbusADU[2] >> 1); i++) {
 					if (i < ku8MaxBufferSize) {
-						_u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
+						_u16ResponseBuffer[i] = word_from_bytes(u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
 					}
 					_u8ResponseBufferLength = i;
 				}

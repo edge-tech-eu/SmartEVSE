@@ -2,6 +2,8 @@
 #define SMARTEVSE_h
 
 typedef struct {
+  unsigned long ts;
+  bool isNew;
   unsigned char cable_current;
   double c[3];
   double v[3];
@@ -10,8 +12,11 @@ typedef struct {
   unsigned char state;
   unsigned char error;
   unsigned char temperature;
+  unsigned int error_count;
+  unsigned int count;
 } ChargerState;
 
+void smart_evse_init();
 void smart_evse_set_phases(int address, bool isPhases3);
 bool smart_evse_is_32_amp(int address);
 void smart_evse_get_charger_state(int address, ChargerState *charger_state);

@@ -33,21 +33,23 @@
 #include "Slider.h"
 #include "SmartEVSE.h"
 
-unsigned long next_time;
-
-ChargerState charger_state;
+// the default address of the EdgeTech EVSE has modbus address 1
+// be aware that when the address is still 1, the board needs a state change t respond to modbus
 
 #define ADDRESS 1
 
+ChargerState charger_state;
+
+unsigned long next_time;
+
 static slider_t slider;
+
 
 void setup(void) {
 
   Serial.begin(115200);
   delay(2500);
   Serial.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
-
-  
 
   M5.begin();
 
