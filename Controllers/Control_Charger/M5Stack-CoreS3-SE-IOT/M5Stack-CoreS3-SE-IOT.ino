@@ -17,9 +17,14 @@
   - schematics: https://m5stack-doc.oss-cn-shenzhen.aliyuncs.com/498/Sch_M5_CoreS3_SE_v1.0.pdf
   - schematics COMMU: https://static-cdn.m5stack.com/resource/docs/products/module/commu/commu_sch_01.webp
 
-
   Notes:
   - screen size: 320 x 240
+  
+
+  Contact us if you help controlling our evse: https://edgetech.eu/
+
+    your friends @ EdgeTech
+  
 */
 #include <Arduino.h>
 #include <M5ModuleDisplay.h>
