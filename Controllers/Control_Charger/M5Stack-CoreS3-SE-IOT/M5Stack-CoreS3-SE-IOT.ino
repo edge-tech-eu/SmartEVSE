@@ -56,8 +56,6 @@ void setup(void) {
   delay(2500);
   Serial.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
 
-  
-
   smart_evse_init();
 
   int board_max_current = 16;
@@ -83,7 +81,6 @@ void setup(void) {
 
 void loop(void) {
 
-  
   unsigned long now = millis();
 
   if (now > next_time) {
