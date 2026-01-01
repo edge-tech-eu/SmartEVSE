@@ -36,7 +36,7 @@ public:
     bool wasChanged(void) const;
     
     bool value_update(int new_value, LovyanGFX* gfx = &M5.Display);
-    
+
 protected:
     
     int calc_pos(int value);

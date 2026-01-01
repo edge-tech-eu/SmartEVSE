@@ -20,6 +20,8 @@ static slider_t slider;
 #define POS_X_EV_V 10
 #define POS_X_HOME_A 16
 
+int advertized;
+
 void ui_init(int board_max_current) {
 
   M5.begin();
@@ -38,7 +40,15 @@ void ui_init(int board_max_current) {
   M5.Display.print("L2:     A    V      A\n");
   M5.Display.print("L3:     A    V      A\n");
 
+  Serial.printf("slider: max value %d\r\n", board_max_current);
+
+  advertized = board_max_current;
+
   slider.setup({ 10, 190, 300, 40 }, 0, board_max_current, board_max_current, TFT_WHITE, TFT_BLACK, TFT_LIGHTGRAY);
+
+  slider.draw();
+
+  ui_set_advertizing_current_callback(advertized);
 }
 
 void ui_set_ev_values(ChargerState charger_state) {
@@ -71,6 +81,7 @@ void ui_set_home_values(double home_current[3]) {
   M5.Display.printf("%4.1f", home_current[2]);
 }
 
+
 void ui_process() {
 
   // M5.delay(16);
@@ -83,14 +94,25 @@ void ui_process() {
 
     slider.update(t);
 
-    if (slider.wasChanged()) {
 
-      int advertized = slider.getValue();
-      if ((advertized>0)&&(advertized<6)) {
-        advertized = 0;
-        slider.value_update(advertized);
+    if (t.wasReleased()) {
+
+      Serial.println("released");
+
+      int new_advertized = slider.getValue();
+      if (advertized != new_advertized) {
+
+        if ((new_advertized > 0) && (new_advertized < 6)) {
+          Serial.printf("slider set to %d, reset to 0\r\n", new_advertized);
+          new_advertized = 0;
+          slider.value_update(new_advertized);
+        }
+        
+        if (advertized != new_advertized) {
+          advertized = new_advertized;
+          ui_set_advertizing_current_callback(advertized);
+        }
       }
-      ui_set_advertizing_current_callback(advertized);
     }
   }
 }
