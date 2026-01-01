@@ -34,9 +34,11 @@ public:
 
     int getValue(void) const;
     bool wasChanged(void) const;
-
-protected:
+    
     bool value_update(int new_value, LovyanGFX* gfx = &M5.Display);
+    
+protected:
+    
     int calc_pos(int value);
     void draw_frame(LovyanGFX* gfx = &M5.Display);
     void draw_thumb(int pos, uint16_t color, LovyanGFX* gfx = &M5.Display);
