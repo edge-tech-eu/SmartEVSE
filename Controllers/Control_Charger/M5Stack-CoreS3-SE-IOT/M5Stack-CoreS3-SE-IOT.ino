@@ -37,6 +37,7 @@
 
 ChargerState charger_state;
 
+#define INTERVAL  1000
 unsigned long next_time;
 
 #define ALLOW_MISSING   3
@@ -82,7 +83,7 @@ void setup(void) {
 
   smart_evse_get_max_currents(ADDRESS);
 
-  next_time = millis() + 1000;
+  next_time = millis() + INTERVAL;
 }
 
 void loop(void) {
@@ -91,7 +92,7 @@ void loop(void) {
 
   if (now > next_time) {
 
-    next_time = now + 10000;
+    next_time = now + INTERVAL;
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 
