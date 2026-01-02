@@ -39,6 +39,8 @@ ChargerState charger_state;
 
 unsigned long next_time;
 
+#define ALLOW_MISSING   3
+unsigned char allow_missing_count;
 
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
@@ -57,6 +59,8 @@ void setup(void) {
   Serial.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
 
   smart_evse_init();
+
+  allow_missing_count = ALLOW_MISSING;
 
   int board_max_current = 16;
 
@@ -85,11 +89,13 @@ void loop(void) {
 
   if (now > next_time) {
 
-    next_time = now + 5000;
+    next_time = now + 10000;
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 
     if (charger_state.isNew) {
+
+      allow_missing_count = ALLOW_MISSING;
 
       charger_state.isNew = false;
 
@@ -100,6 +106,15 @@ void loop(void) {
       Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n", charger_state.kwh_session, charger_state.kwh_total);
 
       ui_set_ev_values(charger_state);
+
+    } else {
+
+      if(allow_missing_count) {
+        allow_missing_count--;
+        if(!allow_missing_count) {
+          ui_unset_ev_values();
+        }
+      }
     }
   }
 
