@@ -15,10 +15,10 @@ int advertized;
 bool single_phases;
 
 
-void ui_init(int board_max_current) {
+void ui_init(int board_max_current, int initial_phases) {
 
   advertized = board_max_current;
-  single_phases = false;
+  single_phases = (initial_phases == 1);
 
   M5.begin();
 
@@ -40,13 +40,17 @@ void ui_init(int board_max_current) {
   M5.Display.setCursor(POS_X, POS_Y + 3 * POS_DY);
   M5.Display.print("L3:     A    V      A");
 
+  M5.Display.setCursor(STATE_X, STATE_Y);
+  M5.Display.print("State: ");
+
+  ui_set_state(0);
+
   M5.Display.setCursor(ADVERTIZED_X, ADVERTIZED_Y);
   M5.Display.print("Advertizing:   A x ");
 
   ui_set_advertized(advertized);
 
   Serial.printf("slider: max value %d\r\n", advertized);
-
 
   slider.setup({ SLIDER_X, SLIDER_Y, SLIDER_WIDTH, SLIDER_HEIGHT }, 0, advertized, advertized, TFT_WHITE, TFT_BLACK, TFT_LIGHTGRAY);
   slider.draw();
@@ -55,6 +59,17 @@ void ui_init(int board_max_current) {
   button.draw();
 
   ui_set_advertizing_current_callback(advertized);
+}
+  
+void ui_set_state(int state) {
+  M5.Display.setCursor(STATE_X + STATE_X+STATE_V_X, STATE_Y);
+  switch(state) {
+    case 0: M5.Display.printf("unknown     "); break;
+    case 1: M5.Display.printf("no ev       "); break;
+    case 2: M5.Display.printf("ev connected"); break;
+    case 3: M5.Display.printf("ev charging "); break;
+    case 4: M5.Display.printf("ev charging "); break;
+  }
 }
 
 void ui_set_advertized(int value) {
@@ -79,6 +94,8 @@ void ui_set_ev_values(ChargerState charger_state) {
   M5.Display.printf("%4.1f", charger_state.c[2]);
   M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L3 * POS_DY);
   M5.Display.printf("%3.0f", charger_state.v[2]);
+
+  ui_set_state(charger_state.state);
 }
 
 void ui_unset_ev_values() {
@@ -97,6 +114,8 @@ void ui_unset_ev_values() {
   M5.Display.printf("    ");
   M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L3 * POS_DY);
   M5.Display.printf("   ");
+
+  ui_set_state(0);
 }
 
 void ui_set_home_values(double home_current[3]) {

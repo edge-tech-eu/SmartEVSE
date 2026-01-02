@@ -42,6 +42,8 @@ unsigned long next_time;
 #define ALLOW_MISSING   3
 unsigned char allow_missing_count;
 
+#define PHASES  3
+
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
     Serial.printf("advertizing %dA\r\n", advertizing_current);
@@ -68,7 +70,7 @@ void setup(void) {
     board_max_current = 32;
   }
 
-  ui_init(board_max_current);
+  ui_init(board_max_current, PHASES);
 
   Serial.printf("init done\r\n");
 
