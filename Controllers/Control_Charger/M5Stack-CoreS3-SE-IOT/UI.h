@@ -3,8 +3,9 @@
 
 #include "SmartEVSE.h"
 
-void ui_init(int board_max_current);
+void ui_init(int board_max_current, int initial_phases);
 void ui_set_advertized(int value);
+void ui_set_state(int state);
 void ui_set_ev_values(ChargerState charger_state);
 void ui_unset_ev_values();
 void ui_set_home_values(double home_current[3]);
@@ -23,6 +24,10 @@ void ui_process();
 #define POS_X_EV_A 4
 #define POS_X_EV_V 10
 #define POS_X_HOME_A 16
+
+#define STATE_X POS_X
+#define STATE_Y 136
+#define STATE_V_X (6 * POS_DX)
 
 #define ADVERTIZED_X 16
 #define ADVERTIZED_Y 160
