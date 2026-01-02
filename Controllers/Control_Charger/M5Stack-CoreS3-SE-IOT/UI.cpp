@@ -33,12 +33,17 @@ void ui_init(int board_max_current, int initial_phases) {
 
   M5.Display.setCursor(POS_X, POS_Y);
   M5.Display.print("    EV          Home");
-  M5.Display.setCursor(POS_X, POS_Y + POS_DY);
+  M5.Display.setCursor(POS_X, POS_Y + POS_Y_L1);
   M5.Display.print("L1:     A    V      A");
-  M5.Display.setCursor(POS_X, POS_Y + 2 * POS_DY);
+  M5.Display.setCursor(POS_X, POS_Y + POS_Y_L2);
   M5.Display.print("L2:     A    V      A");
-  M5.Display.setCursor(POS_X, POS_Y + 3 * POS_DY);
+  M5.Display.setCursor(POS_X, POS_Y + POS_Y_L3);
   M5.Display.print("L3:     A    V      A");
+
+  M5.Display.setCursor(POS_X, POS_Y + POS_Y_KWH_SESSION);
+  M5.Display.print("session:     kWh");
+  M5.Display.setCursor(POS_X, POS_Y + POS_Y_KWH_TOTAL);
+  M5.Display.print("total:       kWh");
 
   M5.Display.setCursor(STATE_X, STATE_Y);
   M5.Display.print("State: ");
@@ -80,20 +85,25 @@ void ui_set_advertized(int value) {
 
 void ui_set_ev_values(ChargerState charger_state) {
 
-  M5.Display.setCursor(POS_X + POS_X_EV_A * POS_DX, POS_Y + POS_Y_L1 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_EV_A * POS_DX, POS_Y + POS_Y_L1 );
   M5.Display.printf("%4.1f", charger_state.c[0]);
-  M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L1 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L1 );
   M5.Display.printf("%3.0f", charger_state.v[0]);
 
-  M5.Display.setCursor(POS_X + POS_X_EV_A * POS_DX, POS_Y + POS_Y_L2 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_EV_A * POS_DX, POS_Y + POS_Y_L2 );
   M5.Display.printf("%4.1f", charger_state.c[1]);
-  M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L2 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L2 );
   M5.Display.printf("%3.0f", charger_state.v[1]);
 
-  M5.Display.setCursor(POS_X + POS_X_EV_A * POS_DX, POS_Y + POS_Y_L3 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_EV_A * POS_DX, POS_Y + POS_Y_L3 );
   M5.Display.printf("%4.1f", charger_state.c[2]);
-  M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L3 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_EV_V * POS_DX, POS_Y + POS_Y_L3 );
   M5.Display.printf("%3.0f", charger_state.v[2]);
+
+  M5.Display.setCursor(POS_X+POS_X_KWH, POS_Y + POS_Y_KWH_SESSION); 
+  M5.Display.printf("%5.1f", charger_state.kwh_session);
+  M5.Display.setCursor(POS_X+POS_X_KWH, POS_Y + POS_Y_KWH_TOTAL);
+  M5.Display.printf("%5.1f", charger_state.kwh_total);
 
   ui_set_state(charger_state.state);
 }
