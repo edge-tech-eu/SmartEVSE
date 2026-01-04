@@ -41,9 +41,9 @@ void ui_init(int board_max_current, int initial_phases) {
   M5.Display.print("L3:     A    V      A");
 
   M5.Display.setCursor(POS_X, POS_Y + POS_Y_KWH_SESSION);
-  M5.Display.print("session:     kWh");
+  M5.Display.print("Session:     kWh");
   M5.Display.setCursor(POS_X, POS_Y + POS_Y_KWH_TOTAL);
-  M5.Display.print("total:       kWh");
+  M5.Display.print("Total:       kWh");
 
   M5.Display.setCursor(STATE_X, STATE_Y);
   M5.Display.print("State: ");
@@ -67,7 +67,7 @@ void ui_init(int board_max_current, int initial_phases) {
 }
   
 void ui_set_state(int state) {
-  M5.Display.setCursor(STATE_X + STATE_X+STATE_V_X, STATE_Y);
+  M5.Display.setCursor(STATE_X + STATE_V_X, STATE_Y);
   switch(state) {
     case 0: M5.Display.printf("unknown     "); break;
     case 1: M5.Display.printf("no ev       "); break;

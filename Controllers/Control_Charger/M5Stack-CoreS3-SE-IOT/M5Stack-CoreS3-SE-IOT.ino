@@ -58,8 +58,10 @@ void ui_set_phases_callback(int phases) {
 void setup(void) {
 
   Serial.begin(115200);
+  Serial1.begin(115200, SERIAL_8N1, 2, 1);
   delay(2500);
   Serial.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
+  Serial1.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
 
   smart_evse_init();
 
@@ -93,6 +95,8 @@ void loop(void) {
   if (now > next_time) {
 
     next_time = now + INTERVAL;
+
+  Serial1.printf(".");
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 

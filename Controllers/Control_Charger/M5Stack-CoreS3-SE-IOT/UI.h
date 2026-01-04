@@ -32,7 +32,7 @@ void ui_process();
 
 #define STATE_X POS_X
 #define STATE_Y 136
-#define STATE_V_X (6 * POS_DX)
+#define STATE_V_X (7 * POS_DX)
 
 #define ADVERTIZED_X POS_X
 #define ADVERTIZED_Y 160
