@@ -28,6 +28,7 @@
 */
 #include <Arduino.h>
 #include "SmartEVSE.h"
+#include "DSMR5Reader.h"
 #include "UI.h"
 
 // the default address of the EdgeTech EVSE has modbus address 1
@@ -37,28 +38,28 @@
 
 ChargerState charger_state;
 
-#define INTERVAL  1000
+#define INTERVAL 1000
 unsigned long next_time;
 
-#define ALLOW_MISSING   3
+#define ALLOW_MISSING 3
 unsigned char allow_missing_count;
 
-#define PHASES  3
+#define PHASES 3
 
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
-    Serial.printf("advertizing %dA\r\n", advertizing_current);
+  Serial.printf("advertizing %dA\r\n", advertizing_current);
 }
 
 void ui_set_phases_callback(int phases) {
 
-    Serial.printf("set phases to %d\r\n", phases);
+  Serial.printf("set phases to %d\r\n", phases);
 }
 
 void setup(void) {
 
   Serial.begin(115200);
-  Serial1.begin(115200, SERIAL_8N1, 2, 1);
+
   delay(2500);
   Serial.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
   Serial1.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
@@ -85,6 +86,17 @@ void setup(void) {
 
   smart_evse_get_max_currents(ADDRESS);
 
+  dsmr5reader_init();
+
+  if (dsmr5reader_check() != DSMR_OK) {
+
+    Serial.printf("No compatible meter found!\r\n");
+
+    while (1) {}
+  }
+
+  Serial.printf("DSMR: %s\r\n",id);
+
   next_time = millis() + INTERVAL;
 }
 
@@ -92,11 +104,16 @@ void loop(void) {
 
   unsigned long now = millis();
 
+  if (dsmr5reader_process_line()) {
+
+    // Serial.printf("Current: %f, %f, %f\r\n", dsmr_current[0], dsmr_current[1], dsmr_current[2]);
+
+    ui_set_home_values(dsmr_current);
+  }
+
   if (now > next_time) {
 
     next_time = now + INTERVAL;
-
-  Serial1.printf(".");
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 
@@ -106,19 +123,19 @@ void loop(void) {
 
       charger_state.isNew = false;
 
-      Serial.printf("state: %d, error: %d, temperature: %d, cable: %d a\r\n",
-                    charger_state.state, charger_state.error, charger_state.temperature, charger_state.cable_current);
-      Serial.printf("current: %f, %f, %f a\r\n", charger_state.c[0], charger_state.c[1], charger_state.c[2]);
-      Serial.printf("voltage: %f, %f, %f v\r\n", charger_state.v[0], charger_state.v[1], charger_state.v[2]);
-      Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n", charger_state.kwh_session, charger_state.kwh_total);
+      // Serial.printf("state: %d, error: %d, temperature: %d, cable: %d a\r\n",
+      //                charger_state.state, charger_state.error, charger_state.temperature, charger_state.cable_current);
+      // Serial.printf("current: %f, %f, %f a\r\n", charger_state.c[0], charger_state.c[1], charger_state.c[2]);
+      // Serial.printf("voltage: %f, %f, %f v\r\n", charger_state.v[0], charger_state.v[1], charger_state.v[2]);
+      // Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n", charger_state.kwh_session, charger_state.kwh_total);
 
       ui_set_ev_values(charger_state);
 
     } else {
 
-      if(allow_missing_count) {
+      if (allow_missing_count) {
         allow_missing_count--;
-        if(!allow_missing_count) {
+        if (!allow_missing_count) {
           ui_unset_ev_values();
         }
       }

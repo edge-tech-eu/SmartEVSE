@@ -9,6 +9,7 @@ void ui_set_state(int state);
 void ui_set_ev_values(ChargerState charger_state);
 void ui_unset_ev_values();
 void ui_set_home_values(double home_current[3]);
+void ui_unset_home_values();
 void ui_process();
 
 // #define POS_X 16
