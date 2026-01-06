@@ -29,7 +29,7 @@ void ui_process();
 
 #define POS_X_EV_A 4
 #define POS_X_EV_V 10
-#define POS_X_HOME_A 16
+#define POS_X_HOME_A 15
 
 #define STATE_X POS_X
 #define STATE_Y 136

@@ -81,6 +81,8 @@ void ui_set_advertized(int value) {
 
   M5.Display.setCursor(ADVERTIZED_X + ADVERTIZED_V_X, ADVERTIZED_Y + ADVERTIZED_V_Y);
   M5.Display.printf("%2d", value);
+
+  slider.value_update(value);
 }
 
 void ui_set_ev_values(ChargerState charger_state) {
@@ -130,25 +132,25 @@ void ui_unset_ev_values() {
 
 void ui_set_home_values(double home_current[3]) {
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX, POS_Y + POS_Y_L1);
-  M5.Display.printf("%4.1f", home_current[0]);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX-2, POS_Y + POS_Y_L1);
+  M5.Display.printf("%5.1f", home_current[0]);
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX, POS_Y + POS_Y_L2);
-  M5.Display.printf("%4.1f", home_current[1]);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX-2, POS_Y + POS_Y_L2);
+  M5.Display.printf("%5.1f", home_current[1]);
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX, POS_Y + POS_Y_L3);
-  M5.Display.printf("%4.1f", home_current[2]);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX-2, POS_Y + POS_Y_L3);
+  M5.Display.printf("%5.1f", home_current[2]);
 }
 
 void ui_unset_home_values() {
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX, POS_Y + POS_Y_L1 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX-2, POS_Y + POS_Y_L1);
   M5.Display.printf("    ");
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX, POS_Y + POS_Y_L2 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX-2, POS_Y + POS_Y_L2);
   M5.Display.printf("    ");
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX, POS_Y + POS_Y_L3 * POS_DY);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX-2, POS_Y + POS_Y_L3);
   M5.Display.printf("    ");
 }
 
