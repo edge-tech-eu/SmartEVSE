@@ -4,7 +4,7 @@
 
 
 #define ID_LENGTH 25
-char id[ID_LENGTH];
+char dsmr_id[ID_LENGTH];
 #define LINE_BUFFER_SIZE 256
 char line_buffer[LINE_BUFFER_SIZE];
 unsigned int line_buffer_index;
@@ -29,13 +29,13 @@ void dsmr5reader_init() {
 
 #elif ARDUINO_M5STACK_CORES3
 
-#define UART_READ_BUFFER_SIZE 100
-#define UART_READ_BUFFER_SIZE_WARNING 75
+#define UART_READ_BUFFER_SIZE 300
+#define UART_READ_BUFFER_SIZE_WARNING 275
 
   Serial2.setRxBufferSize(UART_READ_BUFFER_SIZE);
 
-  // Serial1.begin(115200, SERIAL_8N1, 2, 1, true);
-  Serial1.begin(115200, SERIAL_8N1, 2, 1);
+  Serial1.begin(115200, SERIAL_8N1, 2, 1, true);
+  //Serial1.begin(115200, SERIAL_8N1, 2, 1);
 
 #endif
 
@@ -47,21 +47,26 @@ int dsmr5reader_check(void) {
 
   unsigned long time_out_time = millis() + 2000UL;
   int c;
+  int count = 0;
 
   do {
     if (Serial1.available()) {
       c = Serial1.read();
+      if (c > 0) {
+        count++;
+      }
     }
   } while ((c != '/') && (millis() < time_out_time));
 
   if (c != '/') {
 
+    Serial.printf("data read so far: %d\r\n", count);
     return (DSMR_NO_DATA);
   }
 
 
-  int n = Serial1.readBytesUntil('\r', id, ID_LENGTH);
-  id[n] = 0;
+  int n = Serial1.readBytesUntil('\r', dsmr_id, ID_LENGTH);
+  dsmr_id[n] = 0;
   Serial1.read();
 
   do {

@@ -9,7 +9,38 @@
     ModBud_Ground/white   G (pin 4)
     ModBud_A/yellow       A (pin 2)
     ModBud_B/green        B (pin 1)
+
+  Ext port M5CoreS3:            DSMR:
+    Pin 1: SDA/pulse/GPIO1/TX - N.C.
+    Pin 2: SCL/edge/GPIO2/RX  - Data, 4K7 resistor to 5V
+    Pin 3: 5V                 - N.C.
+    Pin 4: GND                - Power ground + Signal ground
+                              - Data request tie to 5V
+
+  RJ12 6P6C plug:
+
+             //////
+            //////
+       +-------------+
+      /             /|
+     /             / |
+    /6 5 4 3 2 1  /  |
+   +-+-+-+-+-+-+-+   +
+   | | | | | | | |  /
+   |             | /
+   |   +---+     |/
+   +---+   +-----+
+       +---+
   
+    Pinout:
+      1 - +5V
+      2 - Data request (tie to +5V for data)
+      3 - Data ground
+      4 - N.C.
+      5 - Data (pull high)
+      6 - Power Ground
+
+
   Documentation:
   - M5Stack M5CoreS3 SE: https://docs.m5stack.com/en/core/M5CoreS3%20SE
   - COMMU: https://docs.m5stack.com/en/module/commu
@@ -31,6 +62,8 @@
 #include "DSMR5Reader.h"
 #include "UI.h"
 
+#define MAX_HOME_CURRENT 25
+
 // the default address of the EdgeTech EVSE has modbus address 1
 // be aware that when the address is still 1, the board needs a state change t respond to modbus
 
@@ -44,11 +77,16 @@ unsigned long next_time;
 #define ALLOW_MISSING 3
 unsigned char allow_missing_count;
 
+int board_max_current;
+int max_current;
+int last_max_current;
+
 #define PHASES 3
 
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
   Serial.printf("advertizing %dA\r\n", advertizing_current);
+  smart_evse_set_max_current(ADDRESS, max_current, 0);
 }
 
 void ui_set_phases_callback(int phases) {
@@ -68,11 +106,14 @@ void setup(void) {
 
   allow_missing_count = ALLOW_MISSING;
 
-  int board_max_current = 16;
+  board_max_current = 16;
 
   if (smart_evse_is_32_amp(ADDRESS)) {
     board_max_current = 32;
   }
+
+  last_max_current = board_max_current;
+  max_current = board_max_current;
 
   ui_init(board_max_current, PHASES);
 
@@ -88,17 +129,19 @@ void setup(void) {
 
   dsmr5reader_init();
 
-  if (dsmr5reader_check() != DSMR_OK) {
+  int meter_status = dsmr5reader_check();
+  if (meter_status != DSMR_OK) {
 
-    Serial.printf("No compatible meter found!\r\n");
+    Serial.printf("No compatible meter found! (code: %d)\r\n", meter_status);
 
     while (1) {}
   }
 
-  Serial.printf("DSMR: %s\r\n",id);
+  Serial.printf("DSMR: %s\r\n", dsmr_id);
 
   next_time = millis() + INTERVAL;
 }
+
 
 void loop(void) {
 
@@ -116,6 +159,29 @@ void loop(void) {
     next_time = now + INTERVAL;
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
+
+    // calculate advertizing current
+    max_current = board_max_current;
+    for (int i = 0; i < 3; i++) {
+      int spare = MAX_HOME_CURRENT - dsmr_current[i] + charger_state.c[i];
+      if (spare < max_current) {
+        max_current = spare;
+      }
+    }
+    if(max_current < 6) {
+      max_current = 0;
+    }
+
+    if (last_max_current != max_current) {
+
+      last_max_current = max_current;
+
+      Serial.printf("Setting advertizing current to %d\r\n", max_current);
+
+      ui_set_advertized(max_current);
+
+      ui_set_advertizing_current_callback(max_current);
+    }
 
     if (charger_state.isNew) {
 

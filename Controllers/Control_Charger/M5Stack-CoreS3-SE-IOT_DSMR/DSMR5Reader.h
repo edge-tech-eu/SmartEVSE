@@ -8,7 +8,7 @@
 #define DSMR_NOT_DSMR_50      4
 
 extern double dsmr_current[3];
-extern char id[];
+extern char dsmr_id[];
 
 void dsmr5reader_init(void);
 int dsmr5reader_check(void);
