@@ -10,16 +10,17 @@ void smart_evse_init() {
   mb.begin(9600);
 }
 
-void smart_evse_get_serial(int address) {
+bool smart_evse_get_serial(int address, int *serial) {
 
   if (mb.readInputRegisters(address, 0x00, 5) == mb.ku8MBSuccess) {
 
-    DEBUG_PRINTF("serial: %4x%4x%4x%4x%4x\r\n",
-                  mb.getResponseBuffer(0),
-                  mb.getResponseBuffer(1),
-                  mb.getResponseBuffer(2),
-                  mb.getResponseBuffer(3),
-                  mb.getResponseBuffer(4));
+    for(int i=0;i<5;i++) {
+      serial[i] = mb.getResponseBuffer(i);
+    }
+
+    DEBUG_PRINTF("serial: %4x%4x%4x%4x%4x\r\n",serial[0],serial[1],serial[2],serial[3],serial[4]);
+
+    return(true);
 
   } else {
 
@@ -29,14 +30,20 @@ void smart_evse_get_serial(int address) {
       DEBUG_PRINTF("try state change with button on the board\r\n");
     }
   }
+
+  return(false);
 }
 
 
-void smart_evse_get_fw_version(int address) {
+bool smart_evse_get_fw_version(int address, int *version) {
 
   if (mb.readInputRegisters(address, 0x05, 1) == mb.ku8MBSuccess) {
 
-    DEBUG_PRINTF("fw version: %4x\r\n", mb.getResponseBuffer(0));
+    *version = mb.getResponseBuffer(0);
+
+    DEBUG_PRINTF("fw version: %4x\r\n", *version);
+
+    return(true);
 
   } else {
 
@@ -46,6 +53,8 @@ void smart_evse_get_fw_version(int address) {
       DEBUG_PRINTF("try state change with button on the board\r\n");
     }
   }
+
+  return(false);
 }
 
 

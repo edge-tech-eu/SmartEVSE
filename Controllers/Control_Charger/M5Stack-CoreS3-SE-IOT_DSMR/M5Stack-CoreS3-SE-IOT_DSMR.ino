@@ -115,17 +115,17 @@ void setup(void) {
   last_max_current = board_max_current;
   max_current = board_max_current;
 
-  ui_init(board_max_current, PHASES);
-
-  Serial.printf("init done\r\n");
+  ui_init();
 
   Serial.printf("Request serial and fw version:\r\n");
 
-  smart_evse_get_serial(ADDRESS);
+  int serial[5];
+  int version;
+  smart_evse_get_serial(ADDRESS, serial);
+  smart_evse_get_fw_version(ADDRESS, &version);
+  // ui_start_up(serial,version);
 
-  smart_evse_get_fw_version(ADDRESS);
-
-  smart_evse_get_max_currents(ADDRESS);
+  Serial.printf("init done\r\n");
 
   dsmr5reader_init();
 
@@ -138,6 +138,10 @@ void setup(void) {
   }
 
   Serial.printf("DSMR: %s\r\n", dsmr_id);
+
+  delay(4000);
+
+  ui_setup_main(board_max_current, PHASES);
 
   next_time = millis() + INTERVAL;
 }
