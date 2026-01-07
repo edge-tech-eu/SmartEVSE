@@ -15,10 +15,7 @@ int advertized;
 bool single_phases;
 
 
-void ui_init(int board_max_current, int initial_phases) {
-
-  advertized = board_max_current;
-  single_phases = (initial_phases == 1);
+void ui_init() {
 
   M5.begin();
 
@@ -28,9 +25,26 @@ void ui_init(int board_max_current, int initial_phases) {
   } else {
     Serial.printf("Board type (%d) not expected\r\n", board);
   }
+}
+
+void ui_start_up(int *serial, int version) {
 
   M5.Display.setTextSize(2);
+  M5.Display.setCursor(0, POS_Y);
+  M5.Display.printf("ev charger: connected!");
+  M5.Display.setCursor(0, POS_Y+16*1.5);
+  M5.Display.printf("serial:  %4x%4x%4x%4x%4x",serial[0],serial[1],serial[2],serial[3],serial[4]);
+  M5.Display.setCursor(0, POS_Y+16*3);
+  M5.Display.printf("version: %4x", version);
+}
 
+void ui_setup_main(int board_max_current, int initial_phases) {
+
+  advertized = board_max_current;
+  single_phases = (initial_phases == 1);
+
+  M5.Display.setTextSize(2);
+  M5.Display.clearDisplay(BLACK);
   M5.Display.setCursor(POS_X, POS_Y);
   M5.Display.print("    EV          Home");
   M5.Display.setCursor(POS_X, POS_Y + POS_Y_L1);
@@ -67,7 +81,9 @@ void ui_init(int board_max_current, int initial_phases) {
 }
 
 void ui_set_state(int state) {
+
   M5.Display.setCursor(STATE_X + STATE_V_X, STATE_Y);
+
   switch (state) {
     case 0: M5.Display.printf("unknown     "); break;
     case 1: M5.Display.printf("no ev       "); break;

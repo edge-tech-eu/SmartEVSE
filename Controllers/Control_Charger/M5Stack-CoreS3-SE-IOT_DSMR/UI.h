@@ -3,7 +3,9 @@
 
 #include "SmartEVSE.h"
 
-void ui_init(int board_max_current, int initial_phases);
+void ui_init();
+void ui_start_up(int *serial, int version);
+void ui_setup_main(int board_max_current, int initial_phases);
 void ui_set_advertized(int value);
 void ui_set_state(int state);
 void ui_set_ev_values(ChargerState charger_state);
