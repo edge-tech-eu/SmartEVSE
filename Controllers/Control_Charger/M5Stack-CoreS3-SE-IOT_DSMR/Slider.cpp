@@ -26,11 +26,11 @@ void slider_t::setupColor(uint16_t frame_color, uint16_t back_color, uint16_t th
 }
 
 void slider_t::draw(LovyanGFX* gfx) {
-    gfx->startWrite();
+    //gfx->startWrite();
     draw_frame(gfx);
     int pos = calc_pos(_current_value);
     draw_thumb(pos, _thumb_color, gfx);
-    gfx->endWrite();
+    //gfx->endWrite();
 }
 
 bool slider_t::update(m5::touch_detail_t& td, LovyanGFX* gfx) {

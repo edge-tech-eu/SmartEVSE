@@ -94,6 +94,7 @@ void ui_set_phases_callback(int phases) {
   Serial.printf("set phases to %d\r\n", phases);
 }
 
+
 void setup(void) {
 
   Serial.begin(115200);
@@ -123,9 +124,12 @@ void setup(void) {
   int version;
   smart_evse_get_serial(ADDRESS, serial);
   smart_evse_get_fw_version(ADDRESS, &version);
-  // ui_start_up(serial,version);
+
+  ui_start_up(serial, version);
 
   Serial.printf("init done\r\n");
+
+  delay(100);
 
   dsmr5reader_init();
 
@@ -141,7 +145,11 @@ void setup(void) {
 
   delay(4000);
 
+  ui_clear();
+  
   ui_setup_main(board_max_current, PHASES);
+
+  delay(10000);
 
   next_time = millis() + INTERVAL;
 }
@@ -162,6 +170,8 @@ void loop(void) {
 
     next_time = now + INTERVAL;
 
+    ui_start_update();
+
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 
     // calculate advertizing current
@@ -172,7 +182,7 @@ void loop(void) {
         max_current = spare;
       }
     }
-    if(max_current < 6) {
+    if (max_current < 6) {
       max_current = 0;
     }
 
@@ -210,6 +220,8 @@ void loop(void) {
         }
       }
     }
+
+    ui_end_update();
   }
 
   ui_process();
