@@ -24,11 +24,12 @@ void button_t::setupColor(uint16_t frame_color, uint16_t back_color, uint16_t th
 }
 
 void button_t::draw(LovyanGFX* gfx) {
-    gfx->startWrite();
+    //gfx->startWrite();
     draw_frame(gfx);
     draw_label(gfx);
-    gfx->endWrite();
+    //gfx->endWrite();
 }
+
 
 bool button_t::update(m5::touch_detail_t& td, LovyanGFX* gfx) {
     _was_changed = false;

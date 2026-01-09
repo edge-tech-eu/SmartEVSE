@@ -4,6 +4,8 @@
 #include "SmartEVSE.h"
 
 void ui_init();
+void ui_start_update();
+void ui_end_update();
 void ui_start_up(int *serial, int version);
 void ui_setup_main(int board_max_current, int initial_phases);
 void ui_set_advertized(int value);
@@ -13,6 +15,7 @@ void ui_unset_ev_values();
 void ui_set_home_values(double home_current[3]);
 void ui_unset_home_values();
 void ui_process();
+void ui_clear();
 
 // #define POS_X 16
 #define POS_X (16+18)
