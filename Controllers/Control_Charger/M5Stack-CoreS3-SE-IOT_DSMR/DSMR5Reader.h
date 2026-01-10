@@ -9,6 +9,7 @@
 
 extern double dsmr_current[3];
 extern char dsmr_id[];
+extern bool dsmr_single_phase;
 
 void dsmr5reader_init(void);
 int dsmr5reader_check(void);

@@ -5,6 +5,7 @@
 
 #define ID_LENGTH 25
 char dsmr_id[ID_LENGTH];
+bool dsmr_single_phase;
 #define LINE_BUFFER_SIZE 256
 char line_buffer[LINE_BUFFER_SIZE];
 unsigned int line_buffer_index;
@@ -48,6 +49,9 @@ int dsmr5reader_check(void) {
   unsigned long time_out_time = millis() + 2000UL;
   int c;
   int count = 0;
+  bool dsmr50 = false;
+
+  dsmr_single_phase = true;
 
   do {
     if (Serial1.available()) {
@@ -77,16 +81,25 @@ int dsmr5reader_check(void) {
     // read \n
     Serial1.read();
 
+    if (!strncmp(line_buffer, "1-0:72.7.0", 10)) {
+      dsmr_single_phase = false;
+    }
+
     if (!strncmp(line_buffer, "1-3:0.2.8(", 10)) {
 
       if ((line_buffer[10] == '5') && (line_buffer[11] == '0')) {
-
-        return (DSMR_OK);
+        
+        dsmr50 = true;
+        //return (DSMR_OK);
 
       } else {
 
-        return (DSMR_NOT_DSMR_50);
+        //return (DSMR_NOT_DSMR_50);
       }
+    }
+
+    if(line_buffer[0] == '!') {
+      return(dsmr50?DSMR_OK:DSMR_NOT_DSMR_50);
     }
 
   } while (millis() < time_out_time);
