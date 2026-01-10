@@ -268,6 +268,28 @@ void smart_evse_set_phases(int address, bool isPhases3) {
   }
 }
 
+int smart_evse_get_phases(int address) {
+
+  if (mb.readHoldingRegisters(address, 0x204, 1) == mb.ku8MBSuccess) {
+
+    bool isPhases3 = (mb.getResponseBuffer(0)&1);
+
+    DEBUG_PRINTF("read settings: phases is %d\r\n",(isPhases3?3:1));
+
+    return(isPhases3?3:1);
+
+  } else {
+
+    DEBUG_PRINTF("failed to read over mb\r\n");
+
+    if (address == 1) {
+      DEBUG_PRINTF("try state change with button on the board\r\n");
+    }
+
+    return(-1);
+  }
+}
+
 bool smart_evse_is_32_amp(int address) {
 
   bool is32Amp = false;

@@ -1,5 +1,3 @@
-#include <Arduino.h>
-#include <Wire.h>
 #include <M5Unified.h>
 #include "UI.h"
 #include "Slider.h"
@@ -18,46 +16,30 @@ int last_value;
 
 
 void ui_init() {
-/*
+
   auto cfg = M5.config();
-  // Optional: Disable unused peripherals to speed up init
   cfg.internal_imu = false;
   cfg.internal_mic = false;
-
-  // Initialize with explicit display reset
+  cfg.clear_display = true;
   M5.begin(cfg);
+  M5.Display.setBrightness(128);
+  M5.Display.fillScreen(TFT_BLACK);
+  M5.Display.display();
+}
 
-  // M5.Power.setDisplayBrightness(128);
+void ui_delay_untill_tapped(unsigned long delay) {
 
-  //M5.Display.reset();
-  M5.Display.init();
+  unsigned long till = millis() + delay;
 
-  // Force a full display reset and clear any residual buffer data
-  M5.Display.clear(TFT_BLACK);
-  M5.Display.display();  // Commit the clear to screen
-  */
+  while (millis() < till) {
 
-  auto cfg = M5.config();
-    cfg.internal_imu = false;
-    cfg.internal_mic = false;
-    cfg.clear_display = true; // Ensure display is cleared during init
+    M5.update();
 
-    // Initialize M5 with proper power sequencing
-    M5.begin(cfg);
-
-    // Explicitly reset the AW9523 IO expander that controls display power
-    // Wire.begin(11, 12); // CoreS3 internal I2C bus pins
-    // Wire.beginTransmission(0x58); // AW9523 address
-    // Wire.write(0x00); // Reset register
-    // Wire.write(0x00); // Perform hardware reset
-    // Wire.endTransmission();
-    // delay(100);
-
-    // Re-initialize display with full reset
-    // M5.Display.init();
-    M5.Display.setBrightness(128);
-    M5.Display.fillScreen(TFT_BLACK);
-    M5.Display.display();
+    auto touch = M5.Touch.getDetail();
+    if (touch.wasClicked()) {
+      return;
+    }
+  }
 }
 
 void ui_start_update() {
@@ -73,23 +55,83 @@ void ui_end_update() {
 
 void ui_clear() {
 
-  M5.Display.fillScreen(BLACK);
+  M5.Display.fillScreen(DEFAULT_BG_COLOR);
+  M5.Display.setTextSize(1);
+  M5.Display.setFont(&DEFAULT_FONT);
+  M5.Display.setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BG_COLOR);
+
   M5.Display.display();
 }
 
-void ui_start_up(int *serial, int version) {
+void ui_splash() {
+
+  M5.Display.setTextColor(SPLASH_COLOR_1, DEFAULT_BG_COLOR);
+  M5.Display.setFont(&SPLASH_FONT);
+  M5.Display.setTextSize(1);
+  M5.Display.setCursor(30, 15);
+  M5.Display.setCursor(320 / 2 - SPLASH_FONT_DX * 19 / 2, 15);
+  M5.Display.printf("from your friends @");
+  M5.Display.setTextColor(SPLASH_COLOR_2, DEFAULT_BG_COLOR);
+  M5.Display.setCursor(320 / 2 - SPLASH_FONT_DX * 15 / 2, 240 - 15 - SPLASH_FONT_DY);
+  M5.Display.printf("www.edgetech.eu");
+
+  M5.Display.fillRoundRect(SPLASH_X, SPLASH_Y, SPLASH_WIDTH, SPLASH_HEIGHT, SPLASH_ROUNDNESS, SPLASH_COLOR_2);
+
+  M5.Display.fillTriangle(
+    SPLASH_X + SPLASH_WIDTH / 2 - SPLASH_DIAG_DX, SPLASH_Y,
+    SPLASH_X + SPLASH_WIDTH / 2 + SPLASH_DIAG_DX, SPLASH_Y,
+    SPLASH_X + SPLASH_WIDTH / 2 + SPLASH_DIAG_DX, SPLASH_Y + SPLASH_HEIGHT,
+    SPLASH_COLOR_1);
+  M5.Display.fillRoundRect(SPLASH_X + SPLASH_WIDTH / 2, SPLASH_Y, SPLASH_WIDTH / 2, SPLASH_HEIGHT, SPLASH_ROUNDNESS, SPLASH_COLOR_1);
+
+  M5.Display.fillTriangle(
+    SPLASH_X + SPLASH_WIDTH / 2 - SPLASH_DIAG_DX, SPLASH_Y,
+    SPLASH_X + SPLASH_WIDTH / 2 + SPLASH_DIAG_DX, SPLASH_Y + SPLASH_HEIGHT,
+    SPLASH_X + SPLASH_WIDTH / 2 - SPLASH_DIAG_DX, SPLASH_Y + SPLASH_HEIGHT,
+    SPLASH_COLOR_2);
+
+  M5.Display.setTextColor(SPLASH_COLOR_1, SPLASH_COLOR_2);
+  M5.Display.setFont(&SPLASH_FONT);
+  M5.Display.setTextSize(SPLASH_FONT_SIZE);
+  M5.Display.setCursor(SPLASH_X + SPLASH_TEXT_1_DX, SPLASH_Y + SPLASH_TEXT_1_DY);
+  M5.Display.printf("edge");
+  M5.Display.setTextColor(SPLASH_COLOR_2, SPLASH_COLOR_1);
+  M5.Display.setCursor(SPLASH_X + SPLASH_TEXT_2_DX, SPLASH_Y + SPLASH_TEXT_2_DY);
+  M5.Display.printf("tech");
+
+  M5.Display.display();
+}
+
+void ui_start_up() {
 
   ui_start_update();
 
-  M5.Display.setTextSize(1.5);
+  M5.Display.setFont(&AsciiFont8x16);
+  M5.Display.setTextSize(1);
   M5.Display.setCursor(0, POS_Y);
+  M5.Display.printf("Initializing system:\r\n");
+  /*
   M5.Display.printf("ev charger: connected!");
   M5.Display.setCursor(0, POS_Y + 16 * 1.5);
   M5.Display.printf("serial: %04x%04x%04x%04x%04x", serial[0], serial[1], serial[2], serial[3], serial[4]);
   M5.Display.setCursor(0, POS_Y + 16 * 3);
-  M5.Display.printf("firmware version: %4x", version);
-
+  M5.Display.printf("firmware version: %4x\r\n", version);
+*/
   ui_end_update();
+}
+
+void ui_start_up_add_line(char *line) {
+
+  M5.Display.print(line);
+  M5.Display.display();
+}
+
+void ui_start_up_add_line_error(char *line) {
+
+  M5.Display.setTextColor(ERROR_TEXT_COLOR, DEFAULT_BG_COLOR);
+  M5.Display.print(line);
+  M5.Display.setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BG_COLOR);
+  M5.Display.display();
 }
 
 void ui_setup_main(int board_max_current, int initial_phases) {
@@ -131,8 +173,6 @@ void ui_setup_main(int board_max_current, int initial_phases) {
 
   button.setup({ BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT }, "3", "1", single_phases, TFT_WHITE, TFT_BLACK, TFT_LIGHTGRAY);
   button.draw();
-
-  ui_set_advertizing_current_callback(advertized);
 
   ui_end_update();
 }

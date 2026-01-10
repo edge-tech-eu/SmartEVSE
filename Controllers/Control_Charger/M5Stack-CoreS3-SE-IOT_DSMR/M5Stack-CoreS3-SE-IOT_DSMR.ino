@@ -69,87 +69,169 @@
 
 #define ADDRESS 1
 
+// room to store the charger state (charge state, currents, voltages)
 ChargerState charger_state;
 
+// DSMR smart meter should get new values every second
 #define INTERVAL 1000
 unsigned long next_time;
 
+// allow for 3x not being able to read values before nulling
 #define ALLOW_MISSING 3
 unsigned char allow_missing_count;
 
+// the charger has a jumper to hard set the max current to 16a (no jumper) or 32a (jumper)
 int board_max_current;
+
+// load balancing
 int max_current;
 int last_max_current;
 
-#define PHASES 3
+// set initial value
+#define INITIAL_PHASES 3
+int active_phases;
 
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
   Serial.printf("advertizing %dA\r\n", advertizing_current);
-  smart_evse_set_max_current(ADDRESS, max_current, 0);
+
+  smart_evse_set_max_current(ADDRESS, advertizing_current, 0);
 }
 
 void ui_set_phases_callback(int phases) {
 
   Serial.printf("set phases to %d\r\n", phases);
+
+  smart_evse_set_phases(ADDRESS, phases==3);
 }
 
+void board_init_and_check() {
+
+  bool error;
+  int serial[5];
+  int version;
+  char line[80];
+
+  do {
+
+    error = false;
+
+    ui_clear();
+
+    ui_start_up();
+
+    ui_start_up_add_line("\r\n- Connecting to charger: ");
+
+    smart_evse_init();
+
+    if (!smart_evse_get_serial(ADDRESS, serial)) {
+
+      ui_start_up_add_line_error("not found!\r\n  check wires and address\r\n  change state if at address 1\r\n");
+      board_max_current = 0;
+      error = true;
+
+    } else {
+
+      ui_start_up_add_line("found!\r\n");
+      sprintf(line, "- Serial number: %04x%04x%04x%04x%04x\r\n", serial[0], serial[1], serial[2], serial[3], serial[4]);
+      smart_evse_get_fw_version(ADDRESS, &version);
+      ui_start_up_add_line(line);
+      sprintf(line, "- Firmware version: %d.%d.%d\r\n", version >> 12, (version >> 8) & 0x0f, version & 0xff);
+      ui_start_up_add_line(line);
+      board_max_current = 16;
+
+      if (smart_evse_is_32_amp(ADDRESS)) {
+        board_max_current = 32;
+      }
+
+      sprintf(line, "- Board max current: %d\r\n", board_max_current);
+      ui_start_up_add_line(line);
+    }
+
+    last_max_current = board_max_current;
+    max_current = board_max_current;
+
+    dsmr5reader_init();
+
+    int meter_status = dsmr5reader_check();
+    if (meter_status != DSMR_OK) {
+
+      sprintf(line, "- No compatible meter found! (code: %d)\r\n", meter_status);
+      ui_start_up_add_line_error(line);
+      error = true;
+    } else {
+
+      sprintf(line, "- DSMR: %s\r\n", dsmr_id);
+      ui_start_up_add_line(line);
+      if (dsmr_single_phase) {
+        sprintf(line, "- Singel phase system\r\n");
+      } else {
+        sprintf(line, "- Three phase system\r\n");
+      }
+      ui_start_up_add_line(line);
+    }
+
+    ui_start_up_add_line("- Charger comm test: ");
+    int errors = 0;
+    for (int i = 0; i < 10; i++) {
+      bool found_error = false;
+      for (int j = 0; j < 10; j++) {
+        if (!(smart_evse_get_serial(ADDRESS, serial) && smart_evse_get_fw_version(ADDRESS, &version))) {
+          errors++;
+          found_error = true;
+        }
+      }
+      if (found_error) {
+        ui_start_up_add_line_error("x");
+      } else {
+        ui_start_up_add_line(".");
+      }
+    }
+    int quality = 100 - errors;
+    sprintf(line, " %d%%\r\n", quality);
+    if (quality < 100) {
+      ui_start_up_add_line_error(line);
+      error = true;
+    } else {
+      ui_start_up_add_line(line);
+    }
+
+    if (error) {
+
+      ui_start_up_add_line_error("\r\nErrors: restarting...");
+
+      ui_delay_untill_tapped(5000);
+    }
+
+  } while (error);
+
+  ui_start_up_add_line("\r\nAll fine!");
+}
 
 void setup(void) {
 
+  ui_init();
+  ui_splash();
+
   Serial.begin(115200);
 
-  delay(2500);
   Serial.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
-  Serial1.printf("\r\n\r\nM5Stack CoreS3 SE\r\n\r\n");
 
-  smart_evse_init();
+  ui_delay_untill_tapped(5000);
 
-  allow_missing_count = ALLOW_MISSING;
+  board_init_and_check();
 
-  board_max_current = 16;
-
-  if (smart_evse_is_32_amp(ADDRESS)) {
-    board_max_current = 32;
-  }
-
-  last_max_current = board_max_current;
-  max_current = board_max_current;
-
-  ui_init();
-
-  Serial.printf("Request serial and fw version:\r\n");
-
-  int serial[5];
-  int version;
-  smart_evse_get_serial(ADDRESS, serial);
-  smart_evse_get_fw_version(ADDRESS, &version);
-
-  ui_start_up(serial, version);
-
-  Serial.printf("init done\r\n");
-
-  delay(100);
-
-  dsmr5reader_init();
-
-  int meter_status = dsmr5reader_check();
-  if (meter_status != DSMR_OK) {
-
-    Serial.printf("No compatible meter found! (code: %d)\r\n", meter_status);
-
-    while (1) {}
-  }
-
-  Serial.printf("DSMR: %s\r\n", dsmr_id);
-
-  delay(4000);
+  ui_delay_untill_tapped(30000);
 
   ui_clear();
-  
-  ui_setup_main(board_max_current, PHASES);
 
-  delay(10000);
+  // make sure the charge is in sync
+  active_phases = INITIAL_PHASES;
+  ui_set_advertizing_current_callback(max_current);
+  ui_set_phases_callback(active_phases);
+  allow_missing_count = ALLOW_MISSING;
+
+  ui_setup_main(board_max_current, active_phases);
 
   next_time = millis() + INTERVAL;
 }
@@ -189,8 +271,6 @@ void loop(void) {
     if (last_max_current != max_current) {
 
       last_max_current = max_current;
-
-      Serial.printf("Setting advertizing current to %d\r\n", max_current);
 
       ui_set_advertized(max_current);
 
