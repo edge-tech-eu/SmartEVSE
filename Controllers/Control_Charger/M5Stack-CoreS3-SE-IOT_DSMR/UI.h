@@ -259,26 +259,29 @@ extern const lgfx::GLCDfont Font0;
 #define BUTTON_HEIGHT 24
 
 
-  #define DEFAULT_FONT        fonts::Font0
-  #define DEFAULT_TEXT_COLOR  WHITE
-  #define ERROR_TEXT_COLOR    RED
-  #define DEFAULT_BG_COLOR    BLACK
+  #define DEFAULT_FONT              fonts::Font0
+  #define DEFAULT_TEXT_COLOR        WHITE
+  #define ERROR_TEXT_COLOR          RED
+  #define DEFAULT_BG_COLOR          BLACK
+  #define EV_CHARGING_TEXT_COLOR    BLUE
+  #define EV_CONNECTED_TEXT_COLOR   GREEN
 
-  #define SPLASH_COLOR_1    WHITE
-  #define SPLASH_COLOR_2    RED
-  #define SPLASH_FONT       fonts::FreeMonoBold12pt7b
-  #define SPLASH_FONT_DX    14
-  #define SPLASH_FONT_DY    12
-  #define SPLASH_FONT_SIZE  2
-  #define SPLASH_WIDTH      280
-  #define SPLASH_HEIGHT     120
-  #define SPLASH_ROUNDNESS  (SPLASH_HEIGHT/3)
-  #define SPLASH_X          ((320 - SPLASH_WIDTH)/2)
-  #define SPLASH_Y          ((240 - SPLASH_HEIGHT)/2)
-  #define SPLASH_TEXT_1_DX  15
-  #define SPLASH_TEXT_1_DY  38
-  #define SPLASH_TEXT_2_DX  (SPLASH_TEXT_1_DX+5*(SPLASH_FONT_DX*SPLASH_FONT_SIZE))
-  #define SPLASH_TEXT_2_DY  38
-  #define SPLASH_DIAG_DX    40  
+
+  #define SPLASH_COLOR_1            WHITE
+  #define SPLASH_COLOR_2            RED
+  #define SPLASH_FONT               fonts::FreeMonoBold12pt7b
+  #define SPLASH_FONT_DX            14
+  #define SPLASH_FONT_DY            12
+  #define SPLASH_FONT_SIZE          2
+  #define SPLASH_WIDTH              280
+  #define SPLASH_HEIGHT             120
+  #define SPLASH_ROUNDNESS          (SPLASH_HEIGHT/3)
+  #define SPLASH_X                  ((320 - SPLASH_WIDTH)/2)
+  #define SPLASH_Y                  ((240 - SPLASH_HEIGHT)/2)
+  #define SPLASH_TEXT_1_DX          15
+  #define SPLASH_TEXT_1_DY          38
+  #define SPLASH_TEXT_2_DX          (SPLASH_TEXT_1_DX+5*(SPLASH_FONT_DX*SPLASH_FONT_SIZE))
+  #define SPLASH_TEXT_2_DY          38
+  #define SPLASH_DIAG_DX            40  
 
 #endif

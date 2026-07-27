@@ -30,8 +30,8 @@ void dsmr5reader_init() {
 
 #elif ARDUINO_M5STACK_CORES3
 
-#define UART_READ_BUFFER_SIZE 300
-#define UART_READ_BUFFER_SIZE_WARNING 275
+#define UART_READ_BUFFER_SIZE 2000
+#define UART_READ_BUFFER_SIZE_WARNING 1075
 
   Serial2.setRxBufferSize(UART_READ_BUFFER_SIZE);
 
@@ -42,10 +42,17 @@ void dsmr5reader_init() {
 
   line_buffer_index = 0;
   last_was_newline = false;
+  dsmr_current[0] = 0;
+  dsmr_current[1] = 0;
+  dsmr_current[2] = 0;
 }
+
+#define TELEGRAM_MAX_SIZE 3000
 
 int dsmr5reader_check(void) {
 
+  char telegram[TELEGRAM_MAX_SIZE];
+  int telegram_index = 0;
   unsigned long time_out_time = millis() + 2000UL;
   int c;
   int count = 0;
@@ -68,18 +75,25 @@ int dsmr5reader_check(void) {
     return (DSMR_NO_DATA);
   }
 
+  telegram[telegram_index++] = c;
 
   int n = Serial1.readBytesUntil('\r', dsmr_id, ID_LENGTH);
+  strncpy(&telegram[telegram_index],dsmr_id,n);
+  telegram_index+=n;
   dsmr_id[n] = 0;
-  Serial1.read();
+  c = Serial1.read();
+  telegram[telegram_index++] = c;
 
   do {
 
     // read lines till got: 1-3:0.2.8(50)
     int n = Serial1.readBytesUntil('\r', line_buffer, LINE_BUFFER_SIZE);
     line_buffer[n] = 0;
+    strncpy(&telegram[telegram_index],line_buffer,n);
+    telegram_index+=n;
     // read \n
-    Serial1.read();
+    c = Serial1.read();
+    telegram[telegram_index++] = c;
 
     if (!strncmp(line_buffer, "1-0:72.7.0", 10)) {
       dsmr_single_phase = false;
@@ -88,7 +102,7 @@ int dsmr5reader_check(void) {
     if (!strncmp(line_buffer, "1-3:0.2.8(", 10)) {
 
       if ((line_buffer[10] == '5') && (line_buffer[11] == '0')) {
-        
+
         dsmr50 = true;
         //return (DSMR_OK);
 
@@ -98,8 +112,10 @@ int dsmr5reader_check(void) {
       }
     }
 
-    if(line_buffer[0] == '!') {
-      return(dsmr50?DSMR_OK:DSMR_NOT_DSMR_50);
+    if (line_buffer[0] == '!') {
+      telegram[telegram_index]=0;
+      Serial.printf("telegram (%d):\r\n%s\r\n",telegram_index, telegram);
+      return (dsmr50 ? DSMR_OK : DSMR_NOT_DSMR_50);
     }
 
   } while (millis() < time_out_time);
@@ -107,6 +123,7 @@ int dsmr5reader_check(void) {
   return (DSMR_NOT_DSMR);
 }
 
+int tags_read;
 
 bool dsmr5reader_process_line() {
 
@@ -162,11 +179,7 @@ bool dsmr5reader_process_line() {
 
           // start of telegram
 
-          // Serial.printf("\r\ns\r\n");
-
-          for (int tag = 0; tag < 9; tag++) {
-            tag_value[tag] = -1;
-          }
+          tags_read = 0;
 
         } else if (line_buffer[0] == '!') {
 
@@ -176,8 +189,10 @@ bool dsmr5reader_process_line() {
           //  Serial.printf("%d: %f\r\n", tag, tag_value[tag]);
           // }
 
-          for (int phase = 0; phase < 3; phase++) {
-            dsmr_current[phase] = 1000. * (tag_value[3 + phase] - tag_value[6 + phase]) / tag_value[phase];
+          if (tags_read == (dsmr_single_phase ? 3 : 9)) {
+            for (int phase = 0; phase < 3; phase++) {
+              dsmr_current[phase] = 1000. * (tag_value[3 + phase] - tag_value[6 + phase]) / tag_value[phase];
+            }
           }
 
           // done processing line and telegram
@@ -213,38 +228,47 @@ bool dsmr5reader_process_line() {
                 case ((int)'3' << 8) + '2':
                   line_buffer[16] = 0;
                   tag_value[0] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'5' << 8) + '2':
                   line_buffer[16] = 0;
                   tag_value[1] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'7' << 8) + '2':
                   line_buffer[16] = 0;
                   tag_value[2] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'2' << 8) + '1':
                   line_buffer[17] = 0;
                   tag_value[3] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'4' << 8) + '1':
                   line_buffer[17] = 0;
                   tag_value[4] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'6' << 8) + '1':
                   line_buffer[17] = 0;
                   tag_value[5] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'2' << 8) + '2':
                   line_buffer[17] = 0;
                   tag_value[6] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'4' << 8) + '2':
                   line_buffer[17] = 0;
                   tag_value[7] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
                 case ((int)'6' << 8) + '2':
                   line_buffer[17] = 0;
                   tag_value[8] = atof(&line_buffer[11]);
+                  tags_read++;
                   break;
               }
             }

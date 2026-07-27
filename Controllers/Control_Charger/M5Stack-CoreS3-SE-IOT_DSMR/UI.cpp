@@ -17,11 +17,8 @@ int last_value;
 
 void ui_init() {
 
-  auto cfg = M5.config();
-  cfg.internal_imu = false;
-  cfg.internal_mic = false;
-  cfg.clear_display = true;
-  M5.begin(cfg);
+  
+
   M5.Display.setBrightness(128);
   M5.Display.fillScreen(TFT_BLACK);
   M5.Display.display();
@@ -184,9 +181,17 @@ void ui_set_state(int state) {
   switch (state) {
     case 0: M5.Display.printf("unknown     "); break;
     case 1: M5.Display.printf("no ev       "); break;
-    case 2: M5.Display.printf("ev connected"); break;
-    case 3: M5.Display.printf("ev charging "); break;
-    case 4: M5.Display.printf("ev charging "); break;
+    case 2: 
+      M5.Display.setTextColor(EV_CONNECTED_TEXT_COLOR, DEFAULT_BG_COLOR);
+      M5.Display.printf("ev connected");
+      M5.Display.setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BG_COLOR);
+      break;
+    case 3:
+    case 4: 
+      M5.Display.setTextColor(EV_CHARGING_TEXT_COLOR, DEFAULT_BG_COLOR);
+      M5.Display.printf("ev charging ");
+      M5.Display.setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BG_COLOR);
+      break;
   }
 }
 
@@ -254,14 +259,14 @@ void ui_unset_ev_values() {
 
 void ui_set_home_values(double home_current[3]) {
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX - 2, POS_Y + POS_Y_L1);
-  M5.Display.printf("%5.1f", home_current[0]);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX - 2+POS_DX, POS_Y + POS_Y_L1);
+  M5.Display.printf("%4.1f", home_current[0]);
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX - 2, POS_Y + POS_Y_L2);
-  M5.Display.printf("%5.1f", home_current[1]);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX - 2+POS_DX, POS_Y + POS_Y_L2);
+  M5.Display.printf("%4.1f", home_current[1]);
 
-  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX - 2, POS_Y + POS_Y_L3);
-  M5.Display.printf("%5.1f", home_current[2]);
+  M5.Display.setCursor(POS_X + POS_X_HOME_A * POS_DX - 2+POS_DX, POS_Y + POS_Y_L3);
+  M5.Display.printf("%4.1f", home_current[2]);
 }
 
 void ui_unset_home_values() {

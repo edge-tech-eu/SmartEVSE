@@ -16,6 +16,8 @@ typedef struct {
   unsigned int count;
 } ChargerState;
 
+extern int board_max_current;
+
 void smart_evse_init();
 void smart_evse_set_phases(int address, bool isPhases3);
 bool smart_evse_is_32_amp(int address);

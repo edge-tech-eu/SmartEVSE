@@ -5,6 +5,8 @@
 
 Modbus mb = Modbus();
 
+int board_max_current;
+
 void smart_evse_init() {
 
   mb.begin(9600);
@@ -18,7 +20,7 @@ bool smart_evse_get_serial(int address, int *serial) {
       serial[i] = mb.getResponseBuffer(i);
     }
 
-    DEBUG_PRINTF("serial: %4x%4x%4x%4x%4x\r\n",serial[0],serial[1],serial[2],serial[3],serial[4]);
+    // DEBUG_PRINTF("serial: %4x%4x%4x%4x%4x\r\n",serial[0],serial[1],serial[2],serial[3],serial[4]);
 
     return(true);
 
@@ -41,7 +43,7 @@ bool smart_evse_get_fw_version(int address, int *version) {
 
     *version = mb.getResponseBuffer(0);
 
-    DEBUG_PRINTF("fw version: %4x\r\n", *version);
+    // DEBUG_PRINTF("fw version: %4x\r\n", *version);
 
     return(true);
 
@@ -222,7 +224,7 @@ void smart_evse_set_max_current(int address, int max_current, int max_current_ne
 
   if (mb.writeSingleRegister(address, 0x201, max_current + 256 * max_current_next_second) == mb.ku8MBSuccess) {
 
-    DEBUG_PRINTF("wrote max currents\r\n");
+    DEBUG_PRINTF("wrote max currents: %d (fall back), %d (next second)\r\n", max_current, max_current_next_second);
 
   } else {
 
@@ -256,7 +258,7 @@ void smart_evse_set_phases(int address, bool isPhases3) {
 
   if (mb.writeSingleRegister(address, 0x204, value) == mb.ku8MBSuccess) {
 
-    DEBUG_PRINTF("wrote settings\r\n");
+    DEBUG_PRINTF("wrote settings 0x%04x\r\n", value);
 
   } else {
 
@@ -300,6 +302,8 @@ bool smart_evse_is_32_amp(int address) {
     unsigned int value = mb.getResponseBuffer(0);
 
     is32Amp = (value & 0x02) > 0;
+
+    board_max_current = (is32Amp?32:16);
 
   } else {
 
