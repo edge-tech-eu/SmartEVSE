@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" role="img" aria-labelledby="t d">
+<title id="t">Installing the Edge Smart Load Balancer EVSE-SC-02 on the P1 port of the smart meter</title><desc id="d">The Edge Smart Load Balancer EVSE-SC-02 sits next to the DSMR 5 smart meter, not in the consumer unit, and is connected to the P1 port with an RJ12 cable that also powers it. There are no CT clamps. One Modbus cable runs from the load balancer past every charger. It connects over 2.4 GHz WiFi to the home router and through the internet to the EdgeTech platform; the MyCharger app controls the chargers.</desc>
+<rect width="1000" height="640" fill="#fbfaf6"/>
+<text x="30" y="44" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#6b675e" text-anchor="start" letter-spacing="0.06em">GRID CONNECTION</text>
+<rect x="60" y="54" width="110" height="120" rx="6" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
+<text x="115" y="84" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#141414" text-anchor="middle">smart meter</text>
+<text x="115" y="100" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#141414" text-anchor="middle">DSMR 5</text>
+<rect x="98" y="132" width="34" height="22" rx="3" fill="#141414" stroke="#141414" stroke-width="1.5"/>
+<text x="115" y="147" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#fbfaf6" text-anchor="middle">P1</text>
+<rect x="200" y="40" width="390" height="230" rx="14" fill="none" stroke="#6b675e" stroke-width="1.5" stroke-dasharray="7 6"/>
+<text x="216" y="64" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#6b675e" text-anchor="start" letter-spacing="0.06em">CONSUMER UNIT</text>
+<rect x="226" y="74" width="54" height="70" rx="4" fill="#fbfaf6" stroke="#141414" stroke-width="1.5"/>
+<text x="253" y="104" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#141414" text-anchor="middle">main</text>
+<text x="253" y="120" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#141414" text-anchor="middle">switch</text>
+<path d="M30,80 L60,80" fill="none" stroke="#8a5a2b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M170,80 L226,80" fill="none" stroke="#8a5a2b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M280,80 L440,80" fill="none" stroke="#8a5a2b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M30,98 L60,98" fill="none" stroke="#141414" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M170,98 L226,98" fill="none" stroke="#141414" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M280,98 L440,98" fill="none" stroke="#141414" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M30,116 L60,116" fill="none" stroke="#8f8f8f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M170,116 L226,116" fill="none" stroke="#8f8f8f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M280,116 L440,116" fill="none" stroke="#8f8f8f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M30,134 L60,134" fill="none" stroke="#2a63c9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M170,134 L226,134" fill="none" stroke="#2a63c9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M280,134 L440,134" fill="none" stroke="#2a63c9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="440" y="70" width="120" height="150" rx="5" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
+<text x="500" y="96" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#141414" text-anchor="middle">groups</text>
+<rect x="452" y="108" width="96" height="34" rx="3" fill="#fbfaf6" stroke="#141414" stroke-width="1.5"/>
+<text x="500" y="130" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#141414" text-anchor="middle">house</text>
+<rect x="452" y="150" width="96" height="52" rx="3" fill="#fbfaf6" stroke="#141414" stroke-width="1.5"/>
+<text x="500" y="168" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#141414" text-anchor="middle">charger group</text>
+<text x="500" y="184" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#141414" text-anchor="middle">RCD Type A</text>
+<path d="M548,160 L610,160 L640,140" fill="none" stroke="#8a5a2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M548,168 L610,168 L640,146" fill="none" stroke="#141414" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M548,176 L610,176 L640,152" fill="none" stroke="#8f8f8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M548,184 L610,184 L640,158" fill="none" stroke="#2a63c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M548,192 L610,192 L640,164" fill="none" stroke="#3f9a3f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M548,192 L610,192 L640,164" fill="none" stroke="#e2c400" stroke-width="2" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="6 6"/>
+<text x="600" y="98" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="middle">power cable</text>
+<path d="M115,154 L115,330 L200,330" fill="none" stroke="#141414" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="126" y="220" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#141414" text-anchor="start">P1 cable</text>
+<text x="126" y="236" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#141414" text-anchor="start">(RJ12)</text>
+<text x="126" y="256" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="start">also the</text>
+<text x="126" y="272" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="start">power supply</text>
+<rect x="200" y="300" width="170" height="100" rx="6" fill="#e9e7f2" stroke="#141414" stroke-width="1.5"/>
+<text x="285" y="342" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141414" text-anchor="middle">EVSE-SC-02</text>
+<text x="285" y="360" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="middle">Edge Smart Load Balancer</text>
+<text x="285" y="378" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6b675e" text-anchor="middle">next to the meter,</text>
+<text x="285" y="391" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6b675e" text-anchor="middle">not in the consumer unit</text>
+<text x="414" y="312" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">No CT clamps: it reads import</text>
+<text x="414" y="328" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">and export per phase</text>
+<text x="414" y="344" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">from the smart meter</text>
+<rect x="640" y="110" width="120" height="110" rx="10" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
+<rect x="674" y="128" width="52" height="36" rx="4" fill="#dfe9e3" stroke="#1f6f50" stroke-width="1.2"/>
+<text x="700" y="151" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1f6f50" text-anchor="middle">board</text>
+<text x="700" y="186" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#141414" text-anchor="middle">Charger 1</text>
+<text x="700" y="203" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="middle">EVSE-C-3x32A</text>
+<rect x="820" y="110" width="120" height="110" rx="10" fill="#efece4" stroke="#6b675e" stroke-width="1.5" stroke-dasharray="6 5"/>
+<rect x="854" y="128" width="52" height="36" rx="4" fill="#dfe9e3" stroke="#1f6f50" stroke-width="1.2"/>
+<text x="880" y="151" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1f6f50" text-anchor="middle">board</text>
+<text x="880" y="186" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#6b675e" text-anchor="middle">Charger 2 …</text>
+<text x="880" y="203" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="middle">EVSE-C-3x32A</text>
+<path d="M370,350 L400,350 L400,250 L700,250 L700,220" fill="none" stroke="#6a3fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M700,250 L880,250 L880,220" fill="none" stroke="#6a3fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="560" y="274" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#6a3fa0" text-anchor="start">Modbus RS485, one cable</text>
+<text x="560" y="290" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#6a3fa0" text-anchor="start">passing every charger</text>
+<path d="M293.0,463.0 A10.0,10.0 0 0 1 307.0,463.0" fill="none" stroke="#1d4f9e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M286.0,456.0 A20.0,20.0 0 0 1 314.0,456.0" fill="none" stroke="#1d4f9e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M279.0,449.0 A30.0,30.0 0 0 1 321.0,449.0" fill="none" stroke="#1d4f9e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="300" cy="470" r="3" fill="#1d4f9e"/>
+<path d="M334,456 C420,456 440,470 500,470" fill="none" stroke="#1d4f9e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 6"/>
+<rect x="500" y="452" width="96" height="34" rx="5" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
+<circle cx="516" cy="469" r="3" fill="#1f6f50"/>
+<circle cx="528" cy="469" r="3" fill="#1f6f50"/>
+<circle cx="540" cy="469" r="3" fill="#1f6f50"/>
+<circle cx="552" cy="469" r="3" fill="#6b675e"/>
+<path d="M522,452 L514,430 M574,452 L582,430" fill="none" stroke="#141414" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="548" y="504" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">Home WiFi router</text>
+<text x="548" y="519" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">2.4 GHz</text>
+<path d="M596,469 L680,469" fill="none" stroke="#141414" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M690,492 C662,492 662,456 692,458 C694,430 736,426 746,448 C760,428 802,434 800,462 C830,462 832,492 806,492 Z" fill="#fbfaf6" stroke="#141414" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="748" y="472" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#141414" text-anchor="middle">Internet</text>
+<text x="748" y="487" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#141414" text-anchor="middle">EdgeTech platform</text>
+<path d="M832,470 L880,470" fill="none" stroke="#1d4f9e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 6"/>
+<path d="M894.15,448.15 A5.5,5.5 0 0 1 901.85,448.15" fill="none" stroke="#1d4f9e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M890.3,444.3 A11.0,11.0 0 0 1 905.7,444.3" fill="none" stroke="#1d4f9e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M886.45,440.45 A16.5,16.5 0 0 1 909.55,440.45" fill="none" stroke="#1d4f9e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="898" cy="452" r="3" fill="#1d4f9e"/>
+<rect x="880" y="470" width="46" height="82" rx="8" fill="#141414" stroke="#141414" stroke-width="1.5"/>
+<rect x="884" y="480" width="38" height="58" rx="2" fill="#e8d64a" stroke="#e8d64a" stroke-width="1.5"/>
+<text x="903" y="514" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="8" font-weight="700" fill="#141414" text-anchor="middle">MyCharger</text>
+<text x="903" y="570" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">MyCharger app</text>
+<text x="903" y="585" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">to control</text>
+<text x="234" y="520" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1d4f9e" text-anchor="start">WiFi to the home network</text>
+<text x="234" y="536" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1d4f9e" text-anchor="start">and the internet</text>
+<path d="M30,560 L58,560" fill="none" stroke="#141414" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="564" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">P1 cable (RJ12)</text>
+<path d="M30,580 L58,580" fill="none" stroke="#6a3fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="584" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">Modbus: 3 × 0.75 mm² stranded</text>
+<path d="M30,600 L58,600" fill="none" stroke="#1d4f9e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 5"/>
+<text x="66" y="604" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">WiFi 2.4 GHz</text>
+</svg>

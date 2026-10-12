@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" role="img" aria-labelledby="t d">
+<title id="t">Wiring the charge controller EVSE-C-3x32A</title><desc id="d">The power cable (L1, L2, L3, N, PE) runs from a charger group with a Type A RCD and a 3-pole + N breaker to POWER IN on the charge controller. POWER OUT (L1, L2, L3, N) runs through the ring of the DC-leakage sensor into the charge cable with the Type 2 plug; PE goes straight to the charge cable, the control pilot from the CP terminal. The Modbus cable (G, A+, B−) runs to the site controller and on to the next charger.</desc>
+<rect width="1000" height="640" fill="#fbfaf6"/>
+<rect x="30" y="110" width="170" height="250" rx="8" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
+<text x="46" y="136" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#141414" text-anchor="start">Consumer unit</text>
+<text x="46" y="154" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">charger group</text>
+<rect x="52" y="176" width="126" height="52" rx="4" fill="#fbfaf6" stroke="#141414" stroke-width="1.5"/>
+<text x="115" y="198" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">RCD Type A</text>
+<text x="115" y="214" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">30 mA</text>
+<rect x="52" y="244" width="126" height="52" rx="4" fill="#fbfaf6" stroke="#141414" stroke-width="1.5"/>
+<text x="115" y="266" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">circuit breaker</text>
+<text x="115" y="282" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">3-pole + N</text>
+<rect x="300" y="70" width="470" height="440" rx="14" fill="none" stroke="#6b675e" stroke-width="1.5" stroke-dasharray="7 6"/>
+<text x="316" y="94" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#6b675e" text-anchor="start" letter-spacing="0.06em">CHARGER ENCLOSURE</text>
+<rect x="390" y="140" width="250" height="260" rx="6" fill="#e6efe9" stroke="#1f6f50" stroke-width="1.8"/>
+<text x="515" y="300" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1f6f50" text-anchor="middle">EVSE-C-3x32A</text>
+<text x="515" y="318" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#1f6f50" text-anchor="middle">charge controller</text>
+<rect x="383" y="168" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="402" y="179" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="start">L1</text>
+<path d="M200,215 L250,215 L290,175 L383,175" fill="none" stroke="#8a5a2b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="383" y="190" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="402" y="201" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="start">L2</text>
+<path d="M200,237 L250,237 L290,197 L383,197" fill="none" stroke="#141414" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="383" y="212" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="402" y="223" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="start">L3</text>
+<path d="M200,259 L250,259 L290,219 L383,219" fill="none" stroke="#8f8f8f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="383" y="234" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="402" y="245" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="start">N</text>
+<path d="M200,281 L250,281 L290,241 L383,241" fill="none" stroke="#2a63c9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="383" y="256" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="402" y="267" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="start">PE</text>
+<path d="M200,303 L250,303 L290,263 L383,263" fill="none" stroke="#3f9a3f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M200,303 L250,303 L290,263 L383,263" fill="none" stroke="#e2c400" stroke-width="2.6" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="6 6"/>
+<text x="206" y="326" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#141414" text-anchor="start">Power cable</text>
+<text x="206" y="342" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="start">L1 L2 L3 N PE</text>
+<text x="206" y="356" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="start">size per</text>
+<text x="206" y="370" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b675e" text-anchor="start">NEN 1010</text>
+<text x="410" y="160" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#6b675e" text-anchor="start">POWER IN</text>
+<text x="620" y="160" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#6b675e" text-anchor="end">POWER OUT</text>
+<rect x="633" y="168" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="628" y="179" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="end">L1</text>
+<path d="M647,175 L700,175 L730,196.45 L790,196.45 L840,296.04" fill="none" stroke="#8a5a2b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="633" y="190" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="628" y="201" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="end">L2</text>
+<path d="M647,197 L700,197 L730,204.15 L790,204.15 L840,298.68" fill="none" stroke="#141414" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="633" y="212" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="628" y="223" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="end">L3</text>
+<path d="M647,219 L700,219 L730,211.85 L790,211.85 L840,301.32" fill="none" stroke="#8f8f8f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="633" y="234" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="628" y="245" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="end">N</text>
+<path d="M647,241 L700,241 L730,219.55 L790,219.55 L840,303.96" fill="none" stroke="#2a63c9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="712" cy="208" rx="16" ry="52" fill="none" stroke="#141414" stroke-width="7" opacity=".85"/>
+<text x="712" y="98" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#141414" text-anchor="middle">EVSE-X-DCD</text>
+<text x="712" y="114" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#141414" text-anchor="middle">DC-leakage sensor</text>
+<text x="712" y="130" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6b675e" text-anchor="middle">L1 L2 L3 N through, not PE</text>
+<path d="M712,262 C712,300 690,320 650,330" fill="none" stroke="#141414" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+<rect x="633" y="323" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="628" y="334" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="end">sensor</text>
+<path d="M383,263 L360,263 L360,470 L800,470 L840,318" fill="none" stroke="#3f9a3f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M383,263 L360,263 L360,470 L800,470 L840,318" fill="none" stroke="#e2c400" stroke-width="2.6" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="6 6"/>
+<rect x="633" y="358" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="628" y="369" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="end">CP</text>
+<path d="M647,365 L780,365 L840,326" fill="none" stroke="#e8590c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M840,300 C870,300 880,330 880,360 L880,430" fill="none" stroke="#141414" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="880" cy="470" r="40" fill="#141414"/><circle cx="880" cy="470" r="31" fill="#3a3a3a"/>
+<circle cx="868" cy="458" r="4.2" fill="#fbfaf6"/>
+<circle cx="892" cy="458" r="4.2" fill="#fbfaf6"/>
+<circle cx="861" cy="474" r="4.2" fill="#fbfaf6"/>
+<circle cx="880" cy="472" r="4.2" fill="#fbfaf6"/>
+<circle cx="899" cy="474" r="4.2" fill="#fbfaf6"/>
+<circle cx="871" cy="488" r="4.2" fill="#fbfaf6"/>
+<circle cx="889" cy="488" r="4.2" fill="#fbfaf6"/>
+<text x="880" y="536" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#141414" text-anchor="middle">Charge cable, Type 2 plug</text>
+<text x="880" y="553" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="middle">L1 L2 L3 N PE + CP</text>
+<rect x="553" y="393" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>
+<text x="572" y="404" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#141414" text-anchor="start">G A+ B−</text>
+<path d="M560,407 L560,590 L980,590" fill="none" stroke="#6a3fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="574" y="572" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#6a3fa0" text-anchor="start">Modbus RS485 to the site controller and the next charger</text>
+<text x="574" y="556" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#6a3fa0" text-anchor="start">MODBUS</text>
+<path d="M30,420 L58,420" fill="none" stroke="#8a5a2b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="424" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">L1</text>
+<path d="M30,440 L58,440" fill="none" stroke="#141414" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="444" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">L2</text>
+<path d="M30,460 L58,460" fill="none" stroke="#8f8f8f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="464" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">L3</text>
+<path d="M30,480 L58,480" fill="none" stroke="#2a63c9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="484" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">N (neutral)</text>
+<path d="M30,500 L58,500" fill="none" stroke="#3f9a3f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M30,500 L58,500" fill="none" stroke="#e2c400" stroke-width="2.6" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="6 6"/>
+<text x="66" y="504" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">PE (earth)</text>
+<path d="M30,520 L58,520" fill="none" stroke="#e8590c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="524" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">Control pilot (CP)</text>
+<path d="M30,540 L58,540" fill="none" stroke="#6a3fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="66" y="544" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">Modbus: 3 × 0.75 mm² stranded</text>
+</svg>
