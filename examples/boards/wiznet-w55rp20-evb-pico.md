@@ -17,7 +17,7 @@ This board has no RS485 interface, and the example does not talk to the charge c
 | What | Value in the code |
 |---|---|
 | P1 data in | GP1, UART0 RX (`Serial1`) |
-| UART settings | 115200 baud, RX inverted in hardware (`Serial1.setInvertRX(true)`) |
+| UART settings | 115200 baud, RX inverted in hardware (`Serial1.setInvertRX(true)`), 1024-byte receive buffer |
 | GP0 (UART0 TX) | not used |
 | Debug output | USB serial, 115200 baud |
 
@@ -28,5 +28,5 @@ To also control the charge controller from this board, add an RS485 interface on
 ## Notes
 
 - The sketch waits 10 s at start-up so you can open the serial monitor.
-- If no DSMR 5.0 meter is found, the sketch stops (`while(1) {}`). See the known issue in the [smart-meter-reader README](../smart-meter-reader/README.md#what-it-does).
+- If no DSMR 5.0 meter is found, the sketch prints the reason code and stops (`while(1) {}`). See the [smart-meter-reader README](../smart-meter-reader/README.md#what-it-does).
 - Register map for the charge controller: [docs/en/modbus-registers.md](../../docs/en/modbus-registers.md).

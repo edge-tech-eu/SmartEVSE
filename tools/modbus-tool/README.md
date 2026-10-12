@@ -1,6 +1,6 @@
 # Modbus tool
 
-`smartevse_tool.py` is a small Python program to read and change the registers of the charge controller (EVSE-C-3x32A) from a PC. It shows all status and configuration registers in one table and has a menu for a few common actions.
+`smartevse_tool.py` (the EdgeTech charge controller tool) is a small Python program to read and change the registers of the charge controller (EVSE-C-3x32A) from a PC. It shows all status and configuration registers in one table and has a menu for a few common actions.
 
 ## What it does
 
@@ -40,8 +40,10 @@ The code does not pin a pymodbus version. It works with versions that use `slave
 ## Usage
 
 ```sh
-python3 smartevse_tool.py <IP address or serial port>
+python3 smartevse_tool.py <IP address or serial port> [Modbus address]
 ```
+
+The Modbus address is optional and defaults to 1. Run the tool without arguments to see the usage text.
 
 The tool decides by the argument: a value that starts with `/dev/`, `COM` or `tty` is a serial port (Modbus RTU); anything else is an IP address (Modbus TCP).
 
@@ -62,13 +64,15 @@ python3 smartevse_tool.py 192.168.1.50
 
 Settings: port 502, timeout 2 s.
 
+Modbus TCP through a TCP-to-RTU gateway works for testing from a PC, but its response is slower. EdgeTech site controllers need tight responses from the charger, so they must be on a wired RS485 bus, not over Ethernet.
+
 ## Configure
 
 Fixed values at the top of the script:
 
 | Constant | Default | Notes |
 |---|---|---|
-| `SLAVE` | 1 | Modbus address of the charge controller. Boards ship set to 10: change this to 10 for a new board. At address 1 the charge controller only answers after a state change (press the button on the board). |
+| `SLAVE` | 1 | Modbus address of the charge controller; the optional second argument overrides it. The charger leaves the factory at address 1. Address 1 is special: after boot the charger does not answer there, only after a state change (press the button on the board, or plug in a car). EdgeTech site controllers move each new charger to its own address so all chargers can be reached. For your own controller, give the charger an address of 2 or higher via register 0x0200 (and save it). When reads fail at address 1, the tool prints this hint. |
 | `BAUDRATE` | 9600 | Serial speed. A bus driven by an EVSE-SC-02 site controller runs at 19200 baud; don't connect the tool to that bus while the site controller is running, because a Modbus bus has one master. |
 | `PORT` | 502 | TCP port. |
 
@@ -76,7 +80,7 @@ Fixed values at the top of the script:
 
 Registers read (decimal / hex):
 
-- Input: 0 (serial, first word), 5 (firmware), 6 (ms since boot), 256–269 (pilot, currents, state, temperature, phase currents and voltages, energy, options), 271–275 (session energy per phase, earth quality, UBRR).
+- Input: 0 (serial, first word), 5 (firmware), 6 (ms since boot), 256–268 (pilot, currents, state, temperature, phase currents and voltages, session energy, options), 269–270 (total energy, read as one 32-bit value), 271–275 (session energy per phase, earth quality, UBRR).
 - Holding: 512–522 (address, remote max current, magic code, challenge, settings, LED, condition, UBRR, CP disconnect timing and type).
 
-Decoding in the tool differs in places from the example sketches, for example the scaling of phase currents (the tool divides by 10, the sketches by 256) and the state numbering (the tool maps 0 = A, the sketches 1 = A). Check against the [Modbus register map](../../docs/en/modbus-registers.md) when you rely on a value.
+Decoding follows the [Modbus register map](../../docs/en/modbus-registers.md), the same as the example sketches: currents, voltages and energy are in 1/256 units (divided by 256), the state is 1-indexed (1 = A, 2 = B, 3 = C, 4 = D), and the error byte is a bitmask (several errors can show at once).

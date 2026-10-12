@@ -45,7 +45,7 @@ Het aansluitschema staat in [Installing the charge controller](../en/installatio
 - Verbind de meegeleverde draad aardedraad (groen-geel) met het grijze blok met 5 ingangen. Plaats deze op ingang PE. Verbind de andere zijde met de meegeleverde insteekconnector.
 - Voer de laadkabel door de wartel heen. Vervolgens:
   - steek de aders in de juiste uitgangen op het grijze blok met 4 uitgangen. Let op de juiste kleuren voor het verbinden. Sluit de aarde-ader (PE in het plaatje / groen-geel) aan op de meegeleverde losse insteekconnector. Je kunt de uitgang ontgrendelen door een platte schroevendraaier in het rechthoekige gat te steken – op dat moment kan de ader in de uitgang worden gestoken.
-  - Steek de dunne ader in het grijze blokje met twee oranje heveltje, kies daar de uitgang “PP”, in het plaatje hierboven aangeduid met gele draad met “CP”. Zorg dat je het heveltje helemaal omhoog klikt en de ader diep genoeg in de uitgang steekt. Klik dan het heveltje weer omlaag en controleer dat de ader goed vast zit.
+  - Steek de dunne signaaldraad (CP) in het grijze blokje met twee oranje hendeltjes, in de ingang **CP**, zoals op het plaatje hierboven. Laat **PP** leeg bij een vaste kabel: PP wordt alleen gebruikt bij een Type 2-contactdoos. Zorg dat je het heveltje helemaal omhoog klikt en de ader diep genoeg in de uitgang steekt. Klik dan het heveltje weer omlaag en controleer dat de ader goed vast zit.
 - Schroef de behuizing nu vast op de muur of paal en steek de voedingskabel door de wartel. Vervolgens:
   - Steek de aders van de voedingskabel in de juiste ingangen, let goed op de kleuren op de grijze connector met 5 ingangen.
   - Verbind de aarde-ader (PE) met de insteekconnector

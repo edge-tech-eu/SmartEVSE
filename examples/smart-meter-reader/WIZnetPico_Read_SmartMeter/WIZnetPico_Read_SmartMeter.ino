@@ -8,7 +8,7 @@
 
   The output of the DSMR 5 reader is the current draw of your house per phase.
   This can now be used to load balance your EVSE. See the other examples to see
-  how to control our EVSE
+  how to control the EdgeTech charge controller
 
   Board used:
   - W55RP2.0-EVB-Pico
@@ -37,12 +37,16 @@ void setup() {
 
   dsmr5reader_init();
 
-  if(dsmr5reader_check() != DSMR_OK) {
+  int meter_status = dsmr5reader_check();
 
-    Serial.printf("No compatible meter found!\r\n");
+  if(meter_status != DSMR_OK) {
+
+    Serial.printf("No compatible meter found! (code: %d)\r\n", meter_status);
 
     while(1) {}
   }
+
+  Serial.printf("DSMR 5 meter found (%s phase)\r\n", dsmr_single_phase ? "single" : "three");
 }
 
 void loop() {

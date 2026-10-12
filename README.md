@@ -1,4 +1,4 @@
-English · Nederlandse versie volgt
+English · Dutch version to follow
 
 # EdgeTech charge controller EVSE-C-3x32A
 
@@ -11,7 +11,7 @@ The EVSE-C-3x32A is a Mode 3 AC charge controller for one charge point, up to 3 
 ## Quick start
 
 1. **Install** the charge controller: [docs/en/installation.md](docs/en/installation.md).
-2. **Connect Modbus**: GND, A and B with 3 × 0.75 mm² stranded cable. 9600 baud, 8N1. Boards ship at address 10; the firmware default is address 1, where the board only answers after a state change (press the button on the board).
+2. **Connect Modbus**: GND, A and B with 3 × 0.75 mm² stranded cable. 9600 baud, 8N1. The charger leaves the factory at address 1, where it only answers after a state change (press the button on the board). An EdgeTech site controller moves each new charger to its own address; with your own controller, set an address of 2 or higher (register 0x0200).
 3. **Set the current**: write the limit in amps to register 0x0201 and read the state from 0x0103. All registers: [docs/en/modbus-registers.md](docs/en/modbus-registers.md).
 
 ## Information

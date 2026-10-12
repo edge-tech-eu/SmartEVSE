@@ -4,14 +4,14 @@ Download day-ahead electricity prices from the ENTSO-E Transparency Platform ove
 
 ## What it does
 
-- Connects to Wi-Fi and gets the time from an NTP server (fixed offset of +1 hour, `NTPClient timeClient(ntpUDP, 3600L)`; no daylight saving time).
-- Once at start-up, and then once a day after 13:00 (`GET_DATA_TIME`), it requests the day-ahead price document from `https://web-api.tp.entsoe.eu/api`:
+- Connects to Wi-Fi and gets the time from an NTP server (the `NTP` client of the arduino-pico core). The clock runs in UTC; local time is Europe/Amsterdam with summer time, set with the POSIX time zone string `CET-1CEST,M3.5.0,M10.5.0/3` (`LOCAL_TIMEZONE` in `ENTSOe.h`, applied with `setenv("TZ", ...)` and `tzset()`).
+- At start-up, and then each day after 13:00 local time (`GET_DATA_TIME`) until tomorrow's prices are in, it requests the day-ahead price document from `https://web-api.tp.entsoe.eu/api`:
   - document type `A44` (price document), contract type `A01` (daily),
   - bidding zone `10YNL----------L` (the Netherlands),
-  - `periodStart` = tomorrow's date at 22:00 UTC, `periodEnd` = the day after at 22:00 UTC (see `entsoe_make_url()` in `ENTSOe.cpp`).
-- If the request fails it retries an hour later.
-- Parses the XML response with a small built-in parser (`VerySimpleXMLParser.cpp`) and stores up to 2 days (`PAGES`) of 96 quarter-hour prices (`ENTREES`) in `pricing[][]`, in EUR/MWh. Missing positions are stored as `-1`.
-- Prints every price, then the highest and the lowest price with their day and quarter-hour index, on the serial monitor (115200 baud).
+  - the window is **today and tomorrow, local time**: `periodStart` = local midnight today, `periodEnd` = local midnight the day after tomorrow, both in UTC as the API wants them (23:00 UTC the day before in winter, 22:00 UTC in summer; see `entsoe_make_url()` in `ENTSOe.cpp`). Before about 13:00 the reply only has today.
+- If the request fails, or tomorrow is not published yet, it retries an hour later (a minute later at start-up).
+- Parses the XML response with a small built-in parser (`VerySimpleXMLParser.cpp`) and stores the prices per local day in `pricing[page][index]`: page 0 = today, page 1 = tomorrow, index = quarter-hour since local midnight (up to 100 on the day summer time ends), in EUR/MWh. Prices can be negative; slots without a price are `NAN` (test with `isnan()`). Positions that the reply leaves out repeat the price before them (curve type A03). Hourly data (`PT60M`) is spread over four quarter-hours.
+- Prints every price, then the highest and the lowest price with their day, quarter-hour index and local time, on the serial monitor (115200 baud).
 
 It does not control the charger yet. See [How it talks to the charge controller](#how-it-talks-to-the-charge-controller).
 
@@ -30,10 +30,7 @@ No wiring for this example: it only uses Wi-Fi and USB. To add charger control, 
 
 - Arduino IDE 2.x (or `arduino-cli`).
 - Board package: "Raspberry Pi Pico/RP2040/RP2350" (arduino-pico, by Earle Philhower), board "Raspberry Pi Pico 2W".
-- Libraries (versions from the sketch header):
-  - WiFi 1.0.0 and HTTPClient 1.2: included with the arduino-pico core
-  - NTPClient 3.2.1
-  - RTClib 2.1.4
+- Libraries: none to install. WiFi (with the `NTP` client) and HTTPClient are included with the arduino-pico core.
 - The sketch waits until the serial monitor is open (`while (!Serial)`), so open the serial monitor after uploading.
 
 ## Configure
@@ -52,15 +49,15 @@ No wiring for this example: it only uses Wi-Fi and USB. To add charger control, 
 
 | Setting | Where | Default | Notes |
 |---|---|---|---|
-| `DOMAIN` | `ENTSOe.h` | `10YNL----------L` | EIC code of your bidding zone. |
+| `ENTSOE_DOMAIN` | `ENTSOe.h` | `10YNL----------L` | EIC code of your bidding zone. |
 | `HTTP_ENDPOINT` | `ENTSOe.h` | `https://web-api.tp.entsoe.eu/api` | |
 | `DOCUMENT_TYPE` | `ENTSOe.h` | `A44` | Price document. |
 | `CONTRACT_MARKET_AGREEMENT_TYPE` | `ENTSOe.h` | `A01` | Daily. |
-| `PAGES`, `ENTREES` | `ENTSOe.h` | 2, 96 | Days and 15-minute slots stored. |
-| `GET_DATA_TIME` | `.ino` | 13 | Hour after which the next day's prices are fetched. |
-| Time offset | `.ino`, `NTPClient(ntpUDP, 3600L)` | 3600 s | Change for your time zone or summer time. |
+| `PAGES`, `ENTREES` | `ENTSOe.h` | 2, 100 | Days and 15-minute slots stored (100 covers the day summer time ends). |
+| `GET_DATA_TIME` | `.ino` | 13 | Local hour after which the next day's prices are fetched. |
+| `LOCAL_TIMEZONE` | `ENTSOe.h` | `CET-1CEST,M3.5.0,M10.5.0/3` | POSIX time zone string: Europe/Amsterdam with summer time. Change it if your bidding zone has another time zone. |
 
-**TLS certificate.** The sketch does not verify the server's TLS certificate (`https.setInsecure()`, "do not check the certificate"). That is fine for a test, but anyone between you and the server could send fake prices. For real use, add the server's root certificate and remove `setInsecure()`.
+**TLS certificate.** The sketch checks the server's TLS certificate, so nobody between you and the server can send fake prices. The arduino-pico core has no built-in certificate bundle, so the root certificate of the API server is embedded in `ENTSOe.cpp` (`entsoe_root_ca`, valid until March 2046) and passed with `https.setCACert()`. The check also needs the correct time, which is why the sketch waits for NTP first. If the server ever moves to another certificate authority, the request fails with a TLS error. Then look up the new root (for example `openssl s_client -connect web-api.tp.entsoe.eu:443 -showcerts` shows the chain; take the last certificate) and replace the PEM text in `ENTSOe.cpp`. Do not switch to `setInsecure()` for real use.
 
 ## How it talks to the charge controller
 
@@ -70,4 +67,4 @@ It doesn't yet: this example only gets the prices. To turn it into a charge sche
 2. Each quarter-hour, look up the price in `pricing[][]`.
 3. In cheap slots write the wanted current with `smart_evse_set_max_current()` (register 0x0201); in expensive slots write 0 A.
 
-See the [Modbus register map](../../docs/en/modbus-registers.md). Set the Modbus address of your charge controller (`ADDRESS`; boards ship set to 10, the firmware default is 1).
+See the [Modbus register map](../../docs/en/modbus-registers.md). Set the Modbus address of your charge controller (`ADDRESS`). The charger leaves the factory at address 1. Address 1 is special: after boot the charger does not answer there, only after a state change (press the button on the board, or plug in a car). For your own controller, give the charger an address of 2 or higher via register 0x0200 (and save it). Write the current at least once per second: the charger falls back to its static limit when the writes stop.

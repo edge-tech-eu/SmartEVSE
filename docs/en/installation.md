@@ -13,7 +13,7 @@ English · Dutch version to follow
 |---|---|---|
 | Mains in | Grey 5-pole terminal | L1, L2, L3, N, PE. Wire colours: L1 brown, L2 black, L3 grey, N blue, PE green-yellow |
 | To the car | Grey 4-pole terminal | L1, L2, L3, N of the charging cable or socket. PE of the cable goes to the PE of the mains, not through this terminal |
-| Control pilot | 2-pole terminal with orange levers | CP and PP of the charging cable or socket |
+| Control pilot | 2-pole terminal with orange levers | CP: the thin signal wire of the charging cable or socket. PP: only with a Type 2 socket; with a fixed cable PP stays empty |
 | Modbus | 3-pole terminal with orange levers | GND, A, B. Use 3 × 0.75 mm² stranded multi-core cable and keep branches short |
 | DC leak sensor | Upper white connector on the right | The DC-leakage sensor EVSE-X-DCD, supplied with every charge controller |
 | Cable lock | Lower white connector on the right | The cable lock driver EVSE-X-CL, for chargers with a Type 2 socket |
@@ -34,7 +34,7 @@ The schematic version of the same wiring:
 |---|---|
 | C_SEL (max current) | Open: 3 × 16 A. Jumper fitted: 3 × 32 A |
 | JP_V_LED | Voltage for the external LED: 5 V or 12 V |
-| Test button | Gives the board a state change, needed to talk to it at Modbus address 1 |
+| Test button | Gives the board a state change. At the factory address 1 the board only answers after a state change |
 | Green LED | Flashes every 3 seconds when the board is powered and OK |
 | Red LED | Error code, see [Status and error codes](#status-and-error-codes) |
 
@@ -54,7 +54,7 @@ The schematic version of the same wiring:
 6. **Charging cable.** Feed it through its gland.
    - Put L1, L2, L3 and N through the DC-leakage sensor ring and into the 4-pole terminal. Watch the colours. To open a terminal, push a flat screwdriver into the rectangular hole next to it.
    - Connect PE of the charging cable to the push-in earth connector.
-   - Put the thin signal wires into the 2-pole terminal with the orange levers, at CP and PP as shown in the picture. Lift the lever fully, push the wire in deep, close the lever and pull gently to check.
+   - Put the thin signal wire (CP) into the **CP** input of the 2-pole terminal with the orange levers, as shown in the picture. With a fixed cable, leave **PP** empty: PP is only used with a Type 2 socket, where the charger reads the cable rating from it. Lift the lever fully, push the wire in deep, close the lever and pull gently to check.
 7. **Power cable.** Mount the enclosure on the wall or pole and feed the power cable through its gland.
    - Connect L1, L2, L3 and N to the 5-pole terminal. Watch the colours.
    - Connect PE to the push-in earth connector.
@@ -67,7 +67,7 @@ The schematic version of the same wiring:
 
 ### Two or more chargers
 
-Chargers share one Modbus line. Give each charge controller its own Modbus address, keep the branches from the line to each board short, and use one 3 × 0.75 mm² cable for GND, A and B.
+Chargers share one Modbus line. Every charger leaves the factory at address 1; give each one its own Modbus address (an EdgeTech site controller does this for you), keep the branches from the line to each board short, and use one 3 × 0.75 mm² cable for GND, A and B.
 
 ![Two chargers on one Modbus line](../../images/two-chargers-modbus.png)
 

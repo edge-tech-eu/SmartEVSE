@@ -1,9 +1,10 @@
 // this is file is included in all general files
 // but is specific for:
 // 
-// WaveShave RP2350 Touch LCD 4
+// WaveShare RP2350 Touch LCD 4
 
-#define TXD1 8
-#define RXD1 9
+// RS485 on UART1 (Serial2): TX = GP4, RX = GP5
+#define TXD1 4
+#define RXD1 5
 
 #define DEBUG_PRINTF	Serial.printf

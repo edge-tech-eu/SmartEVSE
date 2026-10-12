@@ -3,9 +3,25 @@
 #include "ModBus.h"
 #include "SmartEVSE.h"
 
+// Modbus helpers for the EdgeTech charge controller (EVSE-C-3x32A).
+// Register map, scaling and state numbering: docs/en/modbus-registers.md
+//   https://github.com/edge-tech-eu/SmartEVSE/blob/main/docs/en/modbus-registers.md
+// Currents, voltages and energy are in 1/256 units: divide by 256.
+// State (0x0103 low byte) is 1-indexed: 1 = A, 2 = B, 3 = C, 4 = D.
+
 Modbus mb = Modbus();
 
 int board_max_current;
+
+static void report_no_answer(int address) {
+
+  DEBUG_PRINTF("failed to read over mb (address %d)\r\n", address);
+
+  if (address == 1) {
+    DEBUG_PRINTF("no answer: at address 1 the charger only answers after a state change\r\n");
+    DEBUG_PRINTF("(press the button on the board or plug in a car), or give it address 2 or higher via register 0x0200\r\n");
+  }
+}
 
 void smart_evse_init() {
 
@@ -20,17 +36,13 @@ bool smart_evse_get_serial(int address, int *serial) {
       serial[i] = mb.getResponseBuffer(i);
     }
 
-    // DEBUG_PRINTF("serial: %4x%4x%4x%4x%4x\r\n",serial[0],serial[1],serial[2],serial[3],serial[4]);
+    // DEBUG_PRINTF("serial: %04x%04x%04x%04x%04x\r\n",serial[0],serial[1],serial[2],serial[3],serial[4]);
 
     return(true);
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 
   return(false);
@@ -49,11 +61,7 @@ bool smart_evse_get_fw_version(int address, int *version) {
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 
   return(false);
@@ -75,11 +83,7 @@ void smart_evse_persist_settings(int address) {
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
@@ -98,11 +102,7 @@ void smart_evse_get_max_currents(int address) {
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
@@ -116,15 +116,13 @@ void smart_evse_get_state(int address) {
     int state = states & 0xff;
     int error = (states >> 8) & 0xff;
 
+    // 0x0103 low byte, 1-indexed (see docs/en/modbus-registers.md)
     switch (state) {
-      case 0: DEBUG_PRINTF("state undefined\r\n"); break;
       case 1: DEBUG_PRINTF("state A, no car connected\r\n"); break;
       case 2: DEBUG_PRINTF("state B, car connected, not charging\r\n"); break;
       case 3: DEBUG_PRINTF("state C, car connected, charging\r\n"); break;
-      case 4: DEBUG_PRINTF("state D, car connected, charging, ventilation requited\r\n"); break;
-      case 5: DEBUG_PRINTF("state ERROR\r\n"); break;
-      case 6: DEBUG_PRINTF("hardware error\r\n"); break;
-      default: DEBUG_PRINTF("weird state (%d)\r\n", state); break;
+      case 4: DEBUG_PRINTF("state D, car connected, charging, ventilation required\r\n"); break;
+      default: DEBUG_PRINTF("unexpected state (%d)\r\n", state); break;
     }
 
     // if(error == 0x00) {DEBUG_PRINTF("no errors\r\n");}
@@ -139,11 +137,7 @@ void smart_evse_get_state(int address) {
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
@@ -152,87 +146,70 @@ void smart_evse_get_temperature(int address) {
 
   if (mb.readInputRegisters(address, 0x104, 1) == mb.ku8MBSuccess) {
 
-    int temperature = mb.getResponseBuffer(0);
+    int temperature = (int16_t)mb.getResponseBuffer(0);
 
     DEBUG_PRINTF("board temperature %d\r\n", temperature);
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
 
 void smart_evse_get_current_draw(int address) {
 
+  // 0x105..0x107, 1/256 A
   if (mb.readInputRegisters(address, 0x105, 3) == mb.ku8MBSuccess) {
 
-    DEBUG_PRINTF("current draw L1: %d\r\n", mb.getResponseBuffer(0));
-    DEBUG_PRINTF("current draw L2: %d\r\n", mb.getResponseBuffer(1));
-    DEBUG_PRINTF("current draw L3: %d\r\n", mb.getResponseBuffer(2));
+    DEBUG_PRINTF("current draw L1: %.2f A\r\n", (double)mb.getResponseBuffer(0) / 256.);
+    DEBUG_PRINTF("current draw L2: %.2f A\r\n", (double)mb.getResponseBuffer(1) / 256.);
+    DEBUG_PRINTF("current draw L3: %.2f A\r\n", (double)mb.getResponseBuffer(2) / 256.);
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
 
 void smart_evse_get_session_energy(int address) {
 
+  // 0x108, 1/256 kWh
   if (mb.readInputRegisters(address, 0x108, 1) == mb.ku8MBSuccess) {
 
-    DEBUG_PRINTF("energy delivered in current session: %f kWh\r\n", (1. / 256.) * (double)mb.getResponseBuffer(0));
+    DEBUG_PRINTF("energy delivered in current session: %f kWh\r\n", (double)mb.getResponseBuffer(0) / 256.);
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
 void smart_evse_get_output_voltage(int address) {
 
+  // 0x109..0x10b, 1/256 V
   if (mb.readInputRegisters(address, 0x109, 3) == mb.ku8MBSuccess) {
 
-    DEBUG_PRINTF("voltage L1: %d V\r\n", mb.getResponseBuffer(0));
-    DEBUG_PRINTF("voltage L2: %d V\r\n", mb.getResponseBuffer(1));
-    DEBUG_PRINTF("voltage L3: %d V\r\n", mb.getResponseBuffer(2));
+    DEBUG_PRINTF("voltage L1: %.1f V\r\n", (double)mb.getResponseBuffer(0) / 256.);
+    DEBUG_PRINTF("voltage L2: %.1f V\r\n", (double)mb.getResponseBuffer(1) / 256.);
+    DEBUG_PRINTF("voltage L3: %.1f V\r\n", (double)mb.getResponseBuffer(2) / 256.);
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
+// 0x0201: low byte = RemoteMaxCurrent (A, 0 stops charging), high byte = RemoteMaxCurrentNextSecond.
+// Write at least once per second; after two missed writes the charger falls back to its static limit.
 void smart_evse_set_max_current(int address, int max_current, int max_current_next_second) {
 
-  if (mb.writeSingleRegister(address, 0x201, max_current + 256 * max_current_next_second) == mb.ku8MBSuccess) {
+  uint16_t value = (uint16_t)((max_current & 0xff) | ((max_current_next_second & 0xff) << 8));
 
-    DEBUG_PRINTF("wrote max currents: %d (fall back), %d (next second)\r\n", max_current, max_current_next_second);
+  if (mb.writeSingleRegister(address, 0x201, value) != mb.ku8MBSuccess) {
 
-  } else {
-
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
@@ -244,29 +221,34 @@ void smart_evse_set_magic(int address, int magic) {
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }
 
-void smart_evse_set_phases(int address, bool isPhases3) {
+// 0x0204 settings bitfield: bit 0 = PHASES (0 = 1-phase, 1 = 3-phase).
+// Read-modify-write, so the other bits (cable lock, DC leakage, CP disconnect) are kept.
+bool smart_evse_set_phases(int address, bool isPhases3) {
 
-  unsigned int value = (isPhases3?1:0);
+  if (mb.readHoldingRegisters(address, 0x204, 1) != mb.ku8MBSuccess) {
+
+    DEBUG_PRINTF("could not read settings, phases not changed\r\n");
+    report_no_answer(address);
+    return(false);
+  }
+
+  uint16_t value = mb.getResponseBuffer(0);
+
+  value = (uint16_t)((value & ~0x0001) | (isPhases3 ? 0x0001 : 0x0000));
 
   if (mb.writeSingleRegister(address, 0x204, value) == mb.ku8MBSuccess) {
 
     DEBUG_PRINTF("wrote settings 0x%04x\r\n", value);
+    return(true);
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
+    return(false);
   }
 }
 
@@ -282,11 +264,7 @@ int smart_evse_get_phases(int address) {
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
 
     return(-1);
   }
@@ -307,11 +285,7 @@ bool smart_evse_is_32_amp(int address) {
 
   } else {
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 
   return(is32Amp);
@@ -321,42 +295,46 @@ void smart_evse_get_charger_state(int address, ChargerState *charger_state) {
 
   charger_state->count++;
 
-  if (mb.readInputRegisters(address, 0x103, 10) == mb.ku8MBSuccess) {
-    
-    // 0x103 state, error
-    unsigned int value = mb.getResponseBuffer(0);
+  // read 0x102 up to and including 0x10e (13 registers)
+  if (mb.readInputRegisters(address, 0x102, 13) == mb.ku8MBSuccess) {
+
+    // 0x102 low byte: max cable current (A), high byte: advertised current (A)
+    charger_state->cable_current = mb.getResponseBuffer(0) & 0xff;
+
+    // 0x103 low byte: state (1 = A, 2 = B, 3 = C, 4 = D), high byte: error bits
+    unsigned int value = mb.getResponseBuffer(1);
     charger_state->error = value >> 8;
     charger_state->state = value & 0xff;
 
     // 0x104 temperature
-    charger_state->temperature = mb.getResponseBuffer(1);
+    charger_state->temperature = mb.getResponseBuffer(2);
 
     // 0x105 current l1 (1/256 a)
-    charger_state->c[0] = (double)mb.getResponseBuffer(2)/256.;
+    charger_state->c[0] = (double)mb.getResponseBuffer(3)/256.;
 
     // 0x106 current l2 (1/256 a)
-    charger_state->c[1] = (double)mb.getResponseBuffer(3)/256.;
+    charger_state->c[1] = (double)mb.getResponseBuffer(4)/256.;
 
     // 0x107 current l3 (1/256 a)
-    charger_state->c[2] = (double)mb.getResponseBuffer(4)/256.;
+    charger_state->c[2] = (double)mb.getResponseBuffer(5)/256.;
 
     // 0x108 energy session (1/256 kwh)
-    charger_state->kwh_session = (double)mb.getResponseBuffer(5)/256.;
+    charger_state->kwh_session = (double)mb.getResponseBuffer(6)/256.;
 
     // 0x109 voltage l1 (1/256 v)
-    charger_state->v[0] = (double)mb.getResponseBuffer(6)/256.;
+    charger_state->v[0] = (double)mb.getResponseBuffer(7)/256.;
 
     // 0x10a voltage l2 (1/256 v)
-    charger_state->v[1] = (double)mb.getResponseBuffer(7)/256.;
+    charger_state->v[1] = (double)mb.getResponseBuffer(8)/256.;
 
     // 0x10b voltage l3 (1/256 v)
-    charger_state->v[2] = (double)mb.getResponseBuffer(8)/256.;
+    charger_state->v[2] = (double)mb.getResponseBuffer(9)/256.;
 
-    // 0x10c options, bit 1 is 32/16a
+    // 0x10c options, bit 1 is 32/16a (buffer 10)
 
-    // 0x10d energy total (low part, 1/256 kwh)
-    // 0x10e energy total (high part, 1/256 kwh)
-    charger_state->kwh_total = (double)mb.getResponseBuffer(10)/256. + (double)mb.getResponseBuffer(11)*256.;
+    // 0x10d energy total, low word; 0x10e energy total, high word (32 bit, 1/256 kwh)
+    uint32_t energy = ((uint32_t)mb.getResponseBuffer(12) << 16) | (uint32_t)mb.getResponseBuffer(11);
+    charger_state->kwh_total = (double)energy / 256.;
 
     // time stamp;
     charger_state->ts = millis();
@@ -366,10 +344,6 @@ void smart_evse_get_charger_state(int address, ChargerState *charger_state) {
 
     charger_state->error_count++;
 
-    DEBUG_PRINTF("failed to read over mb\r\n");
-
-    if (address == 1) {
-      DEBUG_PRINTF("try state change with button on the board\r\n");
-    }
+    report_no_answer(address);
   }
 }

@@ -32,6 +32,12 @@ lv_obj_t *img;
 void ui_set_advertizing_current_callback(int advertizing_current);
 void ui_set_phases_callback(int phases);
 
+// tell the sketch which current to write to the charger (0x0201): 0 unless charging is allowed
+static void apply_advertized() {
+
+  ui_set_advertizing_current_callback(allow_charging ? advertize_current : 0);
+}
+
 void ui_set_ev_values(ChargerState charger_state) {
 
   if(charger_state.state != state) {
@@ -79,7 +85,12 @@ void ui_set_ev_values(ChargerState charger_state) {
   adp = (int)(v * 10 - bdp * 10);
   lv_label_set_text_fmt(et, "%d.%d", bdp, adp);
 
-  lv_label_set_text_fmt(connectionvalue, "%d", 100 - (int)(0.5 + (double)charger_state.error_count / (double)charger_state.count));
+  // connection quality in percent: share of successful reads
+  int quality = 0;
+  if (charger_state.count > 0) {
+    quality = 100 - (int)(0.5 + 100. * (double)charger_state.error_count / (double)charger_state.count);
+  }
+  lv_label_set_text_fmt(connectionvalue, "%d", quality);
 }
 
 void ui_set_home_values(double c[3], double v[3]) {
@@ -132,6 +143,7 @@ static void button_charging_event_cb(lv_event_t *e) {
       lv_label_set_text_fmt(ACV, "%dA", 0);
       lv_label_set_text(labelbtn, "Allow charging");
     }
+    apply_advertized();
   }
 }
 
@@ -159,6 +171,8 @@ static void slider_advertized_event_cb(lv_event_t *e) {
     if (allow_charging) {
       lv_label_set_text_fmt(ACV, "%dA", advertize_current);
     }
+
+    apply_advertized();
   }
 }
 

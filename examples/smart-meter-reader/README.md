@@ -4,8 +4,8 @@ Read a Dutch DSMR 5 smart meter through its P1 port and print the current per ph
 
 ## What it does
 
-- Opens the P1 port on UART0 (`Serial1`) at 115200 baud with the RX input inverted (`Serial1.setInvertRX(true)`). The P1 signal is inverted, and the RP2040/RP2350 can invert it in hardware, so you only need an RJ12 cable.
-- Waits up to 2 s for a telegram and checks it is DSMR 5.0 (line `1-3:0.2.8(50)`). If not, it prints "No compatible meter found!" and stops.
+- Opens the P1 port on UART0 (`Serial1`) at 115200 baud with the RX input inverted (`Serial1.setInvertRX(true)`) and a 1024-byte receive buffer (`setFIFOSize()`). The P1 signal is inverted, and the RP2040/RP2350 can invert it in hardware, so you only need an RJ12 cable.
+- Waits up to 2 s for a telegram, reads it to the end and checks it is DSMR 5.0 (line `1-3:0.2.8(50)`); it also notes whether the meter is single phase (no `1-0:72.7.0` line). This is the same check as in the [smart-meter-load-balancing](../smart-meter-load-balancing/) example. If the check fails, it prints "No compatible meter found!" with a code (1 = no data, 3 = no complete telegram, 4 = not DSMR 5.0) and stops.
 - Then, for every telegram, reads voltage per phase (`1-0:32.7.0`, `52.7.0`, `72.7.0`) and power imported (`21.7.0`, `41.7.0`, `61.7.0`) and exported (`22.7.0`, `42.7.0`, `62.7.0`) per phase.
 - Computes the current per phase as `1000 × (import kW − export kW) / V` and prints it on the serial monitor (115200 baud):
 
@@ -13,9 +13,7 @@ Read a Dutch DSMR 5 smart meter through its P1 port and print the current per ph
   Current: 1.234000, 0.456000, 2.345000
   ```
 
-  A negative value means that phase exports power (for example from solar panels).
-
-**Known issue:** the version check in `dsmr5reader_check()` (this folder's `DSMR5Reader.cpp`) has inverted `strncmp` logic and tests the wrong characters (`line_buffer[11]` twice), so it reports no compatible meter even for a DSMR 5.0 meter. The `DSMR5Reader.cpp` in the [smart-meter-load-balancing](../smart-meter-load-balancing/) example has a corrected check. Until this file is fixed, use that check or skip it.
+  A negative value means that phase exports power (for example from solar panels). On a single-phase meter L2 and L3 are 0.
 
 This sketch does not talk to the charge controller. To use the result, combine it with the [charger-control-basic](../charger-control-basic/) code, or see the [smart-meter-load-balancing](../smart-meter-load-balancing/) example, which does both on one board.
 
@@ -40,7 +38,7 @@ P1 pinout (RJ12 6P6C): 1 = +5 V, 2 = data request, 3 = data ground, 4 = not conn
 | GND | 3 (data ground) and 6 (power ground) | |
 | — | 2 (data request) | Must be pulled to +5 V so the meter sends data |
 
-GP0 (UART0 TX) is not used. The code does not enable a pull-up on the data line. Whether the data line needs an external pull-up resistor on the Pico, and which 5 V source to use for the data request, are to be confirmed from the diagram; the M5Stack load-balancing example uses a 4.7 kΩ pull-up.
+GP0 (UART0 TX) is not used. The code does not enable a pull-up on the data line. The meter's data output is open collector: if your wiring has no pull-up, add a 4.7 kΩ resistor from the data line to **3.3 V** (the Pico's 3V3 pin), as in the M5Stack load-balancing example. Never pull the data line up to 5 V: the Pico pins are 3.3 V. Only the data request line (P1 pin 2) goes to +5 V; it is an input of the meter. Which 5 V source to use for the data request is to be confirmed from the diagram.
 
 ## Build and upload
 

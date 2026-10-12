@@ -3,6 +3,7 @@
   WaveShare RP2350 Touch LCD 4
 
   Board: Raspberry Pi Pico/RP2040/RP2350: WaveShare RP2350 LCD 0.96
+  RS485: UART1 (Serial2), TX = GP4, RX = GP5 (set in Board.h)
   
     Connections:
     Charger:              WaveShare:   
@@ -24,8 +25,11 @@
 #include "Board.h"
 #include "SmartEVSE.h"
 
-// the default address of the EdgeTech EVSE has modbus address 1
-// be aware that when the address is still 1, the board needs a state change t respond to modbus
+// Modbus address of the EdgeTech charge controller. It leaves the factory at address 1.
+// At address 1 the charger does not answer after boot, only after a state change
+// (press the button on the board, or plug in a car).
+// For your own controller, give the charger address 2 or higher via register 0x0200 (and save it),
+// then set ADDRESS to that value. See docs/en/modbus-registers.md
 
 #define ADDRESS 1
 
@@ -47,8 +51,6 @@ void setup() {
 
   smart_evse_get_serial(ADDRESS);
 
-  // smart_evse_change_address(ADDRESS, NEW_ADDRESS, 0x1234);
-  
   smart_evse_get_fw_version(ADDRESS);
 
   smart_evse_get_max_currents(ADDRESS);
@@ -58,7 +60,7 @@ void setup() {
 
 void loop() {
 
-unsigned long now = millis();
+  unsigned long now = millis();
 
   if (now > next_time) {
 
@@ -66,10 +68,15 @@ unsigned long now = millis();
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 
-    Serial.printf("state: %d, error: %d, temperature: %d, cable: %d a\r\n", 
-      charger_state.state, charger_state.error, charger_state.temperature, charger_state.cable_current);
-    Serial.printf("current: %f, %f, %f a\r\n",charger_state.c[0],charger_state.c[1],charger_state.c[2]);
-    Serial.printf("voltage: %f, %f, %f v\r\n",charger_state.v[0],charger_state.v[1],charger_state.v[2]);
-    Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n");
+    if (charger_state.isNew) {
+
+      charger_state.isNew = false;
+
+      Serial.printf("state: %d, error: %d, temperature: %d, cable: %d a\r\n",
+        charger_state.state, charger_state.error, charger_state.temperature, charger_state.cable_current);
+      Serial.printf("current: %f, %f, %f a\r\n",charger_state.c[0],charger_state.c[1],charger_state.c[2]);
+      Serial.printf("voltage: %f, %f, %f v\r\n",charger_state.v[0],charger_state.v[1],charger_state.v[2]);
+      Serial.printf("session: %f kwh, total: %f kwh\r\n\r\n", charger_state.kwh_session, charger_state.kwh_total);
+    }
   }
 }

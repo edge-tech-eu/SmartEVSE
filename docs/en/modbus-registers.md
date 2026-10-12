@@ -4,13 +4,13 @@ English · Dutch version to follow
 
 > Same source as the register page on edgetech.eu. Firmware 2.10.17 and later.
 
-Applies to EVSE-C-3x32A firmware 2.10.17 and later. Modbus RTU over RS485, 9600 baud 8N1 (19200 when driven by an EVSE-SC-02), default address 0x01, boards ship at address 10.
+Applies to EVSE-C-3x32A firmware 2.10.17 and later. Modbus RTU over RS485, 9600 baud 8N1 (19200 when driven by an EVSE-SC-02), factory address 0x01.
 
-**Address 0x01 caveat.** At address 0x01 the board only answers after a state change (for example the button on the board). For continuous polling set the address to 0x02 or higher via register 0x0200.
+**Address 0x01.** The charger leaves the factory at address 0x01. This is a special address: after boot the charger does not answer there, only after a state change (for example the button on the board, or plugging in a car). An EdgeTech site controller moves each new charger to its own address, so all chargers on the bus can be reached. With your own controller, do the same: after a state change, write a new address of 0x02 or higher to register 0x0200 and save it.
 
 **Unit convention.** All analog values use 1/256 units: voltage in 1/256 V, current in 1/256 A, energy in 1/256 kWh. Divide by 256.
 
-**Timing.** The board expects a response window of 40 ms. Use a wired RS485 bus; RS485-over-Ethernet converters and wireless Modbus do not work.
+**Timing.** The board expects a response window of 40 ms. Use a wired RS485 bus. Modbus over Ethernet (an RS485-to-Ethernet gateway, Modbus TCP) works in principle, but the response is slower: fine for testing from a PC, but not with EdgeTech site controllers, which need tight responses from the charger. Wireless Modbus does not work.
 
 ## The two registers you need
 
@@ -107,7 +107,7 @@ The state register is 1-indexed. Voltage and current registers are only meaningf
 
 | Address | Name | Size | Description |
 |---|---|---|---|
-| `0x0200` L | ModbusAddress | ½ | Slave address. Protected. Default `0x01`, shipped `10` |
+| `0x0200` L | ModbusAddress | ½ | Slave address. Protected. Factory `0x01` (answers only after a state change); site controllers move each charger to its own address |
 | `0x0200` H | Discovery | ½ | Not used |
 | `0x0201` L | RemoteMaxCurrent | ½ | Advertised charge current limit in amps. `0` disables charging. The control register. |
 | `0x0201` H | RemoteMaxCurrentNextSecond | ½ | One-second failsafe limit; falls back to RemoteMaxCurrent unless rewritten within 1 s. Not for normal control. |

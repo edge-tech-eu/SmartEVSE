@@ -5,8 +5,13 @@
 
 #ifdef ARDUINO_ARCH_RP2040
 
-	#define TXD1 4
-	#define RXD1 5
+	// RS485 UART pins: defined in Board.h; GP4/GP5 (UART1) if the board does not set them
+	#ifndef TXD1
+		#define TXD1 4
+	#endif
+	#ifndef RXD1
+		#define RXD1 5
+	#endif
 
 	// use UART1 / Serial2
 	#define SERIAL_RS485	Serial2

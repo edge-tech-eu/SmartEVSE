@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""EdgeTech charge controller tool: read and change the registers of the EdgeTech
+charge controller (EVSE-C-3x32A) over Modbus.
+
+Register map, scaling and state numbering: docs/en/modbus-registers.md
+"""
 import sys
 import time
 import os
@@ -14,10 +19,24 @@ except ImportError:
 # --- ARGUMENT PARSING & CONFIGURATION ---
 # =================================================================
 
-if len(sys.argv) < 2:
-    print("Usage: python3 smartevse_tool.py <IP_or_SerialPort>")
-    print("  TCP Example: python3 smartevse_tool.py 10.1.2.24")
-    print("  RTU Example: python3 smartevse_tool.py /dev/ttyUSB0")
+USAGE = """EdgeTech charge controller tool
+
+Usage: python3 smartevse_tool.py <IP_or_SerialPort> [modbus_address]
+  RTU example: python3 smartevse_tool.py /dev/ttyUSB0
+  RTU example: python3 smartevse_tool.py COM3 2
+  TCP example: python3 smartevse_tool.py 10.1.2.24
+
+modbus_address defaults to 1. The charger leaves the factory at address 1. At address 1
+it does not answer after boot, only after a state change (press the button on the board,
+or plug in a car). For your own controller, give the charger address 2 or higher via
+register 0x0200 (and save it).
+
+Modbus TCP goes through a TCP-to-RTU gateway. That works for testing from a PC, but the
+response is slower. EdgeTech site controllers need tight responses from the charger, so
+they must be on a wired RS485 bus, not over Ethernet."""
+
+if len(sys.argv) < 2 or sys.argv[1] in ('-h', '--help'):
+    print(USAGE)
     sys.exit(1)
 
 TARGET = sys.argv[1]
@@ -32,7 +51,17 @@ else:
     IP = TARGET
     SERIAL_PORT = None
 
+# Modbus address of the charger (default 1, see USAGE above)
 SLAVE = 1
+if len(sys.argv) >= 3:
+    try:
+        SLAVE = int(sys.argv[2], 0)
+    except ValueError:
+        print(f"Invalid Modbus address: {sys.argv[2]}")
+        sys.exit(1)
+    if not 1 <= SLAVE <= 247:
+        print(f"Modbus address must be 1..247, got {SLAVE}")
+        sys.exit(1)
 PORT = 502
 BAUDRATE = 9600
 
@@ -82,6 +111,7 @@ def decode_split_bytes(val, name_h, name_l, decoder_h=str, decoder_l=str):
     return f"{name_h}: {decoder_h(h)} | {name_l}: {decoder_l(l)}"
 
 def decode_error(val):
+    # 0x0103 high byte: bitmask, bits combine
     if val == 0: return "No error"
     errors = {
         1: "Temperature too high",
@@ -89,15 +119,24 @@ def decode_error(val):
         4: "Ground fault",
         8: "Max CP too low",
         16: "Min CP too high",
-        32: "DCL triggered",
+        32: "DC leakage detected",
         64: "I2C initialization failed",
         128: "I2C communication error"
     }
-    return errors.get(val, f"Unknown ({val})")
+    return ", ".join(name for bit, name in errors.items() if val & bit)
 
 def decode_state(val):
-    states = {0: "A", 1: "B", 2: "C", 3: "D", 4: "Error"}
-    return states.get(val, str(val))
+    # 0x0103 low byte: IEC 61851 state, 1-indexed (1 = A, 2 = B, 3 = C, 4 = D)
+    states = {1: "A", 2: "B", 3: "C", 4: "D"}
+    return states.get(val, f"Unknown ({val})")
+
+def decode_current(val):
+    # 1/256 A
+    return f"{val / 256.0:.2f} A"
+
+def decode_voltage(val):
+    # 1/256 V
+    return f"{val / 256.0:.1f} V"
 
 def decode_settings_bits(val):
     bits = []
@@ -144,21 +183,25 @@ INPUT_REGISTERS = {
     258: ("Current Rating (0x0102)", lambda x: decode_split_bytes(x, "Adv", "Cable")),
     259: ("Status & Error (0x0103)", lambda x: decode_split_bytes(x, "Err", "State", decode_error, decode_state)),
     260: ("Temperature (0x0104)", lambda x: f"{x} °C"),
-    261: ("CurrentL1 (0x0105)", lambda x: f"{x/10.0} A"),
-    262: ("CurrentL2 (0x0106)", lambda x: f"{x/10.0} A"),
-    263: ("CurrentL3 (0x0107)", lambda x: f"{x/10.0} A"),
+    261: ("CurrentL1 (0x0105)", decode_current),
+    262: ("CurrentL2 (0x0106)", decode_current),
+    263: ("CurrentL3 (0x0107)", decode_current),
     264: ("EnergySession (0x0108)", decode_energy),
-    265: ("VoltageL1 (0x0109)", lambda x: f"{x} V"),
-    266: ("VoltageL2 (0x010A)", lambda x: f"{x} V"),
-    267: ("VoltageL3 (0x010B)", lambda x: f"{x} V"),
+    265: ("VoltageL1 (0x0109)", decode_voltage),
+    266: ("VoltageL2 (0x010A)", decode_voltage),
+    267: ("VoltageL3 (0x010B)", decode_voltage),
     268: ("Options (0x010C)", lambda x: f"32A/16A: {(x>>1)&1}, DCL: {x&1}"),
-    269: ("Energy Total L (0x010D)", decode_energy),
+    # 32-bit value: (reg[0x010E] << 16) | reg[0x010D], read as 2 registers
+    269: ("Energy (0x010D-0x010E)", decode_energy),
     271: ("EnergySessionL1 (0x010F)", decode_energy),
     272: ("EnergySessionL2 (0x0110)", decode_energy),
     273: ("EnergySessionL3 (0x0111)", decode_energy),
     274: ("Earth quality (0x0112)", str),
     275: ("UBRR (0x0113)", str)
 }
+
+# registers that are read as a 32-bit value (low word first)
+DOUBLE_REGISTERS = {269}
 
 # Holding Registers (fc=3/5/6) - Configuration
 HOLDING_REGISTERS = {
@@ -197,31 +240,43 @@ def get_client():
 
 def read_and_print_block(client, name, reg_map, is_holding=False):
     print(f"\n[ {name} ]")
-    print(f"{'Metric (PDF Name)':<28} | {'Value':<42} | {'Register (Dec / Hex)'}")
+    print(f"{'Register name':<28} | {'Value':<42} | {'Register (Dec / Hex)'}")
     print("-" * 100)
     
+    failures = 0
+
     for reg_addr, (desc, decoder) in sorted(reg_map.items()):
         # PROTECTION: Skip action registers (10 to 23) during dashboard read
         # to prevent accidental reboots or EEPROM wipes!
         if not is_holding and 10 <= reg_addr <= 23:
             continue
 
+        count = 2 if (not is_holding and reg_addr in DOUBLE_REGISTERS) else 1
+
         if is_holding:
-            res = client.read_holding_registers(address=reg_addr, count=1, **unit_kw(client))
+            res = client.read_holding_registers(address=reg_addr, count=count, **unit_kw(client))
         else:
-            res = client.read_input_registers(address=reg_addr, count=1, **unit_kw(client))
+            res = client.read_input_registers(address=reg_addr, count=count, **unit_kw(client))
 
         if res.isError():
+            failures += 1
             print(f"{desc:<28} | {'❌ Error (Timeout / Not implemented)':<42} | Reg {reg_addr:<3} / 0x{reg_addr:04X}")
             continue
 
         val = res.registers[0]
+        if count == 2:
+            val = (res.registers[1] << 16) | res.registers[0]
         try:
             decoded_val = decoder(val)
         except Exception:
             decoded_val = f"Error decoding (Raw: {val})"
         
         print(f"{desc:<28} | {str(decoded_val):<42} | Reg {reg_addr:<3} / 0x{reg_addr:04X}")
+
+    if failures and SLAVE == 1:
+        print("\nNo answer: at address 1 the charger only answers after a state change")
+        print("(press the button on the board, or plug in a car). For your own controller,")
+        print("give the charger address 2 or higher via register 0x0200 (and save it).")
 
 def run_dashboard():
     clear_screen()
@@ -231,7 +286,9 @@ def run_dashboard():
         return
 
     print("="*100)
-    print(f" ⚡ SmartEVSE Control Center - Target: {TARGET} ({MODE})")
+    print(f" ⚡ EdgeTech charge controller tool - Target: {TARGET} ({MODE}), Modbus address {SLAVE}")
+    if MODE == 'TCP':
+        print(" Modbus TCP via a TCP-to-RTU gateway: fine for testing, but slower. Site controllers need a wired RS485 bus.")
     print(f" pymodbus {pymodbus_version} - using {list(unit_kw(client))[0]}=")
     print("="*100)
 
@@ -277,7 +334,7 @@ def main():
         print(" [1] Set Reg 516 (0x0204) to AUTO + MISUSE (Value: 25 / 0x0019)")
         print(" [2] Set Reg 516 (0x0204) manually (Custom value)")
         print(" [3] Save to EEPROM (SaveEEPROM -> Read Reg 10 / 0x000A)")
-        print(" [4] Reboot Wallbox (Reset -> Read Reg 12 / 0x000C)")
+        print(" [4] Reboot charger (Reset -> Read Reg 12 / 0x000C)")
         print(" [5] Disconnect CP Relay (Disconnect CP -> Read Reg 23 / 0x0017)")
         print(" [r] 🔄 Reload view")
         print(" [q] 🚪 Quit")

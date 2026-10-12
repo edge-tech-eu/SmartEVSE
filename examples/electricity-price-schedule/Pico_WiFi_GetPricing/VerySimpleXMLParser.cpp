@@ -10,18 +10,18 @@ void xml_buffer(const char *buffer) {
   xml_chars_left = (unsigned int)strlen(xml_ptr);
 }
 
+// move to just after the next c, starting at the current position
+// (the current character counts: right after a tag the pointer is already on the next '<')
 int xml_goto_char(char c) {
-  
-  do {
 
+  while((xml_chars_left > 0) && (*xml_ptr != c)) {
     xml_ptr++;
     xml_chars_left--;
+  }
 
-    if(xml_chars_left == 0) {
-        return(-1);
-      }
-
-  } while(c != *xml_ptr);
+  if(xml_chars_left == 0) {
+    return(-1);
+  }
 
   // Serial.printf("[XML] found %c (%u)\r\n", *xml_ptr, xml_chars_left);
 

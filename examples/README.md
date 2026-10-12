@@ -20,8 +20,8 @@ A Python tool to read and change registers from a PC is in [tools/modbus-tool](.
 
 **Address and speed.** The examples talk at 9600 baud, 8N1, and use Modbus address 1 (`#define ADDRESS 1` in each sketch).
 
-- The firmware default address is **1**. At address 1 the charge controller only answers after a state change, for example after you press the button on the board. If you get "failed to read over mb", press the button and try again.
-- Boards **ship set to address 10**. For a new board, change `ADDRESS` to `10` in the sketch.
+- The charger leaves the factory at address **1**. This is a special address: after boot the charger only answers after a state change, for example after you press the button on the board. If you get "failed to read over mb", press the button and try again.
+- For continuous polling, give the charger its own address: after a state change, write 2 or higher to register 0x0200, save it, and set `ADDRESS` in the sketch to match. An EdgeTech site controller does this for each new charger by itself.
 - When an EVSE-SC-02 site controller drives the bus, the bus runs at 19200 baud and the site controller is the master. These examples are also a master, so run them on their own bus, not on a bus that a site controller already drives.
 
 **Registers.** All registers are described in the [Modbus register map](../docs/en/modbus-registers.md).

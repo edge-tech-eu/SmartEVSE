@@ -12,7 +12,7 @@
 
   Documentation:
   - https://www.waveshare.com/pico-2ch-rs485.htm
-  - https://github.com/edge-tech-eu/SmartEVSE/blob/main/ModBusRegisters.pdf
+  - https://github.com/edge-tech-eu/SmartEVSE/blob/main/docs/en/modbus-registers.md
   - https://arduino-pico.readthedocs.io/en/latest/
 
   Contact us if you help controlling our evse: https://edgetech.eu/
@@ -24,8 +24,11 @@
 #include "Board.h"
 #include "SmartEVSE.h"
 
-// the default address of the EdgeTech EVSE has modbus address 1
-// be aware that when the address is still 1, the board needs a state change t respond to modbus
+// Modbus address of the EdgeTech charge controller. It leaves the factory at address 1.
+// At address 1 the charger does not answer after boot, only after a state change
+// (press the button on the board, or plug in a car).
+// For your own controller, give the charger address 2 or higher via register 0x0200 (and save it),
+// then set ADDRESS to that value. See docs/en/modbus-registers.md
 
 #define ADDRESS 1
 

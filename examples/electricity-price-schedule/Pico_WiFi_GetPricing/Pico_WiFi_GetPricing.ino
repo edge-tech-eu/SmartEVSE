@@ -1,42 +1,72 @@
 /* 
     This is example code to show how to get the day-ahead electricity prices from ENTSO-e
-    Use this code to make your own evse controller and charge your car at lowest cost
+    Use this code to make your own charge controller and charge your car at lowest cost
 
-    You need a security key from ENTO-e, see ENTSOe.cpp
+    You need a security key from ENTSO-e, see ENTSOe.cpp
 
     Board used:
     - Raspberrry Pi Pico 2W - from Raspberry Pi Pico/RP2040/RP2350
 
-    Libraries used:
-    - WiFi v1.0.0 (from package RP2040)
-    - HTTPClient v1.2 (from package RP2040)
-    - NTPClient v3.2.1 - to get the time
-    - RTClib v2.1.4    - to convert epoch in date
+    Libraries used (all included with the RP2040/RP2350 board package):
+    - WiFi v1.0.0      - Wi-Fi and the NTP client (NTP)
+    - HTTPClient v1.2  - HTTPS requests
+
+    Time: NTP gives UTC; the local time zone is Europe/Amsterdam with summer time
+    (LOCAL_TIMEZONE in ENTSOe.h).
+
+    TLS: the server certificate is checked against the root certificate in ENTSOe.cpp.
 
     Contact us if you help controlling our evse: https://edgetech.eu/
 
     Edge Technologies
 */
 #include <Arduino.h>
-#include <NTPClient.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <WiFiUdp.h>
-#include <RTClib.h>
+#include <time.h>
+#include <math.h>
 #include "Secrets.h"
 #include "VerySimpleXMLParser.h"
 #include "ENTSOe.h"
 
 WiFiMulti WiFiMulti;
-WiFiUDP ntpUDP;
 
-NTPClient timeClient(ntpUDP, 3600L);
-
-int last_day=0;
-
-// new data on entso-e server at noon
+// new data on entso-e server around noon (local time); fetch tomorrow's prices after this hour
 #define GET_DATA_TIME   13
-int get_time;
+
+// local day (day of the year) of the last successful download, -1 = none yet
+int last_yday = -1;
+// did the last download have prices for tomorrow?
+bool have_tomorrow = false;
+// earliest time of the next attempt (retry after a minute at start-up, else after an hour)
+time_t next_attempt = 0;
+
+bool tomorrow_has_prices() {
+
+  for (int index = 0; index < ENTREES; index++) {
+    if (!isnan(pricing[1][index])) {
+      return (true);
+    }
+  }
+  return (false);
+}
+
+void wait_for_time() {
+
+  Serial.printf("NTP starting...\r\n");
+
+  NTP.begin("pool.ntp.org", "time.nist.gov");
+  while (!NTP.waitSet()) {
+    Serial.printf("still waiting for NTP...\r\n");
+  }
+
+  time_t now = time(nullptr);
+  struct tm local;
+  localtime_r(&now, &local);
+
+  Serial.printf("NTP started (it is %02d:%02d:%02d %s)\r\n\r\n",
+                local.tm_hour, local.tm_min, local.tm_sec, local.tm_isdst > 0 ? "CEST" : "CET");
+}
 
 void setup() {
 
@@ -50,6 +80,12 @@ void setup() {
   Serial.printf("\r\n\r\n\r\nGetting ENTSO-e pricing with Pico\r\n\r\n");
 
 
+  // time zone: Europe/Amsterdam, including summer time
+
+  setenv("TZ", LOCAL_TIMEZONE, 1);
+  tzset();
+
+
   // wifi
 
   Serial.printf("WiFi connecting...\r\n");
@@ -61,41 +97,36 @@ void setup() {
   Serial.printf("WiFi connected!\r\n\r\n");
 
 
-  // network time protocol
+  // network time protocol (also needed to check the TLS certificate)
 
-  Serial.printf("NTP starting...\r\n");
-  timeClient.begin();
-  while (!timeClient.isTimeSet()) {
-    timeClient.update();
-  }
-  Serial.printf("NTP started (it is %s)\r\n\r\n", timeClient.getFormattedTime().c_str());
-
-  last_day = 0;
-  get_time = GET_DATA_TIME;
+  wait_for_time();
 }
 
 
 void loop() {
 
   if ((WiFiMulti.run() == WL_CONNECTED)) {
-    
-    while (!timeClient.isTimeSet()) {
-      Serial.printf("Time is updating...\r\n");
-      timeClient.update();
-      Serial.printf("Time is updated (it is %s)\r\n\r\n", timeClient.getFormattedTime().c_str());
-    }
 
-    if((last_day == 0) || ((timeClient.getDay() != last_day) && (timeClient.getHours() > get_time))) {
+    time_t now = time(nullptr);
+    struct tm local;
+    localtime_r(&now, &local);
 
-      // just in case this fails, we retry in an hour
-      get_time ++;
+    // at start-up, and after GET_DATA_TIME (local time) until tomorrow's prices are in
+    bool wanted = (last_yday < 0) ||
+                  ((local.tm_hour >= GET_DATA_TIME) && ((local.tm_yday != last_yday) || !have_tomorrow));
+
+    if (wanted && (now >= next_attempt)) {
+
+      // just in case this fails or tomorrow is not published yet: retry later
+      next_attempt = now + ((last_yday < 0) ? 60 : 3600);
 
       HTTPClient https;
-      // do not check the certificate
-      https.setInsecure();
 
-      char url[256];
-      entsoe_make_url(url, timeClient.getEpochTime());
+      // check the server certificate against the embedded root certificate
+      https.setCACert(entsoe_root_ca);
+
+      char url[320];
+      entsoe_make_url(url, sizeof(url), now);
       Serial.printf("[HTTPS] getting %s\r\n", url);
 
       if (https.begin(url)) {
@@ -114,8 +145,8 @@ void loop() {
 
             entsoe_simple_stats();
 
-            last_day = timeClient.getDay();
-            get_time = GET_DATA_TIME;
+            last_yday = local.tm_yday;
+            have_tomorrow = tomorrow_has_prices();
           }
 
         } else {

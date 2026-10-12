@@ -8,6 +8,7 @@
 #define DSMR_NOT_DSMR_50      4
 
 extern double dsmr_current[3];
+extern bool dsmr_single_phase;
 
 void dsmr5reader_init(void);
 int dsmr5reader_check(void);

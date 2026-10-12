@@ -15,13 +15,10 @@ Program it with the Arduino IDE and the "Raspberry Pi Pico/RP2040/RP2350" core (
 | What | Value in the code |
 |---|---|
 | UART | UART1 (`Serial2`) |
-| TX / RX in `Board.h` | GP8 / GP9 (`TXD1`, `RXD1`) |
-| TX / RX actually used | GP4 / GP5: `ModBus.cpp` redefines `TXD1`/`RXD1` in its `ARDUINO_ARCH_RP2040` block, and that value wins |
+| TX / RX | GP4 / GP5 (`TXD1`, `RXD1`, defined once in `Board.h`; `ModBus.cpp` only uses GP4/GP5 as a fallback when a board does not define them) |
 | Direction (DE) pin | none driven by the code |
 | Baud rate | 9600, 8N1 |
 | Debug output | USB serial, 115200 baud |
-
-Which RP2350 pins the board's RS485 transceiver really uses is to be confirmed. If GP8/GP9 is right, change the defines in `ModBus.cpp`.
 
 Wiring to the charge controller (from the sketch comment):
 
@@ -35,6 +32,5 @@ Use 3 × 0.75 mm² stranded multi-core cable and keep branches short.
 
 ## Notes
 
-- The charge controller ships set to Modbus address 10; the sketch uses `ADDRESS 1`. Change it to match your board. At address 1 the charge controller only answers after a state change (press the button on the board).
-- The sketch has a commented-out call to `smart_evse_change_address()`. That function does not exist in `SmartEVSE.cpp`.
+- The charger leaves the factory at Modbus address 1, and the sketch uses `ADDRESS 1`. Address 1 is special: after boot the charger does not answer there, only after a state change (press the button on the board, or plug in a car). EdgeTech site controllers move each new charger to its own address so all chargers can be reached. For your own controller, give the charger an address of 2 or higher via register 0x0200 (and save it), then set `ADDRESS` to match. On a failed read at address 1 the sketch prints a hint.
 - Register map: [docs/en/modbus-registers.md](../../docs/en/modbus-registers.md).

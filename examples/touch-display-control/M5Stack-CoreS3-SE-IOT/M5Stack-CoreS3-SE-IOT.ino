@@ -30,8 +30,11 @@
 #include "SmartEVSE.h"
 #include "UI.h"
 
-// the default address of the EdgeTech EVSE has modbus address 1
-// be aware that when the address is still 1, the board needs a state change t respond to modbus
+// Modbus address of the EdgeTech charge controller. It leaves the factory at address 1.
+// At address 1 the charger does not answer after boot, only after a state change
+// (press the button on the board, or plug in a car).
+// For your own controller, give the charger address 2 or higher via register 0x0200 (and save it),
+// then set ADDRESS to that value. See docs/en/modbus-registers.md
 
 #define ADDRESS 1
 
@@ -45,14 +48,58 @@ unsigned char allow_missing_count;
 
 #define PHASES  3
 
+// current limit chosen with the slider (A, 0 = stop). It is written to register 0x0201
+// on every change and again every INTERVAL: the charger needs a write at least once a second.
+int requested_current = 0;
+int active_phases = PHASES;
+
+// keep writing 0 A for a while, so the charger does not fall back to its static limit
+void hold_zero_current(unsigned long ms) {
+
+  unsigned long until = millis() + ms;
+
+  do {
+    smart_evse_set_max_current(ADDRESS, 0, 0);
+    delay(500);
+  } while ((long)(millis() - until) < 0);
+}
+
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
-    Serial.printf("advertizing %dA\r\n", advertizing_current);
+  Serial.printf("advertizing %dA\r\n", advertizing_current);
+
+  requested_current = advertizing_current;
+
+  // 0x0201 low byte: RemoteMaxCurrent in A
+  smart_evse_set_max_current(ADDRESS, requested_current, 0);
 }
 
 void ui_set_phases_callback(int phases) {
 
-    Serial.printf("set phases to %d\r\n", phases);
+  if (phases == active_phases) {
+    return;
+  }
+
+  Serial.printf("set phases to %d\r\n", phases);
+
+  // stop charging before switching phases
+  if (requested_current > 0) {
+    Serial.printf("stopping charge (advertizing 0 A)\r\n");
+    hold_zero_current(3000);
+  }
+
+  // 0x0204 bit 0, read-modify-write keeps the other settings bits
+  if (smart_evse_set_phases(ADDRESS, phases == 3)) {
+    active_phases = phases;
+  } else {
+    Serial.printf("could not change phases\r\n");
+  }
+
+  if (requested_current > 0) {
+    hold_zero_current(500);
+    Serial.printf("restoring advertizing current to %d A\r\n", requested_current);
+    smart_evse_set_max_current(ADDRESS, requested_current, 0);
+  }
 }
 
 void setup(void) {
@@ -96,7 +143,10 @@ void loop(void) {
 
     next_time = now + INTERVAL;
 
-  Serial1.printf(".");
+    Serial1.printf(".");
+
+    // refresh the current limit, at least once per second
+    smart_evse_set_max_current(ADDRESS, requested_current, 0);
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 

@@ -25,7 +25,7 @@ Both the automatic trigger and the variant are settings, and both are off by def
 
 ## Configuration over Modbus
 
-See the [register map](modbus-registers.md) for all registers. Modbus RTU over RS485, 9600 baud 8N1. At the default address 0x01 the board only answers after a state change, for example the button on the board.
+See the [register map](modbus-registers.md) for all registers. Modbus RTU over RS485, 9600 baud 8N1. At the factory address 0x01 the board only answers after a state change, for example the button on the board; give it its own address first (register 0x0200).
 
 ### 1. Choose the mechanism: settings register 0x0204 (fc 3 / fc 6)
 

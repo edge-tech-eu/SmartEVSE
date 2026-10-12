@@ -14,12 +14,12 @@ More photos: [2](images/lilygo_tpanel_example_2.jpeg), [3](images/lilygo_tpanel_
   - state (with a picture on the LilyGo: charger, EV connected, EV charging),
   - current and voltage per phase,
   - session energy and total energy,
-  - Modbus connection quality in percent (LilyGo).
-- The slider sets the current to advertise. Values from 1 to 5 A are set back to 0 A (the minimum charge current is 6 A).
-- The button switches between 1 and 3 phases.
+  - Modbus connection quality in percent (LilyGo): the share of successful reads.
+- The slider sets the current to advertise and writes it to register 0x0201 (`smart_evse_set_max_current()`). Values from 1 to 5 A are set back to 0 A (the minimum charge current is 6 A). On the LilyGo the current is only written while "Allow charging" is on; otherwise 0 A is written. The sketch writes the value again every second, because the charger falls back to its static limit when the writes stop.
+- The button switches between 1 and 3 phases: it stops charging (0 A for 3 s), changes bit 0 of register 0x0204 with a read-modify-write (`smart_evse_set_phases()`, the other settings bits are kept) and then restores the current. 0 A keeps being written during the switch.
 - Both screens have a "Home" column for house currents (`ui_set_home_values()`), but these sketches don't fill it. The smart-meter-load-balancing example does.
 
-**The slider and the phase button do not yet write to the charge controller.** In both sketches the callbacks `ui_set_advertizing_current_callback()` and `ui_set_phases_callback()` only print the new value. To make them control the charger, call `smart_evse_set_max_current()` and `smart_evse_set_phases()` from these callbacks. The [smart-meter-load-balancing](../smart-meter-load-balancing/) example shows how, including the safe order for a phase change (set 0 A, wait, change phases, restore the current).
+The writes happen in the callbacks `ui_set_advertizing_current_callback()` and `ui_set_phases_callback()` in the `.ino` files. The M5Stack sketch writes the full slider value at start-up (the slider starts at the board maximum); the LilyGo sketch starts with charging off (0 A).
 
 ## What you need
 
@@ -66,14 +66,14 @@ Arduino IDE 2.x (or `arduino-cli`).
 
 **M5Stack-CoreS3-SE-IOT**
 
-- Board package: M5Stack (esp32 core by M5Stack), board "M5CoreS3".
+- Board package: M5Stack (esp32 core by M5Stack), board "M5CoreS3". The board "M5CoreS3" in the Espressif esp32 core 3.x also works (compile-checked).
 - Libraries: M5Unified, M5GFX, M5Module-Display (`M5ModuleDisplay.h`). Versions: to be confirmed.
 
 ## Configure
 
 | Setting | Where | Default | Notes |
 |---|---|---|---|
-| `ADDRESS` | `.ino` | `1` | Modbus address of the charge controller. Boards ship set to `10`. At address 1 the charge controller only answers after a state change (press the button on the board). |
+| `ADDRESS` | `.ino` | `1` | Modbus address of the charge controller. The charger leaves the factory at address 1. Address 1 is special: after boot the charger does not answer there, only after a state change (press the button on the board, or plug in a car). EdgeTech site controllers move each new charger to its own address so all chargers can be reached. For your own controller, give the charger an address of 2 or higher via register 0x0200 (and save it), then set `ADDRESS` to match. On a failed read at address 1 the sketch prints a hint. |
 | Baud rate | `SmartEVSE.cpp`, `smart_evse_init()` | 9600 | 8N1. |
 | `INTERVAL` | M5 `.ino` | 1000 ms | Poll interval. The LilyGo sketch also polls every 1000 ms. |
 | `ALLOW_MISSING` | M5 `.ino` | 3 | Missed reads before the values on screen are cleared. |
@@ -89,10 +89,10 @@ The board is the Modbus master. It uses the shared functions in `SmartEVSE.cpp`:
 | 0x0000 (5 registers) | read input | Serial number |
 | 0x0005 | read input | Firmware version |
 | 0x0102 | read input | Max cable current (low byte), advertised current (high byte) |
-| 0x0103–0x010C | read input | State and errors, temperature, current L1–L3, session energy, voltage L1–L3, options |
+| 0x0102–0x010E | read input | Cable current, state and errors, temperature, current L1–L3, session energy, voltage L1–L3, options, total energy (32 bit) |
 | 0x010C | read input | Bit 1: 32 A board |
-| 0x0201 | write single | Max current (available as `smart_evse_set_max_current()`, not called yet) |
-| 0x0204 | write single | Bit 0: 3 phases (available as `smart_evse_set_phases()`, not called yet) |
+| 0x0201 | write single | Max current in A from the slider (`smart_evse_set_max_current()`), every second and on every change |
+| 0x0204 | read holding, then write single | Bit 0: 3 phases (`smart_evse_set_phases()`, read-modify-write) |
 
 Full details: [Modbus register map](../../docs/en/modbus-registers.md).
 

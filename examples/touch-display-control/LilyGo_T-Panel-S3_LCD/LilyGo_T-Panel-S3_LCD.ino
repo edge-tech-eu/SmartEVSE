@@ -1,6 +1,6 @@
 /*
 
-  LillyGo T-Panel S3 RS485
+  LilyGo T-Panel S3 RS485
 
   Board: esp32: ESP32S3 Dev Module
   - USB CDC On Boot	  Enabled
@@ -40,8 +40,11 @@
 #include "SmartEVSE.h"
 #include "UI.h"
 
-// the default address of the EdgeTech EVSE has modbus address 1
-// be aware that when the address is still 1, the board needs a state change t respond to modbus
+// Modbus address of the EdgeTech charge controller. It leaves the factory at address 1.
+// At address 1 the charger does not answer after boot, only after a state change
+// (press the button on the board, or plug in a car).
+// For your own controller, give the charger address 2 or higher via register 0x0200 (and save it),
+// then set ADDRESS to that value. See docs/en/modbus-registers.md
 
 #define ADDRESS 1
 
@@ -55,8 +58,8 @@ volatile bool Touch_Int_Flag = false;
 
 TouchLib touch(Wire, TOUCH_SDA, TOUCH_SCL, CST3240_ADDRESS);
 
-Arduino_DataBus *bus = new Arduino_XL9535SWSPI(IIC_SDA /* SDA */, IIC_SCL /* SCL */, -1 /* XL PWD */,
-                                               XL95X5_CS /* XL CS */, XL95X5_SCLK /* XL SCK */, XL95X5_MOSI /* XL MOSI */);
+Arduino_XL9535SWSPI *bus = new Arduino_XL9535SWSPI(IIC_SDA /* SDA */, IIC_SCL /* SCL */, -1 /* XL PWD */,
+                                                   XL95X5_CS /* XL CS */, XL95X5_SCLK /* XL SCK */, XL95X5_MOSI /* XL MOSI */);
 
 Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
   -1 /* DE */, LCD_VSYNC /* VSYNC */, LCD_HSYNC /* HSYNC */, LCD_PCLK /* PCLK */,
@@ -151,21 +154,65 @@ void lvgl_initialization(void) {
   lv_indev_drv_register(&indev_drv);
 }
 
+// current limit chosen in the UI (A, 0 = stop). It is written to register 0x0201
+// on every change and again every second: the charger needs a write at least once a second.
+int requested_current = 0;
+int active_phases = 3;
+
+// keep writing 0 A for a while, so the charger does not fall back to its static limit
+void hold_zero_current(unsigned long ms) {
+
+  unsigned long until = millis() + ms;
+
+  do {
+    smart_evse_set_max_current(ADDRESS, 0, 0);
+    delay(500);
+  } while ((long)(millis() - until) < 0);
+}
+
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
-    Serial.printf("advertizing %dA\r\n", advertizing_current);
+  Serial.printf("advertizing %dA\r\n", advertizing_current);
+
+  requested_current = advertizing_current;
+
+  // 0x0201 low byte: RemoteMaxCurrent in A
+  smart_evse_set_max_current(ADDRESS, requested_current, 0);
 }
 
 void ui_set_phases_callback(int phases) {
 
-    Serial.printf("set phases to %d\r\n", phases);
+  if (phases == active_phases) {
+    return;
+  }
+
+  Serial.printf("set phases to %d\r\n", phases);
+
+  // stop charging before switching phases
+  if (requested_current > 0) {
+    Serial.printf("stopping charge (advertizing 0 A)\r\n");
+    hold_zero_current(3000);
+  }
+
+  // 0x0204 bit 0, read-modify-write keeps the other settings bits
+  if (smart_evse_set_phases(ADDRESS, phases == 3)) {
+    active_phases = phases;
+  } else {
+    Serial.printf("could not change phases\r\n");
+  }
+
+  if (requested_current > 0) {
+    hold_zero_current(500);
+    Serial.printf("restoring advertizing current to %d A\r\n", requested_current);
+    smart_evse_set_max_current(ADDRESS, requested_current, 0);
+  }
 }
 
 void setup() {
 
   Serial.begin(115200);
 
-  Serial.printf("\r\nLiliGo  T-Panel LVGL\r\n\r\n");
+  Serial.printf("\r\nLilyGo T-Panel LVGL\r\n\r\n");
 
   pinMode(LCD_BL, OUTPUT);
   digitalWrite(LCD_BL, HIGH);
@@ -231,6 +278,9 @@ void loop() {
   if (now > next_time) {
 
     next_time = now + 1000;
+
+    // refresh the current limit, at least once per second
+    smart_evse_set_max_current(ADDRESS, requested_current, 0);
 
     smart_evse_get_charger_state(ADDRESS, &charger_state);
 

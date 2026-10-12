@@ -1,10 +1,13 @@
 #ifndef SMARTEVSE_h
 #define SMARTEVSE_h
 
+// Values as read from the EdgeTech charge controller, see docs/en/modbus-registers.md
+// state: 1 = A, 2 = B, 3 = C, 4 = D (0x0103 low byte). Currents in A, voltages in V, energy in kWh.
+
 typedef struct {
   unsigned long ts;
   bool isNew;
-  unsigned char cable_current;
+  unsigned char cable_current;   // 0x0102 low byte, A
   double c[3];
   double v[3];
   double kwh_session;
@@ -19,7 +22,7 @@ typedef struct {
 extern int board_max_current;
 
 void smart_evse_init();
-void smart_evse_set_phases(int address, bool isPhases3);
+bool smart_evse_set_phases(int address, bool isPhases3);
 bool smart_evse_is_32_amp(int address);
 void smart_evse_get_charger_state(int address, ChargerState *charger_state);
 bool smart_evse_get_serial(int address, int *serial);

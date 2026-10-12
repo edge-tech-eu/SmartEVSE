@@ -5,11 +5,14 @@
   Board: M5Stack: M5CoreS3
 
   BUS usage:
-  COMMU: tx: U2_TXD = GPIO18/BUS_PC_RX/bus pin 16
-  COMMU: rx: U2_RXD = GOIO17/BUS_PC_TX/bus pin 15
-  LAN:  int: jumper left:  G35 = bus pin 2/BUS_ADC1/GPIO10   (alt     G34 = bus pin 26/I2S_DAT1/GPIO14)
-  LAN:  rst: jumper right: G13 = bus pin 22/BUS_G7/GPIO7     (default G0  = bus pin 24/ESP_BOOT/GPIO0)
-  LAN:   cs: jumper left:  G15 = bus pin 20/BUS_PA_SCL/GPIO1 (alt     G5  = bus pin 23/I2S_DAT0/GPIO13)
+  COMMU RS485 (ModBus.cpp: Serial2.begin(..., RX = 18, TX = 17)):
+    ESP32 TX = GPIO17 = BUS_PC_TX / bus pin 16 -> COMMU U2_TXD (transceiver input)
+    ESP32 RX = GPIO18 = BUS_PC_RX / bus pin 15 <- COMMU U2_RXD (transceiver output)
+  LAN module (lan_init() below, not used by default): the module's DIP switches select which
+  bus pin carries each signal. Set them to match the pins in lan_init():
+    cs:  GPIO13 = bus pin 23/I2S_DAT0   (other choice: GPIO1  = bus pin 20/BUS_PA_SCL)
+    rst: GPIO0  = bus pin 24/ESP_BOOT   (other choice: GPIO7  = bus pin 22/BUS_G7)
+    int: GPIO10 = bus pin 2/BUS_ADC1    (other choice: GPIO14 = bus pin 26/I2S_DAT1)
 
 
   BUS  CORES3 SE              COMMU       LAN Module
@@ -17,7 +20,7 @@
    1    GND                    GND         GND
    2    GPIO10 | BUS_ADC1      -           int
    3    GND                    GND         GND
-   4    GPIO7  | BUS_PB_IN     -           -
+   4    GPIO8  | BUS_PB_IN     -           -
    5    GND                    GND         GND
    6    AXP_PG                 -           -
    7    GPIO37 | SPI_MOSI      CAN_MOSI    MOSI
@@ -54,10 +57,16 @@
 
   Ext port M5CoreS3:            DSMR:
     Pin 1: SDA/pulse/GPIO1/TX - N.C.
-    Pin 2: SCL/edge/GPIO2/RX  - Data, 4K7 resistor to 5V
+    Pin 2: SCL/edge/GPIO2/RX  - Data, 4K7 pull-up resistor to 3.3V
     Pin 3: 5V                 - N.C.
     Pin 4: GND                - Power ground + Signal ground
                               - Data request tie to 5V
+
+  GPIO2 is a 3.3V pin: never pull the data line up to 5V. The meter's data output is
+  open collector, so the pull-up sets the logic level. This port has no 3.3V pin; take
+  3.3V from the bus (pin 12, 3V3). Only the data request line goes to 5V: it is an input
+  of the meter and never reaches the ESP32.
+  The signal is inverted; the sketch reads it with an inverted UART (DSMR5Reader.cpp).
 
   RJ12 6P6C plug:
 
@@ -79,7 +88,7 @@
       2 - Data request (tie to +5V for data)
       3 - Data ground
       4 - N.C.
-      5 - Data (pull high)
+      5 - Data (open collector, pull up to 3.3V)
       6 - Power Ground
 
 
@@ -117,12 +126,10 @@ M5Module_LAN LAN;
 void lan_init() {
   
   byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x89};
-  //int  cs_pin  = 1; // jumper left
-  int  cs_pin  = 13; // jumper right
-  int rst_pin = 0; // jumper left 
-  //int rst_pin = 7; // jumper right
-  int  int_pin = 10;// jumper left 
-  //int  int_pin = 14;// jumper right 
+  // must match the DIP switches on the LAN module (see the BUS usage table at the top)
+  int  cs_pin  = 13; // bus pin 23 (other choice: 1, bus pin 20)
+  int rst_pin = 0;   // bus pin 24 (other choice: 7, bus pin 22)
+  int  int_pin = 10; // bus pin 2  (other choice: 14, bus pin 26)
 
     SPI.begin(SCK, MISO, MOSI, -1);
 
@@ -147,8 +154,11 @@ void lan_init() {
 
 #define MAX_HOME_CURRENT 25
 
-// the default address of the EdgeTech EVSE has modbus address 1
-// be aware that when the address is still 1, the board needs a state change t respond to modbus
+// Modbus address of the EdgeTech charge controller. It leaves the factory at address 1.
+// At address 1 the charger does not answer after boot, only after a state change
+// (press the button on the board, or plug in a car).
+// For your own controller, give the charger address 2 or higher via register 0x0200 (and save it),
+// then set ADDRESS to that value. See docs/en/modbus-registers.md
 
 #define ADDRESS 1
 
@@ -174,6 +184,17 @@ int active_phases;
 int last_set_advertizing_current;
 int last_phases;
 
+// keep writing 0 A for a while, so the charger does not fall back to its static limit
+void hold_zero_current(unsigned long ms) {
+
+  unsigned long until = millis() + ms;
+
+  do {
+    smart_evse_set_max_current(ADDRESS, 0, 0);
+    delay(500);
+  } while ((long)(millis() - until) < 0);
+}
+
 void ui_set_advertizing_current_callback(int advertizing_current) {
 
   Serial.printf("advertizing %dA\r\n", advertizing_current);
@@ -189,19 +210,21 @@ void ui_set_phases_callback(int phases) {
 
     if (last_set_advertizing_current > 0) {
 
-      Serial.printf("closing relays (advertizing 0 A)\r\n");
+      Serial.printf("opening relays (advertizing 0 A)\r\n");
 
-      smart_evse_set_max_current(ADDRESS, 0, 0);
-      delay(3000);
+      hold_zero_current(3000);
     }
 
     Serial.printf("set phases to %d\r\n", phases);
 
-    smart_evse_set_phases(ADDRESS, phases == 3);
-    last_phases = phases;
-    delay(500);
+    // read-modify-write of 0x0204 bit 0; the other settings bits are kept
+    if (smart_evse_set_phases(ADDRESS, phases == 3)) {
+      last_phases = phases;
+    }
 
     if (last_set_advertizing_current > 0) {
+
+      hold_zero_current(500);
 
       Serial.printf("resetting advertizing current to %d A\r\n", last_set_advertizing_current);
 
@@ -216,7 +239,7 @@ void setup(void) {
   Serial.begin(115200);
 
   Serial.printf("\r\n\r\nM5Stack CoreS3 SE running EV Charger controller\r\n");
-  Serial.printf(" - read DSMR5 meter for totaal house consumption\r\n");
+  Serial.printf(" - read DSMR5 meter for total house consumption\r\n");
   Serial.printf(" - calculate and write max current to EV charger\r\n\r\n");
 
   board_init();
@@ -288,6 +311,11 @@ void loop(void) {
       ui_set_advertized(max_current);
 
       ui_set_advertizing_current_callback(max_current);
+
+    } else {
+
+      // the charger needs the limit at least once per second, also when it did not change
+      smart_evse_set_max_current(ADDRESS, max_current, 0);
     }
 
     if (charger_state.isNew) {

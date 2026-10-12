@@ -33,7 +33,8 @@ void dsmr5reader_init() {
 #define UART_READ_BUFFER_SIZE 2000
 #define UART_READ_BUFFER_SIZE_WARNING 1075
 
-  Serial2.setRxBufferSize(UART_READ_BUFFER_SIZE);
+  // the meter is read on Serial1 (RX = GPIO2, inverted); the buffer must be set before begin()
+  Serial1.setRxBufferSize(UART_READ_BUFFER_SIZE);
 
   Serial1.begin(115200, SERIAL_8N1, 2, 1, true);
   //Serial1.begin(115200, SERIAL_8N1, 2, 1);
@@ -54,7 +55,7 @@ int dsmr5reader_check(void) {
   char telegram[TELEGRAM_MAX_SIZE];
   int telegram_index = 0;
   unsigned long time_out_time = millis() + 2000UL;
-  int c;
+  int c = 0;
   int count = 0;
   bool dsmr50 = false;
 
@@ -77,7 +78,7 @@ int dsmr5reader_check(void) {
 
   telegram[telegram_index++] = c;
 
-  int n = Serial1.readBytesUntil('\r', dsmr_id, ID_LENGTH);
+  int n = Serial1.readBytesUntil('\r', dsmr_id, ID_LENGTH - 1);
   strncpy(&telegram[telegram_index],dsmr_id,n);
   telegram_index+=n;
   dsmr_id[n] = 0;
@@ -87,13 +88,18 @@ int dsmr5reader_check(void) {
   do {
 
     // read lines till got: 1-3:0.2.8(50)
-    int n = Serial1.readBytesUntil('\r', line_buffer, LINE_BUFFER_SIZE);
+    int n = Serial1.readBytesUntil('\r', line_buffer, LINE_BUFFER_SIZE - 1);
     line_buffer[n] = 0;
-    strncpy(&telegram[telegram_index],line_buffer,n);
-    telegram_index+=n;
+    // keep a copy of the telegram for printing, as far as it fits
+    if (telegram_index + n + 2 < TELEGRAM_MAX_SIZE) {
+      strncpy(&telegram[telegram_index],line_buffer,n);
+      telegram_index+=n;
+    }
     // read \n
     c = Serial1.read();
-    telegram[telegram_index++] = c;
+    if (telegram_index + 2 < TELEGRAM_MAX_SIZE) {
+      telegram[telegram_index++] = c;
+    }
 
     if (!strncmp(line_buffer, "1-0:72.7.0", 10)) {
       dsmr_single_phase = false;
@@ -153,7 +159,7 @@ bool dsmr5reader_process_line() {
 
             line_buffer[line_buffer_index++] = c;
 
-            if (line_buffer_index > LINE_BUFFER_SIZE) {
+            if (line_buffer_index >= LINE_BUFFER_SIZE - 1) {
               line_buffer_index = 0;
             }
 
@@ -191,7 +197,14 @@ bool dsmr5reader_process_line() {
 
           if (tags_read == (dsmr_single_phase ? 3 : 9)) {
             for (int phase = 0; phase < 3; phase++) {
-              dsmr_current[phase] = 1000. * (tag_value[3 + phase] - tag_value[6 + phase]) / tag_value[phase];
+              // a single-phase meter only sends L1; no voltage means no current (no division by zero)
+              if ((phase > 0) && dsmr_single_phase) {
+                dsmr_current[phase] = 0;
+              } else if (tag_value[phase] > 1.0) {
+                dsmr_current[phase] = 1000. * (tag_value[3 + phase] - tag_value[6 + phase]) / tag_value[phase];
+              } else {
+                dsmr_current[phase] = 0;
+              }
             }
           }
 

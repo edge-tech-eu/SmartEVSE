@@ -3,4 +3,4 @@
 // 
 // WaveShare Industrial ESP32S3 Controller Board
 
-#define DEBUG_PRINTF	printf
+#define DEBUG_PRINTF	Serial.printf
