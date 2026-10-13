@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" role="img" aria-labelledby="t d">
-<title id="t">Wiring the charge controller EVSE-C-3x32A</title><desc id="d">The power cable (L1, L2, L3, N, PE) runs from a charger group with a Type A RCD and a 3-pole + N breaker to POWER IN on the charge controller. POWER OUT (L1, L2, L3, N) runs through the ring of the DC-leakage sensor into the charge cable with the Type 2 plug; PE goes straight to the charge cable, the control pilot from the CP terminal. The Modbus cable (G, A+, B−) runs to the site controller and on to the next charger.</desc>
+<title id="t">Wiring the charge controller EVSE-C-3x32A</title><desc id="d">The power cable (L1, L2, L3, N, PE) runs from a charger group with a Type A RCD and a 3-pole + N breaker to POWER IN on the charge controller. POWER OUT (L1, L2, L3, N) runs through the ring of the RDC-DD into the charge cable with the Type 2 plug; PE goes straight to the charge cable, the control pilot from the CP terminal. The Modbus cable (G, A+, B−) runs to the site controller and on to the next charger.</desc>
 <rect width="1000" height="640" fill="#fbfaf6"/>
 <rect x="30" y="110" width="170" height="250" rx="8" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
 <text x="46" y="136" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#141414" text-anchor="start">Consumer unit</text>
@@ -51,7 +51,7 @@
 <path d="M647,241 L700,241 L730,219.55 L790,219.55 L840,303.96" fill="none" stroke="#2a63c9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 <ellipse cx="712" cy="208" rx="16" ry="52" fill="none" stroke="#141414" stroke-width="7" opacity=".85"/>
 <text x="712" y="98" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#141414" text-anchor="middle">EVSE-X-DCD</text>
-<text x="712" y="114" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#141414" text-anchor="middle">DC-leakage sensor</text>
+<text x="712" y="114" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#141414" text-anchor="middle">RDC-DD</text>
 <text x="712" y="130" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6b675e" text-anchor="middle">L1 L2 L3 N through, not PE</text>
 <path d="M712,262 C712,300 690,320 650,330" fill="none" stroke="#141414" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
 <rect x="633" y="323" width="14" height="14" rx="2" fill="#f7f3e3" stroke="#141414" stroke-width="1.2"/>

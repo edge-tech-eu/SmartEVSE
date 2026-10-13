@@ -16,7 +16,7 @@ Without load balancing: the charge point does not know what else the house is us
 The basic kit:
 
 - charge controller EVSE-C-3x32A
-- DC-leakage sensor EVSE-X-DCD with its lead
+- RDC-DD EVSE-X-DCD with its lead
 - charging cable
 - enclosure and cable glands
 - mounting brackets ([3D-printable versions](../../hardware/brackets/))

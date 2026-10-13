@@ -15,12 +15,12 @@ English · Dutch version to follow
 | To the car | Grey 4-pole terminal | L1, L2, L3, N of the charging cable or socket. PE of the cable goes to the PE of the mains, not through this terminal |
 | Control pilot | 2-pole terminal with orange levers | CP: the thin signal wire of the charging cable or socket. PP: only with a Type 2 socket; with a fixed cable PP stays empty |
 | Modbus | 3-pole terminal with orange levers | GND, A, B. Use 3 × 0.75 mm² stranded multi-core cable and keep branches short |
-| DC leak sensor | Upper white connector on the right | The DC-leakage sensor EVSE-X-DCD, supplied with every charge controller |
+| RDC-DD | Upper white connector on the right | The RDC-DD EVSE-X-DCD, supplied with every charge controller |
 | Cable lock | Lower white connector on the right | The cable lock driver EVSE-X-CL, for chargers with a Type 2 socket |
 | External LED | LED EXT, 4-pin | Common-cathode RGB LED or 3 separate LEDs, 5 V or 12 V (see below) |
 | Button | BUTTON, 2-pin | External push button (GND, BUT) |
 
-The DC-leakage sensor: lead L1, L2, L3 and N through the ring. Do **not** lead PE through it.
+The RDC-DD: lead L1, L2, L3 and N through the ring. Do **not** lead PE through it.
 
 The schematic version of the same wiring:
 
@@ -49,10 +49,10 @@ The schematic version of the same wiring:
 1. **Choose the place for the charge point.** Always lay a Modbus cable (3 × 0.75 mm² stranded) next to the power cable, also when you start without load balancing.
 2. **Prepare the enclosure.** Drill the holes for the cable glands of the power cable and the charging cable with a step drill. Drill the holes in the back wall for mounting on a wall or pole, and seal the screw holes, for example with a rubber ring.
 3. **Mount the charge controller** in the enclosure, directly or with the [brackets](../../hardware/brackets/).
-4. **Connect the DC-leakage sensor** to the charge controller with the supplied lead.
+4. **Connect the RDC-DD** to the charge controller with the supplied lead.
 5. **Earth.** Connect the supplied green-yellow wire to PE on the 5-pole terminal, and the other end to the supplied push-in connector. All earth wires meet in that connector.
 6. **Charging cable.** Feed it through its gland.
-   - Put L1, L2, L3 and N through the DC-leakage sensor ring and into the 4-pole terminal. Watch the colours. To open a terminal, push a flat screwdriver into the rectangular hole next to it.
+   - Put L1, L2, L3 and N through the RDC-DD ring and into the 4-pole terminal. Watch the colours. To open a terminal, push a flat screwdriver into the rectangular hole next to it.
    - Connect PE of the charging cable to the push-in earth connector.
    - Put the thin signal wire (CP) into the **CP** input of the 2-pole terminal with the orange levers, as shown in the picture. With a fixed cable, leave **PP** empty: PP is only used with a Type 2 socket, where the charger reads the cable rating from it. Lift the lever fully, push the wire in deep, close the lever and pull gently to check.
 7. **Power cable.** Mount the enclosure on the wall or pole and feed the power cable through its gland.

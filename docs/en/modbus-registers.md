@@ -65,7 +65,7 @@ Protected registers need the magic code (default `0x1234`) written to `0x0202` f
 | `0x0109` | VoltageL1 | 1 | 1/256 V | Output voltage L1, non-zero only in state C/D |
 | `0x010A` | VoltageL2 | 1 | 1/256 V | Output voltage L2 |
 | `0x010B` | VoltageL3 | 1 | 1/256 V | Output voltage L3 |
-| `0x010C` | Options | 1 | bits | Bit 0: DC leakage module enabled. Bit 1: 32 A mode (0 = 16 A) |
+| `0x010C` | Options | 1 | bits | Bit 0: RDC-DD enabled. Bit 1: 32 A mode (0 = 16 A) |
 | `0x010D` | Energy | 2 | 1/256 kWh | Lifetime energy, 32-bit: `(reg[0x010E] << 16) \| reg[0x010D]` |
 | `0x010F` | EnergySessionL1 | 1 | 1/256 kWh | Session energy L1 |
 | `0x0110` | EnergySessionL2 | 1 | 1/256 kWh | Session energy L2 |
@@ -95,7 +95,7 @@ The state register is 1-indexed. Voltage and current registers are only meaningf
 | 2 | 4 | Ground fault | Critical |
 | 3 | 8 | Max CP too low | Warning, pilot out of range |
 | 4 | 16 | Min CP too high | Warning, pilot out of range |
-| 5 | 32 | DC leakage detected by the on-board DC-leakage sensor (EVSE-X-DCD) | Charging blocked |
+| 5 | 32 | DC leakage detected by the on-board RDC-DD (EVSE-X-DCD) | Charging blocked |
 | 6 | 64 | I²C initialisation failed | Internal |
 | 7 | 128 | I²C communication error | Internal |
 
@@ -128,7 +128,7 @@ The state register is 1-indexed. Voltage and current registers are only meaningf
 |---|---|---|
 | 0 | PHASES | 1-phase (0) or 3-phase (1) |
 | 1 | LOCK_STATE | Cable lock behaviour |
-| 2 | DCL_MUST_BE_PRESENT | Block charging unless the DC leakage module is present |
+| 2 | DCL_MUST_BE_PRESENT | Block charging unless the RDC-DD is present |
 | 3 | MISUSE_LOCK_PORT_AS_CP_DISCONNECT | Use the lock port for CP disconnect |
 | 4 | AUTO_CP_DISCONNECT | Automatic CP disconnect after a pause (EV wake-up) |
 | 5 | EV40_CP_DISCONNECT | EV40-style CP disconnect |
