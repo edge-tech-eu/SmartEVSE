@@ -80,7 +80,7 @@ For people who want to install everything themselves but not program the control
 
 ### EVSE-SC-01 with CT clamps
 
-For houses without a DSMR 5 smart meter. The SC-01 goes on a DIN rail in the metering cabinet. Put its three CT clamps around L1, L2 and L3 after the main switch.
+For houses without a DSMR 5 smart meter. The SC-01 goes on a DIN rail in the metering cabinet. Put its three CT clamps around L1, L2 and L3 between the meter and the main switch, where the three phases are not yet split into groups.
 
 ![Site controller EVSE-SC-01 terminals](../../images/site-controller-sc-01-terminals.png)
 
