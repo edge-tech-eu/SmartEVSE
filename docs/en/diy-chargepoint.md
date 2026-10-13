@@ -5,7 +5,7 @@ English · [Nederlands](../nl/diy-chargepoint.md)
 We have done the preparation; this page takes you through putting it together.
 
 > [!IMPORTANT]
-> This guide is for experienced hobbyists: people who know how to connect a device safely to a 3-phase supply, what a residual-current device (RCD) is, and how large loads are connected in the meter cupboard. We always recommend that work in the meter cupboard is done by a qualified electrician.
+> This guide is for experienced hobbyists: people who know how to connect a device safely to a 3-phase supply, what a residual-current device (RCD) is, and how large loads are connected in the metering cabinet. We always recommend that work in the metering cabinet is done by a qualified electrician.
 
 ## 1. The basic charge point
 

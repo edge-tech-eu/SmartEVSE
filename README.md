@@ -53,7 +53,7 @@ English is the main language: every document is in English in [docs/en](docs/en/
 
 ## Safety
 
-The examples only talk Modbus at low voltage. Work on the mains supply and in the meter cupboard is for a qualified electrician.
+The examples only talk Modbus at low voltage. Work on the mains supply and in the metering cabinet is for a qualified electrician.
 
 ## Contact
 

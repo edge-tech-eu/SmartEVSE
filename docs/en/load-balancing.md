@@ -80,7 +80,7 @@ For people who want to install everything themselves but not program the control
 
 ### EVSE-SC-01 with CT clamps
 
-For houses without a DSMR 5 smart meter. The SC-01 goes on a DIN rail in the meter cupboard. Put its three CT clamps around L1, L2 and L3 after the main switch.
+For houses without a DSMR 5 smart meter. The SC-01 goes on a DIN rail in the metering cabinet. Put its three CT clamps around L1, L2 and L3 after the main switch.
 
 ![Site controller EVSE-SC-01 terminals](../../images/site-controller-sc-01-terminals.png)
 
@@ -90,7 +90,7 @@ For houses without a DSMR 5 smart meter. The SC-01 goes on a DIN rail in the met
 
 ### EVSE-SC-02 on the P1 port
 
-For houses with a DSMR 5 smart meter. The SC-02 connects to the P1 port with an RJ12 cable and takes its power from it, so nothing goes in the meter cupboard and no clamps are needed. On the Modbus line it runs at 19200 baud.
+For houses with a DSMR 5 smart meter. The SC-02 connects to the P1 port with an RJ12 cable and takes its power from it, so nothing goes in the metering cabinet and no clamps are needed. On the Modbus line it runs at 19200 baud.
 
 ![Wiring with the EVSE-SC-02](../../images/wiring-edge-site-smartmeter.svg)
 

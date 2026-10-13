@@ -3,7 +3,7 @@ English · Dutch version to follow
 # Installing the charge controller EVSE-C-3x32A
 
 > [!IMPORTANT]
-> This guide is for experienced hobbyists and installers: people who know how to connect a device safely to a 3-phase supply, what a residual-current device (RCD) is, and how large loads are connected in the meter cupboard. We always recommend that work in the meter cupboard is done by a qualified electrician.
+> This guide is for experienced hobbyists and installers: people who know how to connect a device safely to a 3-phase supply, what a residual-current device (RCD) is, and how large loads are connected in the metering cabinet. We always recommend that work in the metering cabinet is done by a qualified electrician.
 
 ## Connections
 
@@ -60,7 +60,7 @@ The schematic version of the same wiring:
    - Connect PE to the push-in earth connector.
    - Check that no strands stick out of the terminals. Loose strands of a stranded wire can touch the next terminal and cause a short circuit.
 8. **Modbus** (optional now, needed for load balancing): GND, A and B to the 3-pole terminal.
-9. **Switch on** the RCD and the circuit breaker in the meter cupboard. The green LED flashes every 3 seconds.
+9. **Switch on** the RCD and the circuit breaker in the metering cabinet. The green LED flashes every 3 seconds.
 
 > [!IMPORTANT]
 > If the red LED flashes, check that the earth is connected properly, both to the charge controller and to the earth of the house.
