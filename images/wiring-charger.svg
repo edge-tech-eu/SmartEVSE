@@ -2,7 +2,7 @@
 <title id="t">Wiring the charge controller EVSE-C-3x32A</title><desc id="d">The power cable (L1, L2, L3, N, PE) runs from a charger group with a Type A RCD and a 3-pole + N breaker to POWER IN on the charge controller. POWER OUT (L1, L2, L3, N) runs through the ring of the RDC-DD into the charge cable with the Type 2 plug; PE goes straight to the charge cable, the control pilot from the CP terminal. The Modbus cable (G, A+, B−) runs to the site controller and on to the next charger.</desc>
 <rect width="1000" height="640" fill="#fbfaf6"/>
 <rect x="30" y="110" width="170" height="250" rx="8" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
-<text x="46" y="136" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#141414" text-anchor="start">Consumer unit</text>
+<text x="46" y="136" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#141414" text-anchor="start">Metering cabinet</text>
 <text x="46" y="154" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">charger group</text>
 <rect x="52" y="176" width="126" height="52" rx="4" fill="#fbfaf6" stroke="#141414" stroke-width="1.5"/>
 <text x="115" y="198" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#141414" text-anchor="middle">RCD Type A</text>

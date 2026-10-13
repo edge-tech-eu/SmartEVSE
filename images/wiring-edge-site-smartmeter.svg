@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" role="img" aria-labelledby="t d">
-<title id="t">Installing the Edge Smart Load Balancer EVSE-SC-02 on the P1 port of the smart meter</title><desc id="d">The Edge Smart Load Balancer EVSE-SC-02 sits next to the DSMR 5 smart meter, not in the consumer unit, and is connected to the P1 port with an RJ12 cable that also powers it. There are no CT clamps. One Modbus cable runs from the load balancer past every charger. It connects over 2.4 GHz WiFi to the home router and through the internet to the EdgeTech platform; the MyCharger app controls the chargers.</desc>
+<title id="t">Installing the Edge Smart Load Balancer EVSE-SC-02 on the P1 port of the smart meter</title><desc id="d">The Edge Smart Load Balancer EVSE-SC-02 sits next to the DSMR 5 smart meter, not in the distribution board, and is connected to the P1 port with an RJ12 cable that also powers it. There are no CT clamps. One Modbus cable runs from the load balancer past every charger. It connects over 2.4 GHz WiFi to the home router and through the internet to the EdgeTech platform; the MyCharger app controls the chargers.</desc>
 <rect width="1000" height="640" fill="#fbfaf6"/>
 <text x="30" y="44" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#6b675e" text-anchor="start" letter-spacing="0.06em">GRID CONNECTION</text>
 <rect x="60" y="54" width="110" height="120" rx="6" fill="#efece4" stroke="#141414" stroke-width="1.5"/>
@@ -8,7 +8,7 @@
 <rect x="98" y="132" width="34" height="22" rx="3" fill="#141414" stroke="#141414" stroke-width="1.5"/>
 <text x="115" y="147" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#fbfaf6" text-anchor="middle">P1</text>
 <rect x="200" y="40" width="390" height="230" rx="14" fill="none" stroke="#6b675e" stroke-width="1.5" stroke-dasharray="7 6"/>
-<text x="216" y="64" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#6b675e" text-anchor="start" letter-spacing="0.06em">CONSUMER UNIT</text>
+<text x="216" y="64" font-family="'Archivo Narrow', 'Arial Narrow', Archivo, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#6b675e" text-anchor="start" letter-spacing="0.06em">METERING CABINET</text>
 <rect x="226" y="74" width="54" height="70" rx="4" fill="#fbfaf6" stroke="#141414" stroke-width="1.5"/>
 <text x="253" y="104" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#141414" text-anchor="middle">main</text>
 <text x="253" y="120" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#141414" text-anchor="middle">switch</text>
@@ -47,7 +47,7 @@
 <text x="285" y="342" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141414" text-anchor="middle">EVSE-SC-02</text>
 <text x="285" y="360" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="middle">Edge Smart Load Balancer</text>
 <text x="285" y="378" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6b675e" text-anchor="middle">next to the meter,</text>
-<text x="285" y="391" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6b675e" text-anchor="middle">not in the consumer unit</text>
+<text x="285" y="391" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6b675e" text-anchor="middle">not in the distribution board</text>
 <text x="414" y="312" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">No CT clamps: it reads import</text>
 <text x="414" y="328" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">and export per phase</text>
 <text x="414" y="344" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6b675e" text-anchor="start">from the smart meter</text>
