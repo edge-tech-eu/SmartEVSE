@@ -36,9 +36,11 @@ P1 pinout (RJ12 6P6C): 1 = +5 V, 2 = data request, 3 = data ground, 4 = not conn
 |---|---|---|
 | GP1 (UART0 RX, physical pin 2) | 5 (data) | 4.7 kΩ pull-up to **3.3 V** (3V3 pin); RX is inverted in software |
 | GND | 3 (data ground) and 6 (power ground) | |
-| — | 2 (data request) | Must be pulled to +5 V so the meter sends data |
+| — | 2 (data request) | Tie to pin 1 (+5 V) so the meter sends data |
 
-GP0 (UART0 TX) is not used. The meter's data output is open collector, so the pull-up resistor sets the logic level: without it the line floats and no data comes in. The code does not enable a pull-up, so the 4.7 kΩ resistor from the data line to **3.3 V** (the Pico's 3V3 pin) is required, as in the M5Stack load-balancing example. The wiring diagram above does not show it yet. Never pull the data line up to 5 V: the Pico pins are 3.3 V. Only the data request line (P1 pin 2) goes to +5 V; it is an input of the meter. Which 5 V source to use for the data request is to be confirmed from the diagram.
+GP0 (UART0 TX) is not used. The meter's data output is open collector, so the pull-up resistor sets the logic level: without it the line floats and no data comes in. The code does not enable a pull-up, so the 4.7 kΩ resistor from the data line to **3.3 V** (the Pico's 3V3 pin) is required, as in the M5Stack load-balancing example. The diagram shows it as R1, from GP1 to the 3V3 pin (pin 36). Never pull the data line up to 5 V: the Pico pins are 3.3 V. Only the data request line (P1 pin 2) goes to +5 V; it is an input of the meter.
+
+**Which 5 V.** The data request draws almost no current, so tie it to P1 pin 1, the meter's own +5 V (as in the diagram). P1 pin 1 can supply at most 250 mA. You may also power the board from it if everything you connect stays below that; if not, use a suitable external 5 V supply and connect its ground to GND. In the diagram the Pico is powered over USB.
 
 ## Build and upload
 

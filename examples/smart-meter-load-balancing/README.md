@@ -50,11 +50,13 @@ P1 pinout used in the sketch comments: 1 = +5 V, 2 = data request, 3 = data grou
 | Pin 2: GPIO2 (RX) | 5 (data) | 4.7 kΩ pull-up to **3.3 V** |
 | Pin 3: 5 V | — | Not connected |
 | Pin 4: GND | 3 (data ground) and 6 (power ground) | |
-| — | 2 (data request) | Tie to +5 V so the meter sends data |
+| — | 2 (data request) | Tie to pin 1 (+5 V) so the meter sends data |
 
 The P1 data line is read on GPIO2 at 115200 baud, 8N1, with the UART input inverted in software (`Serial1.begin(115200, SERIAL_8N1, 2, 1, true)`), so no inverter is needed. The receive buffer of `Serial1` is enlarged to 2000 bytes before `begin()`, so a whole telegram fits.
 
 GPIO2 is a 3.3 V pin: **do not pull it up to 5 V.** The meter's data output is open collector, so the pull-up resistor sets the logic level; connect it to 3.3 V. The ext port has no 3.3 V pin; take 3.3 V from the M5 bus (pin 12, 3V3). Only the data request line (P1 pin 2) goes to +5 V: it is an input of the meter and never reaches the CoreS3 SE.
+
+**Which 5 V.** The data request draws almost no current, so tie it to P1 pin 1, the meter's own +5 V. P1 pin 1 can supply at most 250 mA. You may also power the board from it if everything you connect stays below that; if not, use a suitable external 5 V supply and connect its ground to GND.
 
 ## Build and upload
 

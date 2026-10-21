@@ -84,8 +84,8 @@
        +---+
   
     Pinout:
-      1 - +5V
-      2 - Data request (tie to +5V for data)
+      1 - +5V (at most 250 mA)
+      2 - Data request (tie to pin 1, +5V, for data)
       3 - Data ground
       4 - N.C.
       5 - Data (open collector, pull up to 3.3V)

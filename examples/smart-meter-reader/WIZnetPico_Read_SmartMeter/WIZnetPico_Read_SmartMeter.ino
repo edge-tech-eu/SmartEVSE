@@ -6,7 +6,8 @@
   Wiring (P1 = RJ12 6P6C):
     GP1 (UART0 RX)  - P1 pin 5, data. 4K7 pull-up resistor to 3.3V (3V3 pin)
     GND             - P1 pin 3 (data ground) and pin 6 (power ground)
-    +5V             - P1 pin 2, data request (tie to 5V so the meter sends data)
+    P1 pin 1 (+5V)  - P1 pin 2, data request (so the meter sends data). Pin 1
+                      supplies at most 250 mA; above that, use an external 5V supply
   The data output of the meter is open collector, so the pull-up sets the logic
   level. Never pull the data line up to 5V: the Pico pins are 3.3V.
 
