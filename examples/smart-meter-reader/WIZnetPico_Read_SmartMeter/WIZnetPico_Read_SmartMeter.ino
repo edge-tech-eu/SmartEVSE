@@ -1,7 +1,14 @@
 /*
   This is example code to show how to read out your DSMR 5 smart meter.
-  The code is for a pico controller which can invert the UART RX and directly
-  read from the meter without any hardware (just a "telephone"/RJ12 cable)
+  The code is for a pico controller which can invert the UART RX, so no inverter
+  is needed: an RJ12 ("telephone") cable and one resistor are enough.
+
+  Wiring (P1 = RJ12 6P6C):
+    GP1 (UART0 RX)  - P1 pin 5, data. 4K7 pull-up resistor to 3.3V (3V3 pin)
+    GND             - P1 pin 3 (data ground) and pin 6 (power ground)
+    +5V             - P1 pin 2, data request (tie to 5V so the meter sends data)
+  The data output of the meter is open collector, so the pull-up sets the logic
+  level. Never pull the data line up to 5V: the Pico pins are 3.3V.
 
   This example runs on a WizNet W55RP20 (which had ethernet). But you should be
   able to use it on any pico

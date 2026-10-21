@@ -21,7 +21,7 @@ This sketch does not talk to the charge controller. To use the result, combine i
 
 - WIZnet W55RP20-EVB-Pico (see the [board note](../boards/wiznet-w55rp20-evb-pico.md)). Any RP2040 or RP2350 Pico board should work; the wiring diagram shows a Raspberry Pi Pico 2 W.
 - A DSMR 5 smart meter with a P1 port.
-- An RJ12 (6P6C) cable and a breadboard or RJ12 socket.
+- An RJ12 (6P6C) cable, a breadboard or RJ12 socket, and a 4.7 kΩ resistor.
 - No RS485 interface or charger cable: this example only reads the meter.
 
 ## Wiring
@@ -34,11 +34,11 @@ P1 pinout (RJ12 6P6C): 1 = +5 V, 2 = data request, 3 = data ground, 4 = not conn
 
 | Pico pin | P1 (RJ12) pin | Notes |
 |---|---|---|
-| GP1 (UART0 RX, physical pin 2) | 5 (data) | RX is inverted in software |
+| GP1 (UART0 RX, physical pin 2) | 5 (data) | 4.7 kΩ pull-up to **3.3 V** (3V3 pin); RX is inverted in software |
 | GND | 3 (data ground) and 6 (power ground) | |
 | — | 2 (data request) | Must be pulled to +5 V so the meter sends data |
 
-GP0 (UART0 TX) is not used. The code does not enable a pull-up on the data line. The meter's data output is open collector: if your wiring has no pull-up, add a 4.7 kΩ resistor from the data line to **3.3 V** (the Pico's 3V3 pin), as in the M5Stack load-balancing example. Never pull the data line up to 5 V: the Pico pins are 3.3 V. Only the data request line (P1 pin 2) goes to +5 V; it is an input of the meter. Which 5 V source to use for the data request is to be confirmed from the diagram.
+GP0 (UART0 TX) is not used. The meter's data output is open collector, so the pull-up resistor sets the logic level: without it the line floats and no data comes in. The code does not enable a pull-up, so the 4.7 kΩ resistor from the data line to **3.3 V** (the Pico's 3V3 pin) is required, as in the M5Stack load-balancing example. The wiring diagram above does not show it yet. Never pull the data line up to 5 V: the Pico pins are 3.3 V. Only the data request line (P1 pin 2) goes to +5 V; it is an input of the meter. Which 5 V source to use for the data request is to be confirmed from the diagram.
 
 ## Build and upload
 
