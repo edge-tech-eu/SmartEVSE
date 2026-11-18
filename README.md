@@ -51,6 +51,16 @@ The firmware flasher is attached to the [releases](../../releases) of this repos
 
 English is the main language: every document is in English in [docs/en](docs/en/). Dutch translations go in [docs/nl](docs/nl/) with the same file names. Code, comments and file names are always English.
 
+## Licence
+
+Open source, in two parts:
+
+- **Code** (`examples/`, `tools/`): [MIT](LICENSE).
+- **Documentation, images and hardware files** (`docs/`, `images/`, `hardware/`): [CC BY 4.0](LICENSE-docs.md).
+
+Exceptions: files with their own licence header keep it (the LilyGo driver files in the T-Panel examples are
+GPL-3.0). The charge controller firmware and the firmware flasher in the releases are not open source.
+
 ## Safety
 
 The examples only talk Modbus at low voltage. Work on the mains supply and in the metering cabinet is for a qualified electrician.

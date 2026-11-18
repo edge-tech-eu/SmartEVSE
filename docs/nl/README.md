@@ -51,6 +51,16 @@ De firmware-flasher hangt bij de [releases](https://github.com/edge-tech-eu/Smar
 
 Engels is de hoofdtaal: elk document staat in het Engels in [docs/en](../en/). Nederlandse vertalingen komen in [docs/nl](./) met dezelfde bestandsnamen. Code, commentaar en bestandsnamen zijn altijd Engels.
 
+## Licentie
+
+Open source, in twee delen:
+
+- **Code** (`examples/`, `tools/`): [MIT](../../LICENSE).
+- **Documentatie, afbeeldingen en hardwarebestanden** (`docs/`, `images/`, `hardware/`): [CC BY 4.0](../../LICENSE-docs.md).
+
+Uitzonderingen: bestanden met een eigen licentiekop houden die (de LilyGo-driverbestanden in de T-Panel-voorbeelden
+zijn GPL-3.0). De firmware van de laadmodule en de firmware-flasher in de releases zijn geen open source.
+
 ## Veiligheid
 
 De voorbeelden praten alleen Modbus op laagspanning. Werk aan de netspanning en in de meterkast is voor een erkend installateur.
