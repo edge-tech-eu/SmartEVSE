@@ -1,4 +1,4 @@
-English · Dutch version to follow
+English · [Nederlands](../nl/load-balancing.md)
 
 # Load balancing
 

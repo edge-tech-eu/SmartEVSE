@@ -1,4 +1,4 @@
-English · Dutch version to follow
+English · [Nederlands](../nl/modbus-registers.md)
 
 # Modbus register map — charge controller EVSE-C-3x32A
 

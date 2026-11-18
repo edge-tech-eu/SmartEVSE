@@ -1,4 +1,4 @@
-English · Dutch version to follow
+English · [Nederlands](docs/nl/README.md)
 
 # EdgeTech charge controller EVSE-C-3x32A
 
