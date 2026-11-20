@@ -9,6 +9,7 @@ These examples show ways to use the charge controller (EVSE-C-3x32A) from your o
 | [smart-meter-load-balancing](smart-meter-load-balancing/) | Reads the house current from a Dutch DSMR 5 smart meter (P1 port) and lowers the charge current so the house stays below a set limit | M5Stack CoreS3 SE with COMMU module | Advanced |
 | [smart-meter-reader](smart-meter-reader/) | Reads a DSMR 5 smart meter through its P1 port and prints the current per phase | WIZnet W55RP20-EVB-Pico (any RP2040/RP2350 board should work) | Easy |
 | [electricity-price-schedule](electricity-price-schedule/) | Downloads day-ahead electricity prices from ENTSO-E over Wi-Fi and finds the cheapest and most expensive quarter-hours | Raspberry Pi Pico 2 W | Medium |
+| [nfc-reader](nfc-reader/) | Reads the NFC card reader (EVSE-X-NFC) and prints the ID of every card held against it | Raspberry Pi Pico 2 W with Waveshare 2-channel RS485 module; Python on a PC or Raspberry Pi | Easy |
 
 Board notes: [Waveshare RP2350 LCD](boards/waveshare-rp2350-lcd.md), [WIZnet W55RP20-EVB-Pico](boards/wiznet-w55rp20-evb-pico.md).
 

@@ -22,6 +22,7 @@ The EVSE-C-3x32A is a Mode 3 AC charge controller for one charge point, up to 3 
 | [Modbus register map](docs/en/modbus-registers.md) | Every register, state and error code, and a minimal control loop |
 | [Load balancing](docs/en/load-balancing.md) | Three ways: your own controller, evcc, or an EdgeTech site controller |
 | [EV wake-up](docs/en/ev-wake-up.md) | Waking cars that fall asleep during a charging pause (CP disconnect) |
+| [NFC card reader](docs/en/nfc-reader.md) | The EVSE-X-NFC option: wiring, configuration and the full register map |
 | [Build your own charge point](docs/en/diy-chargepoint.md) | The DIY kit, step by step ([Nederlands](docs/nl/diy-chargepoint.md)) |
 
 ## Inspiration
@@ -35,6 +36,7 @@ The EVSE-C-3x32A is a Mode 3 AC charge controller for one charge point, up to 3 
 | [Smart meter reader](examples/smart-meter-reader/) | Read the P1 port of a DSMR 5 smart meter |
 | [Smart-meter load balancing](examples/smart-meter-load-balancing/) | Limit the charge current to what the house can spare |
 | [Electricity-price schedule](examples/electricity-price-schedule/) | Fetch day-ahead prices to charge when power is cheap |
+| [NFC card reader](examples/nfc-reader/) | Read card IDs from the EVSE-X-NFC (Arduino and Python) |
 
 [tools/modbus-tool](tools/modbus-tool/) is a Python tool to test the charge controller from a PC.
 

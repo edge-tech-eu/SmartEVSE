@@ -22,6 +22,7 @@ De EVSE-C-3x32A is een AC-laadmodule (Mode 3) voor één laadpunt, tot 3 × 32 A
 | [Modbus-registeroverzicht](modbus-registers.md) | Elk register, elke state en foutcode, en een minimale regellus |
 | [Load balancing](load-balancing.md) | Drie manieren: je eigen controller, evcc of een EdgeTech-wifi-module |
 | [EV wake-up](ev-wake-up.md) | Auto's wekken die in slaap vallen tijdens een laadpauze (CP disconnect) |
+| [NFC-kaartlezer](nfc-reader.md) | De optie EVSE-X-NFC: aansluiten, instellen en het volledige registeroverzicht |
 | [Bouw je eigen laadpunt](diy-chargepoint.md) | De doe-het-zelf-kit (DHZ), stap voor stap |
 
 ## Inspiratie
@@ -35,6 +36,7 @@ De EVSE-C-3x32A is een AC-laadmodule (Mode 3) voor één laadpunt, tot 3 × 32 A
 | [Slimme meter uitlezen](../../examples/smart-meter-reader/) | De P1-poort van een slimme meter (DSMR 5) uitlezen |
 | [Load balancing op de slimme meter](../../examples/smart-meter-load-balancing/) | De laadstroom begrenzen tot wat het huis kan missen |
 | [Laadschema op stroomprijs](../../examples/electricity-price-schedule/) | Uurprijzen ophalen om te laden als stroom goedkoop is |
+| [NFC-kaartlezer](../../examples/nfc-reader/) | Kaart-ID's uitlezen van de EVSE-X-NFC (Arduino en Python) |
 
 [tools/modbus-tool](../../tools/modbus-tool/) is een Python-tool om de laadmodule vanaf een pc te testen.
 
