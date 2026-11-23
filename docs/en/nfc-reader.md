@@ -122,6 +122,7 @@ Settings written over Modbus (outputs, signalling) are not stored: after a resta
 ## Notes
 
 - **Continuous read mode** (in the configuration program): if it is on, the reader does not set IsNewTag. Leave it off when you poll as above.
+- **One reader per line.** Usually there is one reader per Modbus line, also with several chargers: the timing determines which charger a card belongs to. All readers answer at address 50, so a second reader on the same line needs another address.
 - **Whitelist.** The reader only reports the card ID. Deciding who may charge is done by the master: an EdgeTech site controller (whitelist in the MyCharger app) or your own code.
 - **EdgeTech site-controller firmware** reads up to 7 UID bytes. Cards with a 4- or 7-byte UID (almost all) are fine.
 

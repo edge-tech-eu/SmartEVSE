@@ -122,6 +122,7 @@ Instellingen die je via Modbus schrijft (uitgangen, signalering) worden niet opg
 ## Opmerkingen
 
 - **Continuous Read Mode** (in het configuratieprogramma): staat die aan, dan zet de lezer IsNewTag niet. Laat hem uit als je uitleest zoals hierboven.
+- **Eén lezer per lijn.** Meestal is er één lezer per Modbuslijn, ook bij meer laadpalen: de timing bepaalt bij welke laadpaal een kaart hoort. Alle lezers antwoorden op adres 50, dus een tweede lezer op dezelfde lijn heeft een ander adres nodig.
 - **Whitelist.** De lezer meldt alleen het kaart-ID. Wie mag laden, beslist de master: een EdgeTech-wifi-module (whitelist in de MyCharger-app) of je eigen code.
 - **De firmware van de EdgeTech-wifi-module** leest tot 7 bytes van de UID. Kaarten met een UID van 4 of 7 bytes (bijna alle) werken.
 
